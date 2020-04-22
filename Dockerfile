@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 EXPOSE 8081/tcp
 
 # Declare entrypoint of that exposed service
-ENTRYPOINT ["python3", "./main.py"]
+ENTRYPOINT ["python3", "./web_main.py"]

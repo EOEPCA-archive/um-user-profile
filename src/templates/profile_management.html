@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+	<link rel="stylesheet" type="text/css" href="/static/css/profile_management.css">
+  </head>
+  <body>
+    {% extends "template.html" %}
+    {% block content %}
+
+    {% if err_msg %}
+    <h3 align="center" style="color: red; font-weight: bold" id="err_msg">Warning: {{ err_msg }}</h3>
+      {% if err_code %}
+      <h3 align="center" style="color: orangered; font-weight: bold" id="err_code">Error code: {{ err_code }}</h3>
+      {% endif %}
+    {% endif %}
+    
+    <br>
+    <br>
+    <br>
+    <br>
+    {% if data %}
+
+    <form action="/profile_management/modify" method="post">
+      {% for data_k, data_v in data.items() %}
+        {% if data_k == "fixed" %}
+          {% for k, v in data_v.items() %}
+          <label for="fname">{{k}}</label>
+          <input type="text" id="{{k}}" name="{{k}}" value="{{v}}" readonly><br><br>      
+          {% endfor %}
+        {% endif %}
+        {% if data_k == "editable" %}
+          {% for k, v in data_v.items() %}
+          <label for="fname">{{k}}</label>
+          <input type="text" id="{{k}}" name="{{k}}" value="{{v}}"><br><br>      
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+      <input type="submit" value="Submit">
+    </form>
+
+    {% endif %}
+
+  {% endblock %}
+  </body>
+</html>

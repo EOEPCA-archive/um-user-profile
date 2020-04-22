@@ -1,0 +1,34 @@
+ <!DOCTYPE html>
+<html lang="en" dir="ltr">
+ <head>
+   <meta charset="utf-8">
+   <title>{{ title }}</title>
+    <link rel="stylesheet" href="/static/css/template.css">
+    <link rel="stylesheet" href="/static/css/general.css">
+ </head>
+
+ <body style="background-color:{{ color_web_background }};">
+
+  <div class = "topnav" style="background-color:{{ color_web_header }};">
+      <a class="navbar-brand" href="{{ url_for('home') }}">
+        <img style="max-width: 170px" class="logo" alt="{{ logo_alt_name }}" src="{{ logo_image_path }}">
+      </a>
+      <div class = "buttons-container">
+          <a class="navbar-buttons" href="{{ url_for('home') }}">Home</a>
+          <a class="navbar-buttons" href="{{ url_for('profile_management') }}">Profile Management</a>
+          {% if username %}
+          <a class="navbar-buttons" href="{{ url_for('logout') }}">{{ username }} (Log Out)</a>
+          {% else %}
+          <a class="navbar-buttons" href="{{ url_for('login') }}">Log In</a>
+          {% endif %}
+      </div>
+
+    </div>
+     
+          {% block content %}
+
+    
+    {% endblock %}
+    
+ </body>
+</html>
