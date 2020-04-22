@@ -1,0 +1,38 @@
+language: python
+python: 3.6.9
+
+env:
+  DOCKER_COMPOSE_VERSION: 1.25.4
+services:
+  - docker
+
+jobs:
+  include:
+    - stage: Testing
+      install: pip install -r src/requirements.txt
+      script: pytest src
+
+    - stage: container creation and publishing
+      install: skip
+      script: travis/containerCreation.sh um-service-template
+
+    - stage: smoke and acceptance test
+      install: skip # without this there's a `git clone` executed!
+      script: travis/acceptanceTest.sh um-service-template 8080 7000 # Service name + external port + internal port for docker
+
+    - stage: release
+      if: branch = master AND NOT type IN (pull_request)
+      install: skip
+      script: travis/release.sh um-service-template
+
+import:
+  - docs/.travis.yml
+
+#notifications:
+#  slack: eoepca:Msk9hjQKAbwSYcVWiepenPim
+#  email:
+#    recipients:
+#      - a.person@acme.com
+#      - a.n.other@acme.com
+#    on_success: never # default: change
+#    on_failure: never # default: always
