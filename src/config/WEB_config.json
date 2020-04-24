@@ -1,5 +1,5 @@
 {
-    "sso_url" : "192.168.33.10",
+    "sso_url" : "eoepca-dev.gluu.org",
     "title": "EOEPCA User Profile",
     "scopes": ["openid"],
     "client_id": "",
@@ -10,6 +10,7 @@
 
     "base_uri": "/web_ui",
     "oauth_callback_path" : "/oauth/callback",
+    "logout_endpoint" : "/logout",
     "service_host": "0.0.0.0",
     "service_port" : 8081,
 
