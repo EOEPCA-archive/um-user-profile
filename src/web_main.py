@@ -116,7 +116,7 @@ def modify_management():
     refresh_token = session.get('refresh_token')
     logged_in = session.get('logged_in')
     if not logged_in or refresh_token is None or refresh_token is "":
-        session["reminder"] = 'resources'
+        session["reminder"] = 'modify_management'
         return redirect(url_for('login'))
 
     # Refresh session and execute
