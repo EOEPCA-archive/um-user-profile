@@ -70,7 +70,7 @@ def oauth_callback():
 
     if userinfo != None:
         session['logged_in'] = True
-        session['logged_user'] = userinfo["name"]
+        session['logged_user'] = userinfo["user_name"]
 
     if session.get('reminder') != None:
         redirect_url = session.get('reminder')
@@ -113,14 +113,14 @@ def logout():
 
 @app.route(g_base_uri+"/profile_management/modify",methods=['POST'])
 def modify_management():
-    #refresh_token = session.get('refresh_token')
-    #logged_in = session.get('logged_in')
-    #if not logged_in or refresh_token is None or refresh_token is "":
-    #    session["reminder"] = 'resources'
-    #    return redirect(url_for('login'))
+    refresh_token = session.get('refresh_token')
+    logged_in = session.get('logged_in')
+    if not logged_in or refresh_token is None or refresh_token is "":
+        session["reminder"] = 'resources'
+        return redirect(url_for('login'))
 
     # Refresh session and execute
-    #session[generic.ERR_MSG], session[generic.ERR_CODE] = refresh_session(refresh_token)
+    session[generic.ERR_MSG], session[generic.ERR_CODE] = refresh_session(refresh_token)
 
     #FORM DATA
     if session[generic.ERR_MSG] is "" and request.form:
@@ -130,29 +130,27 @@ def modify_management():
 
 @app.route(g_base_uri+"/profile_management")
 def profile_management():
-    #err_msg = None
-    #old_err_msg = session.get(generic.ERR_MSG, "")
-    #err_code = session.get(generic.ERR_CODE, "")
+    err_msg = None
+    old_err_msg = session.get(generic.ERR_MSG, "")
+    err_code = session.get(generic.ERR_CODE, "")
     # Overwrite them to not let the user lock themselfs in an error
-    #session[generic.ERR_MSG] = ""
-    #session[generic.ERR_CODE] = ""
+    session[generic.ERR_MSG] = ""
+    session[generic.ERR_CODE] = ""
     
-    #refresh_session(session.get('refresh_token',""))
+    refresh_session(session.get('refresh_token',""))
 
-    #token = session.get('access_token')
-    #logged_in = session.get('logged_in')
-    #if not logged_in or token is None or token is "":
-        #session["reminder"] = 'profile_management'
-        #return redirect(url_for('login'))
+    token = session.get('access_token')
+    logged_in = session.get('logged_in')
+    if not logged_in or token is None or token is "":
+        session["reminder"] = 'profile_management'
+        return redirect(url_for('login'))
 
-    data, session[generic.ERR_MSG], session[generic.ERR_CODE]  = scim_client.getAttributes(session.get('logged_user'))
+    data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
 
     return render_template("profile_management.html",
     title = config["title"],
-    #username = session.get('logged_user'),
-    #logged_in = logged_in,
-    username = "Angel",
-    logged_in = True,
+    username = session.get('logged_user'),
+    logged_in = logged_in,
     color_web_background = g_background_color,
     color_web_header = g_header_color,
     logo_alt_name = g_logo_alt,
