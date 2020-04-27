@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, jsonify, redirect, session, u
 import json
 
 from custom_oauth import OAuthClient
+from custom_scim import SCIMClient
 import generic
 
 config = {}
@@ -19,12 +20,19 @@ g_header_table_color = config["color_header_table"]
 g_text_header_table_color = config["color_text_header_table"]
 g_button_modify_color = config["color_button_modify"]
 g_base_uri = config["base_uri"]
+g_logout_endpoint = config["logout_endpoint"] or "/logout"
+g_separator = config["separator_ui_attributes"] or "->"
 
 # Launch flask
 app = Flask(__name__)
 app.secret_key = generic.randomString()
 
 # Generate internal clients
+scim_client = SCIMClient(config)
+# Save new client_id and secret config if any
+with open("config/WEB_config.json", "w") as f:
+    json.dump(config, f)
+
 auth_client = OAuthClient(config)
 
 def refresh_session(refresh_token):
@@ -91,7 +99,7 @@ def login():
     url = auth_client.get_login_url()
     return redirect(url)
 
-@app.route(g_base_uri+"/logout")
+@app.route(g_base_uri+g_logout_endpoint)
 def logout():
     session['logged_in'] = False
     session['logged_user'] = None
@@ -105,31 +113,18 @@ def logout():
 
 @app.route(g_base_uri+"/profile_management/modify",methods=['POST'])
 def modify_management():
-    refresh_token = session.get('refresh_token')
-    logged_in = session.get('logged_in')
-    if not logged_in or refresh_token is None or refresh_token is "":
-        session["reminder"] = 'resources'
-        return redirect(url_for('login'))
+    #refresh_token = session.get('refresh_token')
+    #logged_in = session.get('logged_in')
+    #if not logged_in or refresh_token is None or refresh_token is "":
+    #    session["reminder"] = 'resources'
+    #    return redirect(url_for('login'))
 
     # Refresh session and execute
-    session[generic.ERR_MSG], session[generic.ERR_CODE] = refresh_session(refresh_token)
+    #session[generic.ERR_MSG], session[generic.ERR_CODE] = refresh_session(refresh_token)
 
     #FORM DATA
     if session[generic.ERR_MSG] is "" and request.form:
-        
-        for k,v in request.form.items():
-
-
-        new_name = request.form['name']
-        new_uri = request.form['uri']
-        new_desc = request.form.get('description', new_desc)
-        new_type = request.form.get('type',new_type)
-
-        # Register
-        payload = resource_manager.prepare_payload_register(new_uri,new_name,new_scopes,new_desc,new_type)
-        print("Final payload -> " + str(payload))
-        result = resource_manager.register(session["access_token"],payload)
-        session[generic.ERR_MSG], session[generic.ERR_CODE] = generic.get_posible_errors(result)
+        session[generic.ERR_MSG], session[generic.ERR_CODE] = scim_client.changeAttributes(session.get('logged_user'), request.form)
 
     return redirect(url_for("profile_management"))
 
@@ -150,6 +145,8 @@ def profile_management():
         #session["reminder"] = 'profile_management'
         #return redirect(url_for('login'))
 
+    data, session[generic.ERR_MSG], session[generic.ERR_CODE]  = scim_client.getAttributes(session.get('logged_user'))
+
     return render_template("profile_management.html",
     title = config["title"],
     #username = session.get('logged_user'),
@@ -160,10 +157,7 @@ def profile_management():
     color_web_header = g_header_color,
     logo_alt_name = g_logo_alt,
     logo_image_path = g_logo_image,
-    data = {
-        "fixed":{"Username":"Angel"},
-        "editable":{"lel":"AAAA"}
-        }
+    data = data
     )
 
 if __name__ == "__main__":

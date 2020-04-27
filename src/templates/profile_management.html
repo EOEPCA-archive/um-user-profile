@@ -20,21 +20,30 @@
     <br>
     {% if data %}
 
-    <form action="/profile_management/modify" method="post">
+    <form action="{{ url_for('modify_management') }}" method="post">
       {% for data_k, data_v in data.items() %}
-        {% if data_k == "fixed" %}
-          {% for k, v in data_v.items() %}
-          <label for="fname">{{k}}</label>
-          <input type="text" id="{{k}}" name="{{k}}" value="{{v}}" readonly><br><br>      
-          {% endfor %}
-        {% endif %}
-        {% if data_k == "editable" %}
-          {% for k, v in data_v.items() %}
-          <label for="fname">{{k}}</label>
-          <input type="text" id="{{k}}" name="{{k}}" value="{{v}}"><br><br>      
-          {% endfor %}
-        {% endif %}
-      {% endfor %}
+        {% for k, v in data_v.items() %}
+          <label>{{k}}</label>
+          {% if v is iterable and v is not string %}
+              {% for i in v %}
+                {% for k2, v2 in i.items() %}
+                <label>{{k2}}</label>
+                {% if data_k == "fixed" %}
+                  <input type="text" id="{{k}}-{{k2}}" name="{{k2}}" value="{{v2}}" readonly><br>
+                {% else %}
+                  <input type="text" id="{{k}}-{{k2}}" name="{{k2}}" value="{{v2}}" ><br>
+                {% endif %}
+                {% endfor %}
+              {% endfor %}
+          {% else %}
+            {% if data_k == "fixed" %}
+              <input type="text" id="{{k}}" name="{{k}}" value="{{v}}" readonly><br>
+            {% else %}
+              <input type="text" id="{{k}}" name="{{k}}" value="{{v}}"><br>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+    {% endfor %}
       <input type="submit" value="Submit">
     </form>
 
