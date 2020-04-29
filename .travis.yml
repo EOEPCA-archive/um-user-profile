@@ -8,9 +8,9 @@ services:
 
 jobs:
   include:
-    #- stage: Testing
-    #  install: pip install -r src/requirements.txt
-    #  script: pytest src
+    - stage: Testing
+      install: pip install -r src/requirements.txt
+      script: pytest src
 
     - stage: container creation and publishing
       install: skip

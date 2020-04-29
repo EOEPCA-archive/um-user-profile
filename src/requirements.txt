@@ -1,13 +1,13 @@
-certifi==2020.4.5.1
-chardet==3.0.4
-click==7.1.1
-Flask==1.1.2
-idna==2.9
-itsdangerous==1.1.0
-Jinja2==2.11.2
-MarkupSafe==1.1.1
-requests==2.23.0
-urllib3==1.25.9
-Werkzeug==1.0.1
-WellKnownHandler==0.1.0
-eoepca-scim==2.3.2
+# EXAMPLE REQUIREMENTS - PLEASE REPLACE WITH REAL ONES
+attrs==19.3.0
+importlib-metadata==1.5.0
+more-itertools==8.2.0
+packaging==20.3
+pluggy==0.13.1
+py==1.8.1
+pyparsing==2.4.6
+pytest==5.3.5
+six==1.14.0
+wcwidth==0.1.8
+zipp==3.1.0
+requests
