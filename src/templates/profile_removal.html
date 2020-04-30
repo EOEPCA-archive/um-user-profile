@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+	<link rel="stylesheet" type="text/css" href="/static/css/profile_management.css">
+  </head>
+  <body>
+    {% extends "template.html" %}
+    {% block content %}
+
+    {% if err_msg %}
+    <h3 align="center" style="color: red; font-weight: bold" id="err_msg">Warning: {{ err_msg }}</h3>
+      {% if err_code %}
+      <h3 align="center" style="color: orangered; font-weight: bold" id="err_code">Error code: {{ err_code }}</h3>
+      {% endif %}
+    {% endif %}
+    
+    <br>
+    <br>
+    <br>
+    <br>
+    <form action="{{ url_for('confirmation_mail') }}" method="post">
+        <button name="delete" type="submit">Delete Button</button>
+    </form>
+
+  {% endblock %}
+  </body>
+</html>

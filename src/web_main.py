@@ -4,6 +4,7 @@ import json
 
 from custom_oauth import OAuthClient
 from custom_scim import SCIMClient
+from custom_smtp import SMTPClient
 import generic
 
 config = {}
@@ -29,6 +30,8 @@ app.secret_key = generic.randomString()
 
 # Generate internal clients
 scim_client = SCIMClient(config)
+smtp_client = SMTPClient(config,app.secret_key)
+_user_mail = ''
 # Save new client_id and secret config if any
 with open("config/WEB_config.json", "w") as f:
     json.dump(config, f)
@@ -70,7 +73,12 @@ def oauth_callback():
 
     if userinfo != None:
         session['logged_in'] = True
+        _user_mail=userinfo["email"]
         session['logged_user'] = userinfo["user_name"]
+        print(userinfo)
+        print('y el mail: ')
+        print(_user_mail)
+        smtp_client.set_email(_user_mail)
 
     if session.get('reminder') != None:
         redirect_url = session.get('reminder')
@@ -157,6 +165,56 @@ def profile_management():
     logo_image_path = g_logo_image,
     data = data
     )
+
+
+@app.route(g_base_uri+"/confirmation_mail",methods=['POST','GET'])
+def confirmation_mail():
+    refresh_token = session.get('refresh_token')
+    html=smtp_client.send_confirmation()
+    #custom_smtp client usage for sending mail.
+    #return render_template("confirmation_mail.html")
+    return html
+
+@app.route(g_base_uri+"/confirmation/<token>")
+def confirmation(token):
+    #custom_scim client delete usage.
+    print('aaahhhaaa')
+    try:
+        email = smtp_client.getConfirmation(token)
+        print(a)
+        #here to delete wiht scim client the user with the email
+    except:
+        print('The confirmation link is invalid or has expired.', 'error')
+
+    return render_template("confirmation_removal.html")
+
+
+
+@app.route(g_base_uri+"/profile_removal")
+def profile_removal():
+    err_msg = None
+    old_err_msg = session.get(generic.ERR_MSG, "")
+    err_code = session.get(generic.ERR_CODE, "")
+    # Overwrite them to not let the user lock themselfs in an error
+    session[generic.ERR_MSG] = ""
+    session[generic.ERR_CODE] = ""
+    print('hey')
+    #refresh_session(session.get('refresh_token',""))
+
+    token = session.get('access_token')
+    logged_in = session.get('logged_in')
+    print(logged_in)
+    #data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
+    return render_template("profile_removal.html",
+    title = config["title"],
+    username = session.get('logged_user'),
+    logged_in = logged_in,
+    color_web_background = g_background_color,
+    color_web_header = g_header_color,
+    logo_alt_name = g_logo_alt,
+    logo_image_path = g_logo_image
+    )
+
 
 if __name__ == "__main__":
     app.run(
