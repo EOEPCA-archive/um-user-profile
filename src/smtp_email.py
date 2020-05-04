@@ -23,7 +23,7 @@ class SMTPEmail():
         """
         self.host = "smtp.gmail.com"
         self.email_from = "testmami46@gmail.com"
-        self.password = "Mami123478"
+        self.password = "ogovnooorodzsjol"
         self.port = 465
         self.context = ssl.create_default_context()
     
@@ -116,3 +116,8 @@ class SMTPEmail():
             print("Error creating email message " + str(e))
         
         return message
+
+if __name__ == "__main__":
+    server = SMTPEmail()
+    server.send_email(email_to="miguelmuniz46@hotmail.com", email_subject="prueba", msg="esto es una prueba")
+    server.send_email(email_to="miguelmuniz46@hotmail.com", email_subject="prueba2", msg="esto es una prueba2")
