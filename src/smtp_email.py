@@ -116,8 +116,3 @@ class SMTPEmail():
             print("Error creating email message " + str(e))
         
         return message
-
-if __name__ == "__main__":
-    server = SMTPEmail()
-    server.send_email(email_to="miguelmuniz46@hotmail.com", email_subject="prueba", msg="esto es una prueba")
-    server.send_email(email_to="miguelmuniz46@hotmail.com", email_subject="prueba2", msg="esto es una prueba2")
