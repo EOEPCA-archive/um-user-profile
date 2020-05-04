@@ -27,19 +27,20 @@ class SMTPEmail():
         self.port = 465
         self.context = ssl.create_default_context()
     
-    def send_email(self, email_to, msg, files=None):
+    def send_email(self, email_to, email_subject, msg, files=None):
         """
         This function does the whole process of creating the SMPT Server connection, generating the message
         and finally sends the email.
 
         Parameters:
             - email_to (String): The receiver of the email
+            - email_subject (String): The subject of the email
             - msg (String): The message to be included in the email
             - files (list of strings -> Ej: ["test.txt", "test2.txt"]): The files that we want to attach
                 - Default: None 
         """
         server = self.start_smtp_server()
-        message = self.create_message(email_from=self.email_from, email_to=email_to, msg=msg, files=files)
+        message = self.create_message(email_from=self.email_from, email_to=email_to, email_subject=email_subject, msg=msg, files=files)
 
         try:
             server.send_message(msg=message)
@@ -64,7 +65,7 @@ class SMTPEmail():
         
         return server
 
-    def create_message(self, email_from, email_to, msg, files=None):
+    def create_message(self, email_from, email_to, email_subject, msg, files=None):
         """
         This function will generate the body of the email, who sends the email, the receiver
         and if it has any attachment.
@@ -72,6 +73,7 @@ class SMTPEmail():
         Parameters:
             - email_from (string): Who sends the email
             - email_to (string): The receiver of the email
+            - email_subject (string): The subject of the email
             - msg (string): The message to be included in the email
             - files (list of strings -> Ej: ["test.txt", "test2.txt"]): The files that we want to attach
                 - Default: None 
@@ -79,7 +81,7 @@ class SMTPEmail():
         message = None
         try:
             message = MIMEMultipart("alternative")
-            message["Subject"] = "Test message"
+            message["Subject"] = email_subject
             message["From"] = email_from
             message["To"] = email_to
 
