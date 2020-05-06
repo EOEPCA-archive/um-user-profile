@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import smtplib
 import ssl
+import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -22,8 +23,8 @@ class SMTPEmail():
             and certificate validation, and try to choose a secure protocol and cipher settings
         """
         self.host = "smtp.gmail.com"
-        self.email_from = "testmami46@gmail.com"
-        self.password = "ogovnooorodzsjol"
+        self.email_from = os.environ['EMAIL_ADRESS']
+        self.password = os.environ['EMAIL_PASSWORD']
         self.port = 465
         self.context = ssl.create_default_context()
     

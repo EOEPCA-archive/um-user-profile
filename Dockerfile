@@ -1,13 +1,13 @@
 # Base container
 FROM python:3.6
-
 # Add requirements, code
-COPY src/* /
+COPY src/ /
 RUN pip install -r requirements.txt
-
 # Declare and expose service listening port
-# EXAMPLE PORT - PLEASE REPLACE WITH REAL ONES
-EXPOSE 8081/tcp
-
+EXPOSE 5566/tcp
 # Declare entrypoint of that exposed service
 ENTRYPOINT ["python3", "./web_main.py"]
+
+#Env variable for Email Address and password
+ENV EMAIL_ADRESS="testmami46@gmail.com" \
+    EMAIL_PASSWORD="ogovnooorodzsjol"
