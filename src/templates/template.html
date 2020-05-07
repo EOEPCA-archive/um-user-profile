@@ -16,6 +16,7 @@
       <div class = "buttons-container">
           <a class="navbar-buttons" href="{{ url_for('home') }}">Home</a>
           <a class="navbar-buttons" href="{{ url_for('profile_management') }}">Profile Management</a>
+          <a class="navbar-buttons" href="{{ url_for('profile_removal') }}">Delete Profile</a>
           {% if username %}
           <a class="navbar-buttons" href="{{ url_for('logout') }}">{{ username }} (Log Out)</a>
           {% else %}

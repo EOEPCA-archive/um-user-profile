@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 from eoepca_scim import *
-
 import collections
 
 class SCIMClient():
@@ -97,3 +96,12 @@ class SCIMClient():
             else:
                 items.append((new_key, v))
         return dict(items)
+
+    def deleteUser(self,userID):
+        
+        try:
+            self.scim_client.deleteUser(userID)
+        except Exception as e:
+            print(str(e))
+            err = "Something went wrong while deleting user: "+str(e)
+
