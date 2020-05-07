@@ -75,9 +75,6 @@ def oauth_callback():
         session['logged_in'] = True
         _user_mail=userinfo["email"]
         session['logged_user'] = userinfo["user_name"]
-        print(userinfo)
-        print('y el mail: ')
-        print(_user_mail)
         smtp_client.set_email(_user_mail)
 
     if session.get('reminder') != None:

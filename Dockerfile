@@ -7,3 +7,7 @@ RUN pip install -r requirements.txt
 EXPOSE 5566/tcp
 # Declare entrypoint of that exposed service
 ENTRYPOINT ["python3", "./web_main.py"]
+
+#Env variable for Email Address and password
+ENV EMAIL_ADRESS="testmami46@gmail.com" \
+    EMAIL_PASSWORD="ogovnooorodzsjol"
