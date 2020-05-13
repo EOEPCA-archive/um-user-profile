@@ -1,4 +1,17 @@
 [[mainOverview]]
 = Overview
 
-TBD
+== Building Block Overview
+
+[NOTE]
+.Content Description
+================================
+This section contains:
+
+* High-Level Description of the Building Block
+* Context within EOEPCA
+================================
+
+The User Profile Building Block aims at filling in the functionality gaps within the User Management tasks. The User Profile portal is integrated as an OIDC Client internal to the Platform, and interacts with SCIM endpoints to extract information.
+
+The figure below, identifies the main workflows on which the Login Service participates:
