@@ -29,10 +29,10 @@ import:
   - docs/.travis.yml
 
 notifications:
-  slack: 'eoepca:Msk9hjQKAbwSYcVWiepenPim'
+  slack: eoepca:Msk9hjQKAbwSYcVWiepenPim
 #  email:
 #    recipients:
 #      - a.person@acme.com
 #      - a.n.other@acme.com
-    on_success: change # default: change
-    on_failure: always # default: always
+  on_success: change # default: change
+  on_failure: always # default: always
