@@ -36,9 +36,83 @@
 </li>
 <li><a href="#mainOverview">2. Overview</a>
 <ul class="sectlevel2">
-<li><a href="#_building_block_overview">2.1. Building Block Overview</a></li>
+<li><a href="#_building_block_overview">2.1. Building Block Overview</a>
+<ul class="sectlevel3">
+<li><a href="#_end_user_authentication_through_external_idps">2.1.1. End-User Authentication through external IDPs</a>
+<ul class="sectlevel4">
+<li><a href="#_authentication_flow">2.1.1.1. Authentication Flow</a></li>
+<li><a href="#IMAGE">2.1.1.2. Unique identification of End-Users</a></li>
 </ul>
 </li>
+<li><a href="#_single_sign_on">2.1.2. Single Sign-On</a></li>
+<li><a href="#_single_log_out">2.1.3. Single Log-Out</a></li>
+</ul>
+</li>
+<li><a href="#_static_architecture">2.2. Static Architecture</a></li>
+<li><a href="#_use_cases">2.3. Use Cases</a></li>
+<li><a href="#_external_interfaces">2.4. External Interfaces</a>
+<ul class="sectlevel3">
+<li><a href="#_authentication_authn_interface">2.4.1. Authentication (AuthN) Interface</a></li>
+<li><a href="#_authorization_authz_interface">2.4.2. Authorization (AuthZ) Interface</a></li>
+<li><a href="#_identity_management_interface">2.4.3. Identity Management Interface</a></li>
+<li><a href="#_administration_interface">2.4.4. Administration Interface</a></li>
+<li><a href="#_external_idp_discovery_interface">2.4.5. External IDP Discovery Interface</a></li>
+</ul>
+</li>
+<li><a href="#_required_resources">2.5. Required Resources</a>
+<ul class="sectlevel3">
+<li><a href="#_software">2.5.1. Software</a></li>
+</ul>
+</li>
+<li><a href="#_design_standards_conventions_and_procedures">2.6. Design Standards, Conventions and Procedures</a>
+<ul class="sectlevel3">
+<li><a href="#_uml_design">2.6.1. UML Design</a></li>
+<li><a href="#_naming_conventions">2.6.2. Naming Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#mainDesign">3. Building Block Design</a>
+<ul class="sectlevel2">
+<li><a href="#_authentication_and_authorization_service">3.1. Authentication and Authorization Service</a>
+<ul class="sectlevel3">
+<li><a href="#_overview_and_purpose">3.1.1. Overview and Purpose</a></li>
+<li><a href="#_software_reuse_and_dependencies">3.1.2. Software Reuse and Dependencies</a></li>
+<li><a href="#_interfaces">3.1.3. Interfaces</a></li>
+<li><a href="#_data">3.1.4. Data</a></li>
+<li><a href="#_applicable_resources">3.1.5. Applicable Resources</a></li>
+</ul>
+</li>
+<li><a href="#_administration_service">3.2. Administration Service</a>
+<ul class="sectlevel3">
+<li><a href="#_overview_and_purpose_2">3.2.1. Overview and Purpose</a></li>
+<li><a href="#_software_reuse_and_dependencies_2">3.2.2. Software Reuse and Dependencies</a></li>
+<li><a href="#_interfaces_2">3.2.3. Interfaces</a></li>
+<li><a href="#_data_2">3.2.4. Data</a></li>
+<li><a href="#_applicable_resources_2">3.2.5. Applicable Resources</a></li>
+</ul>
+</li>
+<li><a href="#_back_end_service">3.3. Back-End Service</a>
+<ul class="sectlevel3">
+<li><a href="#_overview_and_purpose_3">3.3.1. Overview and Purpose</a></li>
+<li><a href="#_software_reuse_and_dependencies_3">3.3.2. Software Reuse and Dependencies</a></li>
+<li><a href="#_interfaces_3">3.3.3. Interfaces</a></li>
+<li><a href="#_data_3">3.3.4. Data</a></li>
+<li><a href="#_applicable_resources_3">3.3.5. Applicable Resources</a></li>
+</ul>
+</li>
+<li><a href="#_relying_party_service">3.4. Relying-Party Service</a>
+<ul class="sectlevel3">
+<li><a href="#_overview_and_purpose_4">3.4.1. Overview and Purpose</a></li>
+<li><a href="#_software_reuse_and_dependencies_4">3.4.2. Software Reuse and Dependencies</a></li>
+<li><a href="#_interfaces_4">3.4.3. Interfaces</a></li>
+<li><a href="#_data_4">3.4.4. Data</a></li>
+<li><a href="#_applicable_resources_4">3.4.5. Applicable Resources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#traceabilityMatrix">4. Use Case Traceability</a></li>
 </ul>
 </div>
 </div>
@@ -126,7 +200,7 @@ The Amendment Record Sheet below records the history and issue status of this do
 <dd>
 <p>Provides an over of the &lt;Template Service&gt; component, within the context of the wider Common Architecture design.</p>
 </dd>
-<dt class="hdlist1">Section 3 - <a href="#mainDesign">[mainDesign]</a></dt>
+<dt class="hdlist1">Section 3 - <a href="#mainDesign">Building Block Design</a></dt>
 <dd>
 <p>Provides the design of the &lt;Template Service&gt; component.</p>
 </dd>
@@ -893,19 +967,315 @@ OGC 08-068r2,<br>
 </table>
 </div>
 <div class="paragraph">
-<p>The User Profile Building Block aims at filling in the functionality gaps within the User Management tasks. The User Profile portal is integrated as an OIDC Client internal to the Platform, and interacts with SCIM endpoints to extract information.</p>
+<p>The Login Service building block provides an OIDC and UMA compliant solution enabling authentication and authorization mechanisms within an Exploitation Platform. Other building blocks, such as the Policy Decision Point, Policy Enforcement Point and User Profile rely on this Building Block to provide several standard interfaces.</p>
+</div>
+<div class="paragraph">
+<p>As stated in the EOEPCA Master System Design Document (ref. [PENDING]), the Login Service establishes itself as a client (Relying Party) for external Identity Providers (IDPs) allowing users coming from external domains to authenticate into the Exploitation Platform. In addition to this functionality, the Login Service also allows any Platform component to authenticate itself (without the need for an End-User to initiate the flow) therefore facilitating security aspects of the internal workflows of a Platform.</p>
 </div>
 <div class="paragraph">
 <p>The figure below, identifies the main workflows on which the Login Service participates:</p>
 </div>
-<div class="exampleblock">
-<div class="content">
+<div id="IMAGE" class="paragraph">
+<p>Based on this workflows, the Login Service enables the following functionality aspects</p>
+</div>
+<div class="sect3">
+<h4 id="_end_user_authentication_through_external_idps">2.1.1. End-User Authentication through external IDPs</h4>
+<div class="paragraph">
+<p>The Login Service establishes itself as a client to all supported external IDPs, with the necessary trust relationships in place to support the authentication flow. End-Users participating in this flow will propagate - with their necessary consent - a subset of the information stored in the external IDP into the Login Service back-end in order to facilitate unique identification of users and the Billing and Accounting functionalities of the overall Platform.</p>
+</div>
+<div class="sect4">
+<h5 id="_authentication_flow">2.1.1.1. Authentication Flow</h5>
+<div class="paragraph">
+<p>The following image indicates the sequence of events necessary for a user to authenticate using an external Identity Provider (IDP).</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="IMAGE">2.1.1.2. Unique identification of End-Users</h5>
+<div class="paragraph">
+<p>By default, the Login Service extracts the email account stored in the external Identity Provider and checks that the user has not logged in previously with any other external IDP under the same email account. Whenever that&#8217;s the case, the authentication flow skips the persistence of End-User attributes to the back-end and directly considers the user authenticated.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_single_sign_on">2.1.2. Single Sign-On</h4>
+<div class="paragraph">
+<p>Single Sign-On (SSO) comes as one of the main benefits of using OIDC as authentication standard, allowing Service Providers (Client Applications) that utilize the Login Service to skip the step that requires input of credentials by the end-user if the Login Service detects that a session for the user is ongoing within the platform.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_single_log_out">2.1.3. Single Log-Out</h4>
+<div class="paragraph">
+<p>Similar to the SSO functionality, applications can request the End-User session can be terminated across the platform, and register themselves to receive this log-out request (in order to also handle it internally).</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_static_architecture">2.2. Static Architecture</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">Content Description</div>
+<div class="paragraph">
+<p>This section contains:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Diagram and description of the major logical components within the Building Block</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The Login Service, heavily relies on Free and Open Source Software that already implements the interfaces and functionality required. The following image depicts the Static Architecture of this Building Block.</p>
+</div>
+<div id="IMAGE" class="ulist">
+<ul>
+<li>
+<p>The Authentication and Authorization Service enables both OIDC and UMA flows for the whole Platform</p>
+</li>
+<li>
+<p>The Administration Service provides and Administration GUI and a SCIM Implementation allowing direct interaction with the End-User Back-End</p>
+</li>
+<li>
+<p>The Back-End Service stores the necessary information for the other components to provide Session Management, Authorization and persists external IDP information generated or relayed during authentication.</p>
+</li>
+<li>
+<p>The Relying Party component allows to register as a RP in any external IDP.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The Section for the Building Block Design [REF] contains detailed descriptions and references to the Open Source components used in this Building Block.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_use_cases">2.3. Use Cases</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">Content Description</div>
+<div class="paragraph">
+<p>This section contains:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Diagrams and definition of the use cases covered by this Building Block</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_external_interfaces">2.4. External Interfaces</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">Content Description</div>
+<div class="paragraph">
+<p>This section contains:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Listing of technical external interfaces (with other Building Blocks)</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_authentication_authn_interface">2.4.1. Authentication (AuthN) Interface</h4>
+<div class="paragraph">
+<p>The Login Service exposes an OpenID Connect interface through a .well-known URI that describes all standard endpoints</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_authorization_authz_interface">2.4.2. Authorization (AuthZ) Interface</h4>
+<div class="paragraph">
+<p>The Login Service exposes a User Managed Access (UMA) interface through a .well-known URI that describes all standard endpoints</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_identity_management_interface">2.4.3. Identity Management Interface</h4>
+<div class="paragraph">
+<p>The Login Service exposes a System for Cross Domain Identity (SCIM) Interface through a .well-known URI that describes all standard endpoints</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_administration_interface">2.4.4. Administration Interface</h4>
+<div class="paragraph">
+<p>A web service is made available for administrators and operators to manage the configuration aspects of the Login Service without the need to authenticate using external IDPs.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_external_idp_discovery_interface">2.4.5. External IDP Discovery Interface</h4>
+<div class="paragraph">
+<p>A landing web page interface for Authentication Requests is made available, allowing users to select their preferred external IDP and initiate authentication flow.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_required_resources">2.5. Required Resources</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">Content Description</div>
+<div class="paragraph">
+<p>This section contains:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>List of HW and SW required resources for the correct functioning of the building Block</p>
+</li>
+<li>
+<p>References to open repositories (when applicable)</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_software">2.5.1. Software</h4>
+<div class="paragraph">
+<p>The following Open-Source Software is required to support the deployment and integration of the Login Service:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Authentication and Authorization Service</p>
+<div class="ulist">
+<ul>
+<li>
+<p>oxAuth - Gluu Inc. [LINK to Github]</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Administration Service</p>
+<div class="ulist">
+<ul>
+<li>
+<p>oxTrust - Gluu Inc. (Link to Github)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Back-end Service</p>
+<div class="ulist">
+<ul>
+<li>
+<p>OpenDJ/LDAP Distribution (Link to Github)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>OIDC Compliant, extensible Relying Party</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Passport.js (Link to Github)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Deployment, Configuration and Integration Tooling</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Persistence system load/backup/restore components (Link to Github)</p>
+</li>
+<li>
+<p>Kubernetes secret and config Tooling (Link to Github)</p>
+</li>
+<li>
+<p>Reverse Proxy exposing API interfaces - Nginx/Ingress</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_design_standards_conventions_and_procedures">2.6. Design Standards, Conventions and Procedures</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">Content Description</div>
+<div class="paragraph">
+<p>This section contains:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Explanations on the UML Design notation and necessary naming conventions used throughout the document</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_uml_design">2.6.1. UML Design</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_naming_conventions">2.6.2. Naming Conventions</h4>
 <div style="page-break-after: always;"></div>
-<div id="mainDesign" class="paragraph">
-<p>= Building Block Design</p>
 </div>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="mainDesign">3. Building Block Design</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">Content Description</div>
 <div class="paragraph">
 <p>This section contains:</p>
 </div>
@@ -938,46 +1308,115 @@ OGC 08-068r2,<br>
 <div class="paragraph">
 <p>When a breakdown is necessary, a general overview of the building block can be given. On the contrary, no breakdown indicates a single component development with the same expected sections.</p>
 </div>
-<div class="exampleblock">
-<div class="content">
-<div class="paragraph">
-<p>== Authentication and Authorization Service<br>
-=== Overview and Purpose<br>
-=== Software Reuse and Dependencies<br>
-=== Interfaces<br>
-=== Data<br>
-=== Applicable Resources</p>
+</td>
+</tr>
+</table>
 </div>
-<div class="paragraph">
-<p>== Administration Service<br>
-=== Overview and Purpose<br>
-=== Software Reuse and Dependencies<br>
-=== Interfaces<br>
-=== Data<br>
-=== Applicable Resources</p>
+<div class="sect2">
+<h3 id="_authentication_and_authorization_service">3.1. Authentication and Authorization Service</h3>
+<div class="sect3">
+<h4 id="_overview_and_purpose">3.1.1. Overview and Purpose</h4>
+
 </div>
-<div class="paragraph">
-<p>== Back-End Service<br>
-=== Overview and Purpose<br>
-=== Software Reuse and Dependencies<br>
-=== Interfaces<br>
-=== Data<br>
-=== Applicable Resources</p>
+<div class="sect3">
+<h4 id="_software_reuse_and_dependencies">3.1.2. Software Reuse and Dependencies</h4>
+
 </div>
-<div class="paragraph">
-<p>== Relying-Party Service<br>
-=== Overview and Purpose<br>
-=== Software Reuse and Dependencies<br>
-=== Interfaces<br>
-=== Data<br>
-=== Applicable Resources</p>
+<div class="sect3">
+<h4 id="_interfaces">3.1.3. Interfaces</h4>
+
 </div>
+<div class="sect3">
+<h4 id="_data">3.1.4. Data</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_applicable_resources">3.1.5. Applicable Resources</h4>
+
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administration_service">3.2. Administration Service</h3>
+<div class="sect3">
+<h4 id="_overview_and_purpose_2">3.2.1. Overview and Purpose</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_software_reuse_and_dependencies_2">3.2.2. Software Reuse and Dependencies</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_interfaces_2">3.2.3. Interfaces</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_data_2">3.2.4. Data</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_applicable_resources_2">3.2.5. Applicable Resources</h4>
+
+</div>
+</div>
+<div class="sect2">
+<h3 id="_back_end_service">3.3. Back-End Service</h3>
+<div class="sect3">
+<h4 id="_overview_and_purpose_3">3.3.1. Overview and Purpose</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_software_reuse_and_dependencies_3">3.3.2. Software Reuse and Dependencies</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_interfaces_3">3.3.3. Interfaces</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_data_3">3.3.4. Data</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_applicable_resources_3">3.3.5. Applicable Resources</h4>
+
+</div>
+</div>
+<div class="sect2">
+<h3 id="_relying_party_service">3.4. Relying-Party Service</h3>
+<div class="sect3">
+<h4 id="_overview_and_purpose_4">3.4.1. Overview and Purpose</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_software_reuse_and_dependencies_4">3.4.2. Software Reuse and Dependencies</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_interfaces_4">3.4.3. Interfaces</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_data_4">3.4.4. Data</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_applicable_resources_4">3.4.5. Applicable Resources</h4>
 <div style="page-break-after: always;"></div>
-<div id="traceabilityMatrix" class="paragraph">
-<p>= Use Case Traceability</p>
 </div>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="traceabilityMatrix">4. Use Case Traceability</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">Content Description</div>
 <div class="paragraph">
 <p>This section contains:</p>
 </div>
@@ -988,8 +1427,10 @@ OGC 08-068r2,<br>
 </li>
 </ul>
 </div>
-<div class="exampleblock">
-<div class="content">
+</td>
+</tr>
+</table>
+</div>
 <hr>
 <div class="paragraph large">
 <p>&lt;&lt; End of Document &gt;&gt;</p>
@@ -997,13 +1438,10 @@ OGC 08-068r2,<br>
 </div>
 </div>
 </div>
-</div>
-</div>
-</div>
 <div id="footer">
 <div id="footer-text">
 Version 0.1<br>
-Last updated 2020-05-13 12:07:56 UTC
+Last updated 2020-05-13 12:16:16 UTC
 </div>
 </div>
 </body>
