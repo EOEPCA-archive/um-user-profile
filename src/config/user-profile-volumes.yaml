@@ -1,0 +1,133 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: user-profile-logs-volume-claim
+spec:
+  storageClassName: ""
+  volumeName: user-profile-logs
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10M
+  selector:
+    matchLabels:
+      user-profile: logs
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: user-profile-lib-ext-volume-claim
+spec:
+  storageClassName: ""
+  volumeName: user-profile-lib-ext
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10M
+  selector:
+    matchLabels:
+      user-profile: lib-ext
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: user-profile-custom-static-volume-claim
+spec:
+  storageClassName: ""
+  volumeName: user-profile-custom-static
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10M
+  selector:
+    matchLabels:
+      user-profile: custom-static
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: user-profile-custom-pages-volume-claim
+spec:
+  storageClassName: ""
+  volumeName: user-profile-custom-pages
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10M
+  selector:
+    matchLabels:
+      user-profile: custom-pages
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: user-profile-logs
+  labels:
+      user-profile: logs
+spec:
+  capacity:
+    storage: 10M
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+      path: "/data/user-profile/logs"
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: user-profile-lib-ext
+  labels:
+      user-profile: lib-ext
+spec:
+  capacity:
+    storage: 10M
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+      path: "/data/user-profile/custom/libs"
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: user-profile-custom-static
+  labels:
+      user-profile: custom-static
+spec:
+  capacity:
+    storage: 10M
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+      path: "/data/user-profile/custom/static"
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: user-profile-custom-pages
+  labels:
+      user-profile: custom-pages
+spec:
+  capacity:
+    storage: 10M
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/user-profile/custom/pages"
