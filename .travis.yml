@@ -14,16 +14,16 @@ jobs:
 
     - stage: container creation and publishing
       install: skip
-      script: travis/containerCreation.sh um-service-template
+      script: travis/containerCreation.sh um-user-profile
 
     - stage: smoke and acceptance test
       install: skip # without this there's a `git clone` executed!
-      script: travis/acceptanceTest.sh um-service-template 8080 7000 # Service name + external port + internal port for docker
+      script: travis/acceptanceTest.sh um-user-profile 8080 7000 # Service name + external port + internal port for docker
 
     - stage: release
       if: branch = master AND NOT type IN (pull_request)
       install: skip
-      script: travis/release.sh um-service-template
+      script: travis/release.sh um-user-profile
 
 import:
   - docs/.travis.yml
