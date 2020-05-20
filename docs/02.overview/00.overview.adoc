@@ -12,37 +12,31 @@ This section contains:
 * Context within EOEPCA
 ================================
 
-The Login Service building block provides an OIDC and UMA compliant solution enabling authentication and authorization mechanisms within an Exploitation Platform. Other building blocks, such as the Policy Decision Point, Policy Enforcement Point and User Profile rely on this Building Block to provide several standard interfaces.
+In order to support the Billing Service, the User Profile building block allows to identify users (leaving a reference to their home IdP), to assign them Billing Identities, Service API keys, License keys and to record Terms and Conditions acceptance. It's a persistence service with interfaces that will be queried by other building blocks (License Manager, Billing Service, Policy Decision Point) and modified by both the License Manager and the Login Service (during creation of a new user profile or assignment of new Licenses).
 
-As stated in the EOEPCA Master System Design Document (ref. [PENDING]), the Login Service establishes itself as a client (Relying Party) for external Identity Providers (IDPs) allowing users coming from external domains to authenticate into the Exploitation Platform. In addition to this functionality, the Login Service also allows any Platform component to authenticate itself (without the need for an End-User to initiate the flow) therefore facilitating security aspects of the internal workflows of a Platform.
-
-The figure below, identifies the main workflows on which the Login Service participates:
+The figure below, identifies the main workflows on which the User Profile participates:
 
 [[IMAGE]]
 
-Based on this workflows, the Login Service enables the following functionality aspects
+Based on this workflows, the User Profile enables the following functionality aspects
 
-=== End-User Authentication through external IDPs
+=== OIDC Client in User Profile
 
-The Login Service establishes itself as a client to all supported external IDPs, with the necessary trust relationships in place to support the authentication flow. End-Users participating in this flow will propagate - with their necessary consent - a subset of the information stored in the external IDP into the Login Service back-end in order to facilitate unique identification of users and the Billing and Accounting functionalities of the overall Platform.
+The User Profile will mainly use the OIDC Client functionality in the User Profile Portal in order to provide Client authentication and End-User authentication functionality according to the OpenIDConnect Authentication Code Flow.
 
-==== Authentication Flow
+This functionality is provided by the *custom_oauth* script and uses the python WellKnownHandler library that allows for simple parsing and usage of an SSO server's "well-known" endpoints 
 
-The following image indicates the sequence of events necessary for a user to authenticate using an external Identity Provider (IDP).
+=== Send confirmation Email
 
-[[IMAGE]]
+This functionalitu allows you to send an email and notify the user that the account will be deleted. In addition, by clicking on the link in the email the user will confirm the action. This functionality is provided by *custom_smtp* and *smtp_email* scripts.
 
-==== Unique identification of End-Users
+The first script is dedicated to prepare both the url to proceed with the account removal and the html that will be in the body of the email.
 
-By default, the Login Service extracts the email account stored in the external Identity Provider and checks that the user has not logged in previously with any other external IDP under the same email account. Whenever that's the case, the authentication flow skips the persistence of End-User attributes to the back-end and directly considers the user authenticated.
+And after doing the 2 steps above,  it will create a class of the *smtp_email* script, which will make the whole process of creating the SMPT Server connection, generating the message and finally sends the email. Previously we need to have configured the mail that will send the email, choosing the mail (Google Account) and the password to access, which are in the Dockerfile as a container variable.
 
-=== Single Sign-On
+=== Account removal
 
-Single Sign-On (SSO) comes as one of the main benefits of using OIDC as authentication standard, allowing Service Providers (Client Applications) that utilize the Login Service to skip the step that requires input of credentials by the end-user if the Login Service detects that a session for the user is ongoing within the platform.
-
-=== Single Log-Out
-
-Similar to the SSO functionality, applications can request the End-User session can be terminated across the platform, and register themselves to receive this log-out request (in order to also handle it internally).
+The functionality related to the account removal is implemented thanks to a SCIM Client that allow querying for user information, update User Profiles based on the assignment of a specific license or in this case a account removal previously created and the 2 previously mentioned functionalities.
 
 == Static Architecture
 
@@ -55,14 +49,14 @@ This section contains:
 
 ================================
 
-The Login Service, heavily relies on Free and Open Source Software that already implements the interfaces and functionality required. The following image depicts the Static Architecture of this Building Block.
+The User Profile, heavily relies on Free and Open Source Software that already implements the interfaces and functionality required. The following image depicts the Static Architecture of this Building Block.
 
-[[IMAGE]]
+[#img_userProfileDiagram,reftext='{figure-caption} {counter:figure-num}']
+image::User_Profile.png[width=85%,pdfwidth=85%,align="center"]
 
 * The Authentication and Authorization Service enables both OIDC and UMA flows for the whole Platform
-* The Administration Service provides and Administration GUI and a SCIM Implementation allowing direct interaction with the End-User Back-End
-* The Back-End Service stores the necessary information for the other components to provide Session Management, Authorization and persists external IDP information generated or relayed during authentication.
-* The Relying Party component allows to register as a RP in any external IDP.
+* The User Profile Portal with SCIM Implementation, allowing direct interaction with the End-User Back-End, in this case, the account removal
+* A connection to an SMTP Email server for sending confirmation emails, using at the moment a Google Account.
 
 The Section for the Building Block Design [REF] contains detailed descriptions and references to the Open Source components used in this Building Block.
 
@@ -90,23 +84,7 @@ This section contains:
 
 === Authentication (AuthN) Interface
 
-The Login Service exposes an OpenID Connect interface through a .well-known URI that describes all standard endpoints
-
-=== Authorization (AuthZ) Interface
-
-The Login Service exposes a User Managed Access (UMA) interface through a .well-known URI that describes all standard endpoints
-
-=== Identity Management Interface
-
-The Login Service exposes a System for Cross Domain Identity (SCIM) Interface through a .well-known URI that describes all standard endpoints
-
-=== Administration Interface
-
-A web service is made available for administrators and operators to manage the configuration aspects of the Login Service without the need to authenticate using external IDPs.
-
-=== External IDP Discovery Interface
-
-A landing web page interface for Authentication Requests is made available, allowing users to select their preferred external IDP and initiate authentication flow.
+The User Profile uses an OpenID Connect interface through a .well-known URI that describes all standard endpoints
 
 == Required Resources
 
@@ -126,16 +104,13 @@ The following Open-Source Software is required to support the deployment and int
 
 * Authentication and Authorization Service
 ** oxAuth - Gluu Inc. [LINK to Github]
-* Administration Service
-** oxTrust - Gluu Inc. (Link to Github)
-* Back-end Service
-** OpenDJ/LDAP Distribution (Link to Github)
 * OIDC Compliant, extensible Relying Party
 ** Passport.js (Link to Github)
+* Email Service
+** SMTP Client python library: smtplib (https://docs.python.org/3/library/smtplib.html)
+** Email settings library: email (https://docs.python.org/3/library/email.html#module-email)
 * Deployment, Configuration and Integration Tooling
-** Persistence system load/backup/restore components (Link to Github)
 ** Kubernetes secret and config Tooling (Link to Github)
-** Reverse Proxy exposing API interfaces - Nginx/Ingress
 
 
 == Design Standards, Conventions and Procedures
