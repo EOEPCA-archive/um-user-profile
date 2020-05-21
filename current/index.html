@@ -47,7 +47,9 @@
 <li><a href="#_use_cases">2.3. Use Cases</a></li>
 <li><a href="#_external_interfaces">2.4. External Interfaces</a>
 <ul class="sectlevel3">
-<li><a href="#_authentication_authn_interface">2.4.1. Authentication (AuthN) Interface</a></li>
+<li><a href="#_um_login_service_interface">2.4.1. um-login-service Interface</a></li>
+<li><a href="#_web_interface">2.4.2. Web Interface</a></li>
+<li><a href="#_smtp_interface">2.4.3. SMTP Interface</a></li>
 </ul>
 </li>
 <li><a href="#_required_resources">2.5. Required Resources</a>
@@ -978,7 +980,7 @@ OGC 08-068r2,<br>
 <div class="sect3">
 <h4 id="_send_confirmation_email">2.1.2. Send confirmation Email</h4>
 <div class="paragraph">
-<p>This functionalitu allows you to send an email and notify the user that the account will be deleted. In addition, by clicking on the link in the email the user will confirm the action. This functionality is provided by <strong>custom_smtp</strong> and <strong>smtp_email</strong> scripts.</p>
+<p>This functionality allows you to send an email and notify the user that the account will be deleted. In addition, by clicking on the link in the email the user will confirm the action. This functionality is provided by <strong>custom_smtp</strong> and <strong>smtp_email</strong> scripts.</p>
 </div>
 <div class="paragraph">
 <p>The first script is dedicated to prepare both the url to proceed with the account removal and the html that will be in the body of the email.</p>
@@ -1067,6 +1069,64 @@ OGC 08-068r2,<br>
 </tr>
 </table>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use Case: Account Removal</p>
+</li>
+</ul>
+</div>
+<div id="img_userProfileUseCaseRemoval" class="imageblock text-center">
+<div class="content">
+<img src="./images/Use_Case_Removal.png" alt="Use Case Removal" width="85%">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Principal actor: User</p>
+</li>
+<li>
+<p>Preconditions:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user must be signed in to perform the action</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Postconditions:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user&#8217;s account will be removed</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Main successful scenario:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user logs in to the platform</p>
+</li>
+<li>
+<p>The user selects the option to remove account</p>
+</li>
+<li>
+<p>The user will receive a confirmation email</p>
+</li>
+<li>
+<p>When the user clicks on the url in the email will confirm the action of account removal</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_external_interfaces">2.4. External Interfaces</h3>
@@ -1093,9 +1153,28 @@ OGC 08-068r2,<br>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_authentication_authn_interface">2.4.1. Authentication (AuthN) Interface</h4>
+<h4 id="_um_login_service_interface">2.4.1. um-login-service Interface</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Identity Management Interface: The User Profile uses a System for Cross Domain Identity (SCIM) Interface through a .well-known URI that describes all standard endpoints provided by um-login-service building block.</p>
+</li>
+<li>
+<p>Authentication (AuthN) Interface: The User Profile uses an OpenID Connect interface through a .well-known URI that describes all standard endpoints provided by um-login-service building block.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_web_interface">2.4.2. Web Interface</h4>
 <div class="paragraph">
-<p>The User Profile uses an OpenID Connect interface through a .well-known URI that describes all standard endpoints</p>
+<p>A web service is made available for users to perform actions related to the building block, such as account removal.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_smtp_interface">2.4.3. SMTP Interface</h4>
+<div class="paragraph">
+<p>The User Profile building block uses SMTP client in order to implement all the functionality related to sending confirmation emails</p>
 </div>
 </div>
 </div>
@@ -1144,11 +1223,11 @@ OGC 08-068r2,<br>
 </div>
 </li>
 <li>
-<p>OIDC Compliant, extensible Relying Party</p>
+<p>SSO server&#8217;s "well-known" endpoints</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Passport.js (Link to Github)</p>
+<p>Python library: WellKnownHandler (<a href="https://pypi.org/project/WellKnownHandler/" class="bare">https://pypi.org/project/WellKnownHandler/</a>)</p>
 </li>
 </ul>
 </div>
@@ -1391,7 +1470,7 @@ OGC 08-068r2,<br>
 <div id="footer">
 <div id="footer-text">
 Version 0.1<br>
-Last updated 2020-05-21 11:39:02 UTC
+Last updated 2020-05-21 13:03:25 UTC
 </div>
 </div>
 </body>
