@@ -28,7 +28,7 @@ This functionality is provided by the *custom_oauth* script and uses the python 
 
 === Send confirmation Email
 
-This functionalitu allows you to send an email and notify the user that the account will be deleted. In addition, by clicking on the link in the email the user will confirm the action. This functionality is provided by *custom_smtp* and *smtp_email* scripts.
+This functionality allows you to send an email and notify the user that the account will be deleted. In addition, by clicking on the link in the email the user will confirm the action. This functionality is provided by *custom_smtp* and *smtp_email* scripts.
 
 The first script is dedicated to prepare both the url to proceed with the account removal and the html that will be in the body of the email.
 
@@ -71,6 +71,23 @@ This section contains:
 
 ================================
 
+* Use Case: Account Removal
+
+[#img_userProfileUseCaseRemoval,reftext='{figure-caption} {counter:figure-num}']
+image::Use_Case_Removal.png[width=85%,pdfwidth=85%,align="center"]
+
+** Principal actor: User
+** Preconditions:
+*** The user must be signed in to perform the action
+** Postconditions:
+*** The user's account will be removed
+** Main successful scenario:
+*** The user logs in to the platform
+*** The user selects the option to remove account
+*** The user will receive a confirmation email
+*** When the user clicks on the url in the email will confirm the action of account removal
+
+
 == External Interfaces
 
 [NOTE]
@@ -82,9 +99,18 @@ This section contains:
 
 ================================
 
-=== Authentication (AuthN) Interface
+=== um-login-service Interface
 
-The User Profile uses an OpenID Connect interface through a .well-known URI that describes all standard endpoints
+* Identity Management Interface: The User Profile uses a System for Cross Domain Identity (SCIM) Interface through a .well-known URI that describes all standard endpoints provided by um-login-service building block.
+* Authentication (AuthN) Interface: The User Profile uses an OpenID Connect interface through a .well-known URI that describes all standard endpoints provided by um-login-service building block.
+
+=== Web Interface
+
+A web service is made available for users to perform actions related to the building block, such as account removal.
+
+=== SMTP Interface
+
+The User Profile building block uses SMTP client in order to implement all the functionality related to sending confirmation emails
 
 == Required Resources
 
@@ -104,8 +130,8 @@ The following Open-Source Software is required to support the deployment and int
 
 * Authentication and Authorization Service
 ** oxAuth - Gluu Inc. [LINK to Github]
-* OIDC Compliant, extensible Relying Party
-** Passport.js (Link to Github)
+* SSO server's "well-known" endpoints
+** Python library: WellKnownHandler (https://pypi.org/project/WellKnownHandler/)
 * Email Service
 ** SMTP Client python library: smtplib (https://docs.python.org/3/library/smtplib.html)
 ** Email settings library: email (https://docs.python.org/3/library/email.html#module-email)
