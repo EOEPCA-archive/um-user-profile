@@ -110,7 +110,11 @@ A web service is made available for users to perform actions related to the buil
 
 === SMTP Interface
 
-The User Profile building block uses SMTP client in order to implement all the functionality related to sending confirmation emails
+The User Profile building block uses SMTP client in order to implement all the functionality related to sending confirmation emails.
+
+* How to configure the account for sending emails
+
+** If you want to select the email you want to use to send these emails you must update the Dockerfile, changing the values of the variables EMAIL_ADRESS for the account you want to use and EMAIL_PASSWORD for the account password. Note that the value for EMAIL_PASSWORD should be an app password to make it easy and avoid problems (https://support.google.com/accounts/answer/185833?hl=en)
 
 == Required Resources
 

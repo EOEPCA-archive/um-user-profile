@@ -17,28 +17,21 @@ When a breakdown is necessary, a general overview of the building block can be g
 
 ================================
 
-== Authentication and Authorization Service
+== um-login-service Service
 === Overview and Purpose
 === Software Reuse and Dependencies
 === Interfaces
 === Data
 === Applicable Resources
 
-== Administration Service
+== Web Service
 === Overview and Purpose
 === Software Reuse and Dependencies
 === Interfaces
 === Data
 === Applicable Resources
 
-== Back-End Service
-=== Overview and Purpose
-=== Software Reuse and Dependencies
-=== Interfaces
-=== Data
-=== Applicable Resources
-
-== Relying-Party Service
+== SMTP Service
 === Overview and Purpose
 === Software Reuse and Dependencies
 === Interfaces
