@@ -133,14 +133,14 @@ Project Link: [https://github.com/EOEPCA/um-user-profile](https://github.com/EOE
 - README.md is based on [this template](https://github.com/othneildrew/Best-README-Template) by [Othneil Drew](https://github.com/othneildrew).
 
 
-[contributors-shield]: https://img.shields.io/github/contributors/EOEPCA/um-user-profilesvg?style=flat-square
+[contributors-shield]: https://img.shields.io/github/contributors/EOEPCA/um-user-profile.svg?style=flat-square
 [contributors-url]: https://github.com/EOEPCA/um-user-profile/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/EOEPCA/um-user-profilesvg?style=flat-square
+[forks-shield]: https://img.shields.io/github/forks/EOEPCA/um-user-profile.svg?style=flat-square
 [forks-url]: https://github.com/EOEPCA/um-user-profile/network/members
-[stars-shield]: https://img.shields.io/github/stars/EOEPCA/um-user-profilesvg?style=flat-square
+[stars-shield]: https://img.shields.io/github/stars/EOEPCA/um-user-profile.svg?style=flat-square
 [stars-url]: https://github.com/EOEPCA/um-user-profile/stargazers
-[issues-shield]: https://img.shields.io/github/issues/EOEPCA/um-user-profilesvg?style=flat-square
+[issues-shield]: https://img.shields.io/github/issues/EOEPCA/um-user-profile.svg?style=flat-square
 [issues-url]: https://github.com/EOEPCA/um-user-profile/issues
-[license-shield]: https://img.shields.io/github/license/EOEPCA/um-user-profilesvg?style=flat-square
+[license-shield]: https://img.shields.io/github/license/EOEPCA/um-user-profile.svg?style=flat-square
 [license-url]: https://github.com/EOEPCA/um-user-profile/blob/master/LICENSE
-[build-shield]: https://www.travis-ci.com/EOEPCA/um-user-profilesvg?branch=master
+[build-shield]: https://www.travis-ci.com/EOEPCA/um-user-profile.svg?branch=master
