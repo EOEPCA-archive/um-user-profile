@@ -32,8 +32,6 @@
     <br />
     <a href="https://github.com/EOEPCA/um-user-profile"><strong>Explore the docs »</strong></a>
     <br />
-    <a href="https://github.com/EOEPCA/um-user-profile">View Demo</a>
-    ·
     <a href="https://github.com/EOEPCA/um-user-profile/issues">Report Bug</a>
     ·
     <a href="https://github.com/EOEPCA/um-user-profile/issues">Request Feature</a>
