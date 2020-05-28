@@ -28,7 +28,7 @@
   <h3 align="center">um-user-profile</h3>
 
   <p align="center">
-    Template for developing an EOEPCA Service
+    EOEPCA's User profile
     <br />
     <a href="https://github.com/EOEPCA/um-user-profile"><strong>Explore the docs »</strong></a>
     <br />
@@ -42,18 +42,12 @@
 
 ## Table of Contents
 
-- [Steps to use this template](#steps-to-use-this-template)
 - [Table of Contents](#table-of-contents)
-- [About The Project](#about-the-project)
   - [Built With](#built-with)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
-  - [Testing](#testing)
 - [Documentation](#documentation)
-- [Usage](#usage)
-  - [Running the template service](#running-the-template-service)
-  - [Upgrading Gradle Wrapper](#upgrading-gradle-wrapper)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -61,10 +55,6 @@
 - [Acknowledgements](#acknowledgements)
 
 <!-- ABOUT THE PROJECT -->
-
-## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
 
 ### Built With
 
@@ -110,14 +100,6 @@ cd template-service
 
 The component documentation can be found at https://eoepca.github.io/um-user-profile/.
 
-<!-- USAGE EXAMPLES -->
-
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
 <!-- ROADMAP -->
 
 ## Roadmap
@@ -144,7 +126,7 @@ Distributed under the Apache-2.0 License. See `LICENSE` for more information.
 
 ## Contact
 
-[EOEPCA mailbox](eoepca.systemteam@telespazio.com)
+EOEPCA mailbox - eoepca.systemteam@telespazio.com
 
 Project Link: [https://github.com/EOEPCA/um-user-profile](https://github.com/EOEPCA/um-user-profile)
 
