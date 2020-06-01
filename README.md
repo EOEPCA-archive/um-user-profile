@@ -30,7 +30,7 @@
   <p align="center">
     EOEPCA's User profile
     <br />
-    <a href="https://github.com/EOEPCA/um-user-profile"><strong>Explore the docs »</strong></a>
+    <a href="https://eoepca.github.io/um-user-profile/"><strong>Explore the docs »</strong></a>
     <br />
     <a href="https://github.com/EOEPCA/um-user-profile/issues">Report Bug</a>
     ·
