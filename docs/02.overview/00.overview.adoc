@@ -14,9 +14,9 @@ This section contains:
 
 In order to support the Billing Service, the User Profile building block allows to identify users (leaving a reference to their home IdP), to assign them Billing Identities, Service API keys, License keys and to record Terms and Conditions acceptance. It's a persistence service with interfaces that will be queried by other building blocks (License Manager, Billing Service, Policy Decision Point) and modified by both the License Manager and the Login Service (during creation of a new user profile or assignment of new Licenses).
 
-The figure below, identifies the main workflows on which the User Profile participates:
+The figure below, identifies the main workflows on which the User Profile participates, along with it's components:
 
-[[IMAGE]]
+TODO: Image
 
 Based on this workflows, the User Profile enables the following functionality aspects
 
@@ -52,13 +52,13 @@ This section contains:
 The User Profile, heavily relies on Free and Open Source Software that already implements the interfaces and functionality required. The following image depicts the Static Architecture of this Building Block.
 
 [#img_userProfileDiagram,reftext='{figure-caption} {counter:figure-num}']
-image::User_Profile.png[width=85%,pdfwidth=85%,align="center"]
+image::../images/User_Profile.png[width=85%,pdfwidth=85%,align="center"]
 
 * The Authentication and Authorization Service enables both OIDC and UMA flows for the whole Platform
 * The User Profile Portal with SCIM Implementation, allowing direct interaction with the End-User Back-End, in this case, the account removal
 * A connection to an SMTP Email server for sending confirmation emails, using at the moment a Google Account.
 
-The Section for the Building Block Design [REF] contains detailed descriptions and references to the Open Source components used in this Building Block.
+The Section for the Building Block Design <<Design>> contains detailed descriptions and references to the Open Source components used in this Building Block.
 
 == Use Cases
 
@@ -74,7 +74,7 @@ This section contains:
 * Use Case: Account Removal
 
 [#img_userProfileUseCaseRemoval,reftext='{figure-caption} {counter:figure-num}']
-image::Use_Case_Removal.png[width=85%,pdfwidth=85%,align="center"]
+image::../images/Use_Case_Removal.png[width=85%,pdfwidth=85%,align="center"]
 
 ** Principal actor: User
 ** Preconditions:
@@ -133,26 +133,11 @@ This section contains:
 The following Open-Source Software is required to support the deployment and integration of the Login Service:
 
 * Authentication and Authorization Service
-** oxAuth - Gluu Inc. [LINK to Github]
+** oxAuth - Gluu Inc. (https://github.com/GluuFederation/oxAuth)
 * SSO server's "well-known" endpoints
 ** Python library: WellKnownHandler (https://pypi.org/project/WellKnownHandler/)
 * Email Service
 ** SMTP Client python library: smtplib (https://docs.python.org/3/library/smtplib.html)
 ** Email settings library: email (https://docs.python.org/3/library/email.html#module-email)
 * Deployment, Configuration and Integration Tooling
-** Kubernetes secret and config Tooling (Link to Github)
-
-
-== Design Standards, Conventions and Procedures
-
-[NOTE]
-.Content Description
-================================
-This section contains:
-
-* Explanations on the UML Design notation and necessary naming conventions used throughout the document
-
-================================
-
-=== UML Design
-=== Naming Conventions
+** Kubernetes secret and config Tooling (https://github.com/kubernetes/kubernetes)

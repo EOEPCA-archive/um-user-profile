@@ -97,7 +97,7 @@ cd template-service
 
 ## Configuration
 
-The User Profile building block gets all its configuration from the file located under `config/config.json`.
+The User Profile building block gets all its configuration from the file located under `src/config/WEB_config.json`.
 The parameters that are accepted, and their meaning, are as follows:
 - **sso_url**: hostname or IP of the Auth Server.
 - **title**: Title that will be seen when navigating to the web interface
