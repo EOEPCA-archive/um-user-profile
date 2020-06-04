@@ -1,5 +1,5 @@
 = EOEPCA - {component-name}
-:component-name: <Template Service>
+:component-name: User Profile
 :component-github-name: um-user-profile
 
 EO Exploitation Platform Common Architecture (EOEPCA).
