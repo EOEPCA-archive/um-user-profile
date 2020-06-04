@@ -6,9 +6,14 @@ metadata:
     app: user-profile
 spec:
   ports:
-  - port: 5566
+  - port: 80
+    targetPort: 80
+    name: http-up
     protocol: TCP
-    name: user-profile
+  - port: 443
+    name: https-up
+    targetPort: 443
+    protocol: TCP
   selector:
     app: user-profile
 
@@ -33,9 +38,15 @@ spec:
             containers:
             - name: user-profile
               imagePullPolicy: Always
-              image: eoepca/um-user-profile:travis_25
+              image: eoepca/um-user-profile:latest
               ports:
-              - containerPort: 5566
+                - containerPort: 80
+                  name: http-up
+                - containerPort: 443
+                  name: https-up
+              envFrom:
+                - configMapRef:
+                    name: um-user-profile-config
             hostAliases:
             - ip: NGINX_IP
               hostnames:
