@@ -11,7 +11,8 @@ class OAuthClient():
         if use_env_var is False:
             self.scopes = self._get_valid_url_scopes(config["scopes"])
         else:
-            self.scopes = self._get_valid_url_scopes(config["scopes"].strip('][').split(', '))
+            config["scopes"] = config["scopes"].split(" ")
+            self.scopes = self._get_valid_url_scopes(config["scopes"])
 
         sso_url = self._get_valid_https_url(config["sso_url"])
         self.wkhandler = wkh.WellKnownHandler(sso_url,secure=not config["debug_mode"]) # Force HTTPS if not debug mode

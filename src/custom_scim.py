@@ -9,8 +9,10 @@ class SCIMClient():
             self.protected_attrs = config["protected_attributes"]
             self.blacklist_attrs = config["blacklist_attributes"]
         else:
-            self.protected_attrs = config["protected_attributes"].strip('][').split(', ')
-            self.blacklist_attrs = config["blacklist_attributes"].strip('][').split(', ')
+            config["protected_attributes"] = config["protected_attributes"].split(" ")
+            config["blacklist_attributes"] = config["blacklist_attributes"].split(" ")
+            self.protected_attrs = config["protected_attributes"]
+            self.blacklist_attrs = config["blacklist_attributes"]
 
         sso_url = self._get_valid_https_url(config["sso_url"])
         self.separator = config["separator_ui_attributes"]
