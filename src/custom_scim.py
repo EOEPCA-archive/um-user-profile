@@ -1,8 +1,16 @@
 #!/usr/bin/python3
 from eoepca_scim import *
+import logging
 import collections
 
-class SCIMClient():
+class Singleton(type):
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+class SCIMClient(metaclass=Singleton):
 
     def __init__(self, config, use_env_vars):
         if use_env_vars is False:
@@ -17,14 +25,21 @@ class SCIMClient():
         sso_url = self._get_valid_https_url(config["sso_url"])
         self.separator = config["separator_ui_attributes"]
 
-        # auto-create client in SCIM
-        self.scim_client = EOEPCA_Scim(sso_url)
-        grantTypes=["client_credentials", "urn:ietf:params:oauth:grant-type:uma-ticket"]
-        redirectURIs=["https://eoepca-dev.deimos-space.com/login"]
-        logoutURI="https://eoepca-dev.deimos-space.com/logout"
-        responseTypes=[]
-        scopes=["openid", "oxd", "permission"]
-        self.scim_client.registerClient("TestClient", grantTypes, redirectURIs, logoutURI, responseTypes, scopes)
+        if use_env_vars is False:
+            # auto-create client in SCIM
+            self.scim_client = EOEPCA_Scim(sso_url)
+            grantTypes=["client_credentials", "urn:ietf:params:oauth:grant-type:uma-ticket"]
+            redirectURIs=["https://eoepca-dev.deimos-space.com/login"]
+            logoutURI="https://eoepca-dev.deimos-space.com/logout"
+            responseTypes=[]
+            scopes=["openid", "oxd", "permission"]
+            token_endpoint_auth_method=ENDPOINT_AUTH_CLIENT_BASIC
+            self.scim_client.registerClient("TestClient", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method)
+        else:
+            self.client_id_scim = config["client_id_scim"]
+            self.client_secret_scim = config["client_secret_scim"]
+            self.scim_client = EOEPCA_Scim(sso_url, self.client_id_scim, self.client_secret_scim)
+        logging.getLogger().setLevel(logging.INFO)
 
     def _get_valid_https_url(self, url):
         if "http" not in url:
@@ -45,7 +60,6 @@ class SCIMClient():
                 return "Error while updating "+str(k)+" -> "+str(res), ""
 
         return "", ""
-
 
     def getAttributes(self, user_id):
         err = ""
@@ -88,6 +102,9 @@ class SCIMClient():
                 delete.append(k)
             if isinstance(v, dict):
                 data[k] = self._purge_blacklist(v)
+            if isinstance(v, list):
+                if isinstance(v[0], dict):
+                    data[k] = self._purge_blacklist(v[0])
 
         for k in delete: del data[k]
 
@@ -103,10 +120,10 @@ class SCIMClient():
                 items.append((new_key, v))
         return dict(items)
 
-    def deleteUser(self,userID):
+    def deleteUser(self,email):
         
         try:
-            self.scim_client.deleteUser(userID)
+            self.scim_client.deleteUser(email)
         except Exception as e:
             print(str(e))
             err = "Something went wrong while deleting user: "+str(e)

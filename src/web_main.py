@@ -14,6 +14,8 @@ env_vars = [
 "UP_SCOPES",
 "UP_CLIENT_ID",
 "UP_CLIENT_SECRET",
+"UP_CLIENT_ID_SCIM",
+"UP_CLIENT_SECRET_SCIM",
 "UP_REDIRECT_URI",
 "UP_POST_LOGOUT_REDIRECT_URI",
 "UP_BASE_URI",
@@ -86,6 +88,8 @@ if use_env_var is False:
 else:
     os.environ["UP_CLIENT_ID"] = config["client_id"]
     os.environ["UP_CLIENT_SECRET"] = config["client_secret"]
+    os.environ["UP_CLIENT_ID_SCIM"] = config["client_id_scim"]
+    os.environ["UP_CLIENT_SECRET_SCIM"] = config["client_secret_scim"]
 
 auth_client = OAuthClient(config, use_env_var)
 
@@ -242,7 +246,7 @@ def confirmation(token):
     try:
         email = smtp_client.getConfirmation(token)
         #user ID as parameter in order to delete it:
-        scim_client.deleteUser(session.get('logged_user'))
+        scim_client.deleteUser(email)
         #here to delete wiht scim client the user with the email
     except:
         print('The confirmation link is invalid or has expired.', 'error')
