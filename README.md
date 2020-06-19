@@ -1,7 +1,7 @@
 <!--
 ***
 *** To avoid retyping too much info. Do a search and replace for the following:
-*** um-service-template
+*** um-user-profile
 -->
 
 <!-- PROJECT SHIELDS -->
@@ -21,39 +21,32 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/EOEPCA/um-service-template">
+  <a href="https://github.com/EOEPCA/um-user-profile">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">um-service-template</h3>
+  <h3 align="center">um-user-profile</h3>
 
   <p align="center">
-    Template for developing an EOEPCA Service
+    EOEPCA's User profile
     <br />
-    <a href="https://github.com/EOEPCA/um-service-template"><strong>Explore the docs »</strong></a>
+    <a href="https://eoepca.github.io/um-user-profile/"><strong>Explore the docs »</strong></a>
     <br />
-    <a href="https://github.com/EOEPCA/um-service-template">View Demo</a>
+    <a href="https://github.com/EOEPCA/um-user-profile/issues">Report Bug</a>
     ·
-    <a href="https://github.com/EOEPCA/um-service-template/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/EOEPCA/um-service-template/issues">Request Feature</a>
+    <a href="https://github.com/EOEPCA/um-user-profile/issues">Request Feature</a>
   </p>
 </p>
 
 ## Table of Contents
 
-- [Steps to use this template](#steps-to-use-this-template)
 - [Table of Contents](#table-of-contents)
-- [About The Project](#about-the-project)
   - [Built With](#built-with)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
-  - [Testing](#testing)
+- [Configuration](#configuration)
 - [Documentation](#documentation)
-- [Usage](#usage)
-  - [Running the template service](#running-the-template-service)
-  - [Upgrading Gradle Wrapper](#upgrading-gradle-wrapper)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -61,10 +54,6 @@
 - [Acknowledgements](#acknowledgements)
 
 <!-- ABOUT THE PROJECT -->
-
-## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
 
 ### Built With
 
@@ -97,7 +86,7 @@ vagrant ssh
 3. Clone the repo
 
 ```sh
-git clone https://github.com/EOEPCA/um-service-templategit
+git clone https://github.com/EOEPCA/um-user-profile.git
 ```
 
 4. Change local directory
@@ -106,23 +95,44 @@ git clone https://github.com/EOEPCA/um-service-templategit
 cd template-service
 ```
 
+## Configuration
+
+The User Profile building block gets all its configuration from the file located under `src/config/WEB_config.json`.
+The parameters that are accepted, and their meaning, are as follows:
+- **sso_url**: hostname or IP of the Auth Server.
+- **title**: Title that will be seen when navigating to the web interface
+- **scopes**: Scopes used for the internal OAUTH client. Currently, the required are: "openid", "email" and "user_name"
+- **client_id**: Client ID used for the internal OAUTH client.
+- **client_secret**: Client secret for the corresponding client_id.
+- **redirect_uri**: Redirect URI configured in the client, which should point to this service's callback URL.
+- **post_logout_redirect_uri**: Redirect URI for post logout of a user.
+- **base_uri**: Base URI for all requests against the web server
+- **oauth_callback_path**: Callback path for the end of a succesful oauth flow.
+- **logout_endpoint**: Endpoint for the logout of a currently logged in user.
+- **service_host**: Host to listen on (localhost, 0.0.0.0, etc..)
+- **service_port**: Port to listen on for the web server
+- **protected_attributes**: Attributes that the user can see about their profiles, but not edit
+- **blacklist_attributes**: Attributes that the user can not see or edit.
+- **separator_ui_attributes**: Separator used for multi-level attributes
+- **color_web_background**: Color used for the background of the web, in HEX.
+- **color_web_header**: Color used for the header of the web, in HEX.
+- **logo_alt_name**: Alternative name for logo of the web
+- **logo_image_path**: Path to logo of the web
+- **color_header_table**: Color used for the header of any table
+- **color_text_header_table**: Color used for the content of any table
+- **color_button_modify**: Color used for the modify button
+- **use_threads**: Toggle threads for requests. Enabling this in production is recommended
+- **debug_mode**: Toggle debug mode, which enables a debug web interface, more errors and logs.
+
 ## Documentation
 
-The component documentation can be found at https://eoepca.github.io/um-service-template/.
-
-<!-- USAGE EXAMPLES -->
-
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+The component documentation can be found at https://eoepca.github.io/um-user-profile/.
 
 <!-- ROADMAP -->
 
 ## Roadmap
 
-See the [open issues](https://github.com/EOEPCA/um-service-template/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/EOEPCA/um-user-profile/issues) for a list of proposed features (and known issues).
 
 <!-- CONTRIBUTING -->
 
@@ -144,23 +154,23 @@ Distributed under the Apache-2.0 License. See `LICENSE` for more information.
 
 ## Contact
 
-[EOEPCA mailbox](eoepca.systemteam@telespazio.com)
+EOEPCA mailbox - eoepca.systemteam@telespazio.com
 
-Project Link: [https://github.com/EOEPCA/um-service-template](https://github.com/EOEPCA/um-service-template)
+Project Link: [https://github.com/EOEPCA/um-user-profile](https://github.com/EOEPCA/um-user-profile)
 
 ## Acknowledgements
 
 - README.md is based on [this template](https://github.com/othneildrew/Best-README-Template) by [Othneil Drew](https://github.com/othneildrew).
 
 
-[contributors-shield]: https://img.shields.io/github/contributors/EOEPCA/um-service-templatesvg?style=flat-square
-[contributors-url]: https://github.com/EOEPCA/um-service-template/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/EOEPCA/um-service-templatesvg?style=flat-square
-[forks-url]: https://github.com/EOEPCA/um-service-template/network/members
-[stars-shield]: https://img.shields.io/github/stars/EOEPCA/um-service-templatesvg?style=flat-square
-[stars-url]: https://github.com/EOEPCA/um-service-template/stargazers
-[issues-shield]: https://img.shields.io/github/issues/EOEPCA/um-service-templatesvg?style=flat-square
-[issues-url]: https://github.com/EOEPCA/um-service-template/issues
-[license-shield]: https://img.shields.io/github/license/EOEPCA/um-service-templatesvg?style=flat-square
-[license-url]: https://github.com/EOEPCA/um-service-template/blob/master/LICENSE
-[build-shield]: https://www.travis-ci.com/EOEPCA/um-service-templatesvg?branch=master
+[contributors-shield]: https://img.shields.io/github/contributors/EOEPCA/um-user-profile.svg?style=flat-square
+[contributors-url]: https://github.com/EOEPCA/um-user-profile/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/EOEPCA/um-user-profile.svg?style=flat-square
+[forks-url]: https://github.com/EOEPCA/um-user-profile/network/members
+[stars-shield]: https://img.shields.io/github/stars/EOEPCA/um-user-profile.svg?style=flat-square
+[stars-url]: https://github.com/EOEPCA/um-user-profile/stargazers
+[issues-shield]: https://img.shields.io/github/issues/EOEPCA/um-user-profile.svg?style=flat-square
+[issues-url]: https://github.com/EOEPCA/um-user-profile/issues
+[license-shield]: https://img.shields.io/github/license/EOEPCA/um-user-profile.svg?style=flat-square
+[license-url]: https://github.com/EOEPCA/um-user-profile/blob/master/LICENSE
+[build-shield]: https://www.travis-ci.com/EOEPCA/um-user-profile.svg?branch=master
