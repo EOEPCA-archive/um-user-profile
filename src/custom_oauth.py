@@ -7,12 +7,16 @@ import generic
 
 class OAuthClient():
 
-    def __init__(self, config):
+    def __init__(self, config,use_env_var):
+        if use_env_var is False:
+            self.scopes = self._get_valid_url_scopes(config["scopes"])
+        else:
+            config["scopes"] = config["scopes"].split(" ")
+            self.scopes = self._get_valid_url_scopes(config["scopes"])
+
         sso_url = self._get_valid_https_url(config["sso_url"])
         self.wkhandler = wkh.WellKnownHandler(sso_url,secure=not config["debug_mode"]) # Force HTTPS if not debug mode
-
         self.client_id = self._get_valid_url_client_id(config["client_id"])
-        self.scopes = self._get_valid_url_scopes(config["scopes"])
         self.redirect_uri = config["redirect_uri"]
         self.client_secret = config["client_secret"]
         self.post_logout_redirect_uri = config["post_logout_redirect_uri"]
