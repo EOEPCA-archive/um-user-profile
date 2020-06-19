@@ -30,7 +30,7 @@
   <p align="center">
     EOEPCA's User profile
     <br />
-    <a href="https://github.com/EOEPCA/um-user-profile"><strong>Explore the docs »</strong></a>
+    <a href="https://eoepca.github.io/um-user-profile/"><strong>Explore the docs »</strong></a>
     <br />
     <a href="https://github.com/EOEPCA/um-user-profile/issues">Report Bug</a>
     ·
@@ -45,6 +45,7 @@
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
+- [Configuration](#configuration)
 - [Documentation](#documentation)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
@@ -93,6 +94,35 @@ git clone https://github.com/EOEPCA/um-user-profile.git
 ```sh
 cd template-service
 ```
+
+## Configuration
+
+The User Profile building block gets all its configuration from the file located under `src/config/WEB_config.json`.
+The parameters that are accepted, and their meaning, are as follows:
+- **sso_url**: hostname or IP of the Auth Server.
+- **title**: Title that will be seen when navigating to the web interface
+- **scopes**: Scopes used for the internal OAUTH client. Currently, the required are: "openid", "email" and "user_name"
+- **client_id**: Client ID used for the internal OAUTH client.
+- **client_secret**: Client secret for the corresponding client_id.
+- **redirect_uri**: Redirect URI configured in the client, which should point to this service's callback URL.
+- **post_logout_redirect_uri**: Redirect URI for post logout of a user.
+- **base_uri**: Base URI for all requests against the web server
+- **oauth_callback_path**: Callback path for the end of a succesful oauth flow.
+- **logout_endpoint**: Endpoint for the logout of a currently logged in user.
+- **service_host**: Host to listen on (localhost, 0.0.0.0, etc..)
+- **service_port**: Port to listen on for the web server
+- **protected_attributes**: Attributes that the user can see about their profiles, but not edit
+- **blacklist_attributes**: Attributes that the user can not see or edit.
+- **separator_ui_attributes**: Separator used for multi-level attributes
+- **color_web_background**: Color used for the background of the web, in HEX.
+- **color_web_header**: Color used for the header of the web, in HEX.
+- **logo_alt_name**: Alternative name for logo of the web
+- **logo_image_path**: Path to logo of the web
+- **color_header_table**: Color used for the header of any table
+- **color_text_header_table**: Color used for the content of any table
+- **color_button_modify**: Color used for the modify button
+- **use_threads**: Toggle threads for requests. Enabling this in production is recommended
+- **debug_mode**: Toggle debug mode, which enables a debug web interface, more errors and logs.
 
 ## Documentation
 

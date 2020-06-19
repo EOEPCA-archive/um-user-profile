@@ -4,7 +4,7 @@
 #GLUU_SECRET_ADAPTER="kubernetes"
 #ADMIN_PW="admin_Abcd1234#"
 #EMAIL="support@gluu.org"
-DOMAIN="demoexample.gluu.org"
+DOMAIN="eoepca-dev.deimos-space.com"
 ##ORG_NAME="Deimos"
 #COUNTRY_CODE="PT"
 #STATE="NA"
@@ -13,15 +13,11 @@ DOMAIN="demoexample.gluu.org"
 #LDAP_TYPE="opendj"
 
 # Install minikube and kubectl
-K8S_VER=v1.12.0
-TF_VER=0.12.16
+K8S_VER=v1.13.0
+TF_VER=0.12.25
 MINIKUBE_VER=v1.9.1
 
-#eval $(minikube docker-env)
-
-#cd ../
-#docker build -t eoepca/um-user-profile:travis_${TRAVIS_BUILD_NUMBER:-0} .
-#cd travis
+kubectl create cm um-user-profile-config --from-env-file=../src/config/um-user-profile-env-vars
 
 # Apply user-profile
 echo "Applying user-profile"

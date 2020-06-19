@@ -6,11 +6,57 @@ from custom_oauth import OAuthClient
 from custom_scim import SCIMClient
 from custom_smtp import SMTPClient
 import generic
+import os
+
+env_vars = [
+"UP_SSO_URL",
+"UP_TITLE",
+"UP_SCOPES",
+"UP_CLIENT_ID",
+"UP_CLIENT_SECRET",
+"UP_CLIENT_ID_SCIM",
+"UP_CLIENT_SECRET_SCIM",
+"UP_REDIRECT_URI",
+"UP_POST_LOGOUT_REDIRECT_URI",
+"UP_BASE_URI",
+"UP_OAUTH_CALLBACK_PATH",
+"UP_LOGOUT_ENDPOINT",
+"UP_SERVICE_HOST",
+"UP_SERVICE_PORT",
+"UP_PROTECTED_ATTRIBUTES",
+"UP_BLACKLIST_ATTRIBUTES",
+"UP_SEPARATOR_UI_ATTRIBUTES",
+"UP_COLOR_WEB_BACKGROUND",
+"UP_COLOR_WEB_HEADER",
+"UP_LOGO_ALT_NAME",
+"UP_LOGO_IMAGE_PATH",
+"UP_COLOR_HEADER_TABLE",
+"UP_COLOR_TEXT_HEADER_TABLE",
+"UP_COLOR_BUTTON_MODIFY",
+"UP_USE_THREADS",
+"UP_DEBUG_MODE"]
+
+use_env_var = True
+
+for env_var in env_vars:
+    if env_var not in os.environ:
+        use_env_var = False
 
 config = {}
 # setup config
-with open("config/WEB_config.json") as j:
-    config = json.load(j)
+if use_env_var is False:
+    with open("config/WEB_config.json") as j:
+        config = json.load(j)
+else:
+    for env_var in env_vars:
+        env_var_config = env_var.replace('UP_', '')
+
+        if "true" in os.environ[env_var].replace('"', ''):
+            config[env_var_config.lower()] = True
+        elif "false" in os.environ[env_var].replace('"', ''):
+            config[env_var_config.lower()] = False
+        else:
+            config[env_var_config.lower()] = os.environ[env_var].replace('"', '')
 
 # We need to pass these on every render, and they are not going to change
 g_background_color = config["color_web_background"]
@@ -23,20 +69,29 @@ g_button_modify_color = config["color_button_modify"]
 g_base_uri = config["base_uri"]
 g_logout_endpoint = config["logout_endpoint"] or "/logout"
 g_separator = config["separator_ui_attributes"] or "->"
+g_oauth_callback_path = config["oauth_callback_path"]
+g_title = config["title"]
 
 # Launch flask
 app = Flask(__name__)
 app.secret_key = generic.randomString()
 
 # Generate internal clients
-scim_client = SCIMClient(config)
+scim_client = SCIMClient(config,use_env_var)
 smtp_client = SMTPClient(config,app.secret_key)
 _user_mail = ''
-# Save new client_id and secret config if any
-with open("config/WEB_config.json", "w") as f:
-    json.dump(config, f)
 
-auth_client = OAuthClient(config)
+# Save new client_id and secret config if any
+if use_env_var is False:
+    with open("config/WEB_config.json", "w") as f:
+        json.dump(config, f)
+else:
+    os.environ["UP_CLIENT_ID"] = config["client_id"]
+    os.environ["UP_CLIENT_SECRET"] = config["client_secret"]
+    os.environ["UP_CLIENT_ID_SCIM"] = config["client_id_scim"]
+    os.environ["UP_CLIENT_SECRET_SCIM"] = config["client_secret_scim"]
+
+auth_client = OAuthClient(config, use_env_var)
 
 def refresh_session(refresh_token):
     print("Refreshing session")
@@ -51,7 +106,7 @@ def refresh_session(refresh_token):
     
     return err, code
 
-@app.route(g_base_uri+config["oauth_callback_path"])
+@app.route(g_base_uri+g_oauth_callback_path)
 def oauth_callback():
     code = request.args.get('code')
     try:
@@ -91,7 +146,7 @@ def home():
         refresh_session(refresh_token)
 
     return render_template("home.html",
-    title = config["title"],
+    title = g_title,
     username = session.get('logged_user'),
     logged_in = logged_in,
     color_web_background = g_background_color,
@@ -153,7 +208,7 @@ def profile_management():
     data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
 
     return render_template("profile_management.html",
-        title = config["title"],
+        title = g_title,
         username = session.get('logged_user'),
         logged_in = logged_in,
         color_web_background = g_background_color,
@@ -176,7 +231,7 @@ def confirmation_mail():
     token = session.get('access_token')
     logged_in = session.get('logged_in')
     return render_template("confirmation_mail.html",
-        title = config["title"],
+        title = g_title,
         username = session.get('logged_user'),
         logged_in = logged_in,
         color_web_background = g_background_color,
@@ -191,13 +246,13 @@ def confirmation(token):
     try:
         email = smtp_client.getConfirmation(token)
         #user ID as parameter in order to delete it:
-        scim_client.deleteUser(session.get('logged_user'))
+        scim_client.deleteUser(email)
         #here to delete wiht scim client the user with the email
     except:
         print('The confirmation link is invalid or has expired.', 'error')
 
     return render_template("confirmation_removal.html",
-        title = config["title"],
+        title = g_title,
         color_web_background = g_background_color,
         color_web_header = g_header_color,
         logo_alt_name = g_logo_alt,
@@ -219,7 +274,7 @@ def profile_removal():
     if logged_in is True and token:
         #data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
         return render_template("profile_removal.html",
-        title = config["title"],
+        title = g_title,
         username = session.get('logged_user'),
         logged_in = logged_in,
         color_web_background = g_background_color,
@@ -235,6 +290,6 @@ if __name__ == "__main__":
     app.run(
         debug=config["debug_mode"],
         threaded=config["use_threads"],
-        port=config["service_port"],
+        port=int(config["service_port"]),
         host=config["service_host"]
     )

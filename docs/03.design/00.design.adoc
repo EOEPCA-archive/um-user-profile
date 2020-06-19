@@ -16,24 +16,110 @@ This section contains:
 When a breakdown is necessary, a general overview of the building block can be given. On the contrary, no breakdown indicates a single component development with the same expected sections.
 
 ================================
+== General UML design
 
-== um-login-service Service
-=== Overview and Purpose
-=== Software Reuse and Dependencies
-=== Interfaces
-=== Data
-=== Applicable Resources
+image::../images/User-profile.png[top=5%, align=center, pdfwidth=6.5in]
 
 == Web Service
 === Overview and Purpose
+The web service is the user interface for all other components on this module.
+
+This same web service holds an interface for user attributes' edition and profile removal for a user.
+
 === Software Reuse and Dependencies
+
+All requirements for the executing of the web service are found under src/requirements.txt, and expect Python 3.6.9 or greater to work.
+
+The most important are:
+
+* **EOEPCA-SCIM**: Used to auto-register itself as a client to the Auth. Server upon startup
+* **WellKnownHandler**: Used to dynamically check the configuration of the Authorization Server on each execution. For example, it can get the needed endpoints for any API the Web Service needs, like the SCIM endpoints.
+* **Flask**: External to EOEPCA's project, this library allows the Web Service to handle HTTP requests, to act as a web server.
+
 === Interfaces
+
+==== Oauth Callback
+A callback for all oauth actions (login/logout), configurable via the `WEB_confg.json` file.
+This endpoint manages the information given by the auth server, returned from the Login Service, and allows users to log into the app through the SSO's sessions.
+
+==== Email Confirmation
+`<base_uri>+/confirmation_mail`
+
+A callback endpoint for all confirmation emails. It recieves a code generated for the email, and verifies the action that the user wanted to take.
+
+Currently it only handles account removal, but this can be expanded in the future since the token checking procedure is very generic.
+
 === Data
+==== Configuration
+
+The Web service gets all its configuration from the file located under `src/config/WEB_config.json`.
+
+The parameters that are accepted, and their meaning, are as follows:
+
+- **sso_url**: hostname or IP of the Auth Server.
+- **title**: Title that will be seen when navigating to the web interface
+- **scopes**: Scopes used for the internal OAUTH client. Currently, the required are: "openid", "email" and "user_name"
+- **client_id**: Client ID used for the internal OAUTH client.
+- **client_secret**: Client secret for the corresponding client_id.
+- **redirect_uri**: Redirect URI configured in the client, which should point to this service's callback URL.
+- **post_logout_redirect_uri**: Redirect URI for post logout of a user.
+- **base_uri**: Base URI for all requests against the web server
+- **oauth_callback_path**: Callback path for the end of a succesful oauth flow.
+- **logout_endpoint**: Endpoint for the logout of a currently logged in user.
+- **service_host**: Host to listen on (localhost, 0.0.0.0, etc..)
+- **service_port**: Port to listen on for the web server
+- **protected_attributes**: Attributes that the user can see about their profiles, but not edit
+- **blacklist_attributes**: Attributes that the user can not see or edit.
+- **separator_ui_attributes**: Separator used for multi-level attributes
+- **color_web_background**: Color used for the background of the web, in HEX.
+- **color_web_header**: Color used for the header of the web, in HEX.
+- **logo_alt_name**: Alternative name for logo of the web
+- **logo_image_path**: Path to logo of the web
+- **color_header_table**: Color used for the header of any table
+- **color_text_header_table**: Color used for the content of any table
+- **color_button_modify**: Color used for the modify button
+- **use_threads**: Toggle threads for requests. Enabling this in production is recommended
+- **debug_mode**: Toggle debug mode, which enables a debug web interface, more errors and logs.
+
+==== Data flow TODO
+
+
 === Applicable Resources
 
-== SMTP Service
+* EOEPCA's SCIM Client - https://github.com/EOEPCA/um-common-scim-client
+* EOEPCA's Well Known Handler - https://github.com/EOEPCA/well-known-handler
+* Flask - https://github.com/pallets/flask
+
+== SMTP Client
 === Overview and Purpose
-=== Software Reuse and Dependencies
+
+The SMTP Client incorporated with this module serves as a basic mean of sending emails to the user. Currently, the only email configured to be sent is the registration confirmation, but this can be expanded in the future.
+
+=== Software Reuse and Dependencies 
+
+* **smtplib + email**: Basic python libraries which provide a communication layer to an SMTP server
+
 === Interfaces
+
+No interfaces are provided for this component, since it's integrated as part of the code of the web, as a python client.
+
 === Data
-=== Applicable Resources
+==== Configuration
+The following configuration is extracted from ENV variables upon start:
+
+- **EMAIL_ADRESS**: Email used to send the email
+- **EMAIL_PASSWORD**: Password for the respective email address.
+
+The following are constants hardcoded in code, but easily changable, and will be variables in the future:
+
+- **host**: SMTP server to comunicate to. Default is 'smtp.gmail.com'
+- **port**: SMTP port to connect to. Default is '465'
+
+Additionally, the client will work with the system's trusted CA certificates, in order to provide certification validation and all other SSL-related capabilites.
+
+==== Data flow
+
+The SMTP Client doesn't use any data supplied by the user, and thus no data flow is needed. Everything it handles is composed of random tokens, which it sends to the user's email (obtained during login).
+
+=== Applicable Resources 
+* smtplib - https://docs.python.org/3/library/smtplib.html
