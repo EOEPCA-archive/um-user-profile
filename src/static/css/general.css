@@ -1,0 +1,85 @@
+#button_delete {
+	border: 1px solid #F12D37;
+	color: #F12D37;
+}
+
+#button_delete:hover {
+	color: white;
+	background-color: #F12D37;
+}
+
+#select_client_id {
+	width: 35%;
+    padding: 5px 20px;
+    border: 1px solid black;
+    border-radius: 3px;
+    background-color: white;
+    outline: none;
+    margin-left: 10px;
+}
+
+.div_label {
+	display: inline-block;
+	width: 115px;
+	text-align: left;
+	margin-bottom: 10px;
+}
+
+.label_general_entry {
+	font-weight: bold;
+}
+
+.header_table {
+    text-align: center;
+}
+
+.column_header {
+	padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.input_table {
+    border: 1px solid black;
+    border-radius: 3px;
+    background-color: white;
+    outline: none;
+}
+
+td {
+    margin-left: 50%;
+    margin-right: 5%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+#custom_table tr {
+	color: black;
+}
+
+#custom_table tbody tr:nth-child(odd){
+  background-color: whitesmoke;
+}
+
+.buttons_table {
+	padding: 5px 5px;
+    border-radius: 3px;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+.container_checkboxes {
+	column-count: 3;
+	margin-top: 5px;
+}
+
+.input_data {
+	width: 25%;
+    padding: 5px 5px;
+    border: 1px solid black;
+    border-radius: 3px;
+    background-color: white;
+    outline: none;
+}
