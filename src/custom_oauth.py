@@ -32,7 +32,7 @@ class OAuthClient(metaclass=Singleton):
         logoutURI="http://"+config["sso_url"]+"/web_ui"
         responseTypes=["code", "token", "id_token"]
         scopes=["openid", "user_name", "permission", "email"]
-        sectorIdentifier="TestSectorIdentifier"
+        sectorIdentifier="https://"+config["sso_url"]+"/oxauth/sectoridentifier/9b473868-fa96-4fd1-a662-76e3663c9726"
         token_endpoint_auth_method=ENDPOINT_AUTH_CLIENT_POST
         scim_client2.registerClient("UserClient", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method, sectorIdentifier=sectorIdentifier)
 
