@@ -12,10 +12,6 @@ env_vars = [
 "UP_SSO_URL",
 "UP_TITLE",
 "UP_SCOPES",
-"UP_CLIENT_ID",
-"UP_CLIENT_SECRET",
-"UP_CLIENT_ID_SCIM",
-"UP_CLIENT_SECRET_SCIM",
 "UP_REDIRECT_URI",
 "UP_POST_LOGOUT_REDIRECT_URI",
 "UP_BASE_URI",
@@ -86,10 +82,11 @@ if use_env_var is False:
     with open("config/WEB_config.json", "w") as f:
         json.dump(config, f)
 else:
-    os.environ["UP_CLIENT_ID"] = config["client_id"]
-    os.environ["UP_CLIENT_SECRET"] = config["client_secret"]
-    os.environ["UP_CLIENT_ID_SCIM"] = config["client_id_scim"]
-    os.environ["UP_CLIENT_SECRET_SCIM"] = config["client_secret_scim"]
+   # os.environ["UP_CLIENT_ID"] = config["client_id"]
+   # os.environ["UP_CLIENT_SECRET"] = config["client_secret"]
+   # os.environ["UP_CLIENT_ID_SCIM"] = config["client_id_scim"]
+   # os.environ["UP_CLIENT_SECRET_SCIM"] = config["client_secret_scim"]
+   pass
 
 auth_client = OAuthClient(config, use_env_var)
 

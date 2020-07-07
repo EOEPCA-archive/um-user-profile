@@ -25,20 +25,15 @@ class SCIMClient(metaclass=Singleton):
         sso_url = self._get_valid_https_url(config["sso_url"])
         self.separator = config["separator_ui_attributes"]
 
-        if use_env_vars is False:
-            # auto-create client in SCIM
-            self.scim_client = EOEPCA_Scim(sso_url)
-            grantTypes=["client_credentials", "urn:ietf:params:oauth:grant-type:uma-ticket"]
-            redirectURIs=["https://eoepca-dev.deimos-space.com/login"]
-            logoutURI="https://eoepca-dev.deimos-space.com/logout"
-            responseTypes=[]
-            scopes=["openid", "oxd", "permission"]
-            token_endpoint_auth_method=ENDPOINT_AUTH_CLIENT_BASIC
-            self.scim_client.registerClient("TestClient", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method)
-        else:
-            self.client_id_scim = config["client_id_scim"]
-            self.client_secret_scim = config["client_secret_scim"]
-            self.scim_client = EOEPCA_Scim(sso_url, self.client_id_scim, self.client_secret_scim)
+        # auto-create client in SCIM
+        self.scim_client = EOEPCA_Scim(sso_url)
+        grantTypes=["client_credentials", "urn:ietf:params:oauth:grant-type:uma-ticket"]
+        redirectURIs=["https://"+config["sso_url"]+"/login"]
+        logoutURI="https://"+config["sso_url"]+"/logout"
+        responseTypes=[]
+        scopes=["openid", "oxd", "permission"]
+        token_endpoint_auth_method=ENDPOINT_AUTH_CLIENT_BASIC
+        self.scim_client.registerClient("SCIMClient", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method)
         logging.getLogger().setLevel(logging.INFO)
 
     def _get_valid_https_url(self, url):
