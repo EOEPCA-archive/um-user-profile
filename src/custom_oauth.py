@@ -1,12 +1,21 @@
 #!/usr/bin/python3
 import requests
 import json
+from eoepca_scim import *
+import logging
 import WellKnownHandler as wkh
 
 import generic
 
-class OAuthClient():
 
+class Singleton(type):
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+class OAuthClient(metaclass=Singleton):
     def __init__(self, config,use_env_var):
         if use_env_var is False:
             self.scopes = self._get_valid_url_scopes(config["scopes"])
@@ -16,9 +25,20 @@ class OAuthClient():
 
         sso_url = self._get_valid_https_url(config["sso_url"])
         self.wkhandler = wkh.WellKnownHandler(sso_url,secure=not config["debug_mode"]) # Force HTTPS if not debug mode
-        self.client_id = self._get_valid_url_client_id(config["client_id"])
+
+        scim_client2 = EOEPCA_Scim(sso_url)
+        grantTypes=["client_credentials", "urn:ietf:params:oauth:grant-type:uma-ticket", "authorization_code", "refresh_token", "implicit", "password"]
+        redirectURIs=["https://"+config["sso_url"]+"/web_ui/oauth/callback"]
+        logoutURI="http://"+config["sso_url"]+"/web_ui"
+        responseTypes=["code", "token", "id_token"]
+        scopes=["openid", "user_name", "permission", "email"]
+        sectorIdentifier="https://"+config["sso_url"]+"/oxauth/sectoridentifier/9b473868-fa96-4fd1-a662-76e3663c9726"
+        token_endpoint_auth_method=ENDPOINT_AUTH_CLIENT_POST
+        scim_client2.registerClient("UserClient", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method, sectorIdentifier=sectorIdentifier)
+
+        self.client_id = self._get_valid_url_client_id(scim_client2.client_id)
         self.redirect_uri = config["redirect_uri"]
-        self.client_secret = config["client_secret"]
+        self.client_secret = scim_client2.client_secret
         self.post_logout_redirect_uri = config["post_logout_redirect_uri"]
 
     def _get_valid_url_client_id(self, client_id):
