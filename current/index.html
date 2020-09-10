@@ -75,7 +75,6 @@
 <li><a href="#_data">3.2.4. Data</a>
 <ul class="sectlevel4">
 <li><a href="#_configuration">3.2.4.1. Configuration</a></li>
-<li><a href="#_data_flow_todo">3.2.4.2. Data flow TODO</a></li>
 </ul>
 </li>
 <li><a href="#_applicable_resources">3.2.5. Applicable Resources</a></li>
@@ -957,8 +956,10 @@ OGC 08-068r2,<br>
 <div class="paragraph">
 <p>The figure below, identifies the main workflows on which the User Profile participates, along with it&#8217;s components:</p>
 </div>
-<div class="paragraph">
-<p>TODO: Image</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/User-profile.png" alt="User profile">
+</div>
 </div>
 <div class="paragraph">
 <p>Based on this workflows, the User Profile enables the following functionality aspects</p>
@@ -969,25 +970,23 @@ OGC 08-068r2,<br>
 <p>The User Profile will mainly use the OIDC Client functionality in the User Profile Portal in order to provide Client authentication and End-User authentication functionality according to the OpenIDConnect Authentication Code Flow.</p>
 </div>
 <div class="paragraph">
-<p>This functionality is provided by the <strong>custom_oauth</strong> script and uses the python WellKnownHandler library that allows for simple parsing and usage of an SSO server&#8217;s "well-known" endpoints</p>
+<p>This functionality is provided by a custom script to manage the oauth standard and uses the python WellKnownHandler library that allows for simple parsing and usage of an SSO server&#8217;s "well-known" endpoints.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_send_confirmation_email">2.1.2. Send confirmation Email</h4>
 <div class="paragraph">
-<p>This functionality allows you to send an email and notify the user that the account will be deleted. In addition, by clicking on the link in the email the user will confirm the action. This functionality is provided by <strong>custom_smtp</strong> and <strong>smtp_email</strong> scripts.</p>
+<p>This functionality allows you to send an email and notify the user that the account will be deleted. In addition, by clicking on the link in the email the user will confirm the action. This functionality is provided by smtp standards for gluu and custom scripts.</p>
 </div>
 <div class="paragraph">
-<p>The first script is dedicated to prepare both the url to proceed with the account removal and the html that will be in the body of the email.</p>
-</div>
-<div class="paragraph">
-<p>And after doing the 2 steps above,  it will create a class of the <strong>smtp_email</strong> script, which will make the whole process of creating the SMPT Server connection, generating the message and finally sends the email. Previously we need to have configured the mail that will send the email, choosing the mail (Google Account) and the password to access, which are in the Dockerfile as a container variable.</p>
+<p>The code within the SMTP is dedicated to prepare both the url to proceed with the account removal and the html that will be in the body of the email.<br>
+With this it will make the whole process of creating the SMPT Server connection, generating the message and finally sends the email. Previously we need to have configured the mail that will send the email, choosing the mail (Google Account) and the password to access, which are in the Dockerfile as a container variable.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_account_removal">2.1.3. Account removal</h4>
 <div class="paragraph">
-<p>The functionality related to the account removal is implemented thanks to a SCIM Client that allow querying for user information, update User Profiles based on the assignment of a specific license or in this case a account removal previously created and the 2 previously mentioned functionalities.</p>
+<p>The functionality related to the account removal is implemented thanks to a SCIM Client that allow querying for user information, update User Profiles based on the assignment of a specific license or in this case a account removal previously created and the two previously mentioned functionalities.</p>
 </div>
 </div>
 </div>
@@ -1334,7 +1333,7 @@ OGC 08-068r2,<br>
 <p>The web service is the user interface for all other components on this module.</p>
 </div>
 <div class="paragraph">
-<p>This same web service holds an interface for user attributes' edition and profile removal for a user.</p>
+<p>This same web service holds an interface for user attributes edition and profile removal for a user.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1364,14 +1363,14 @@ OGC 08-068r2,<br>
 <div class="sect4">
 <h5 id="_oauth_callback">3.2.3.1. Oauth Callback</h5>
 <div class="paragraph">
-<p>A callback for all oauth actions (login/logout), configurable via the <code>WEB_confg.json</code> file.<br>
+<p>A callback for all oauth actions (login/logout), configurable via the <code>WEB_confg.json</code> file in case the deployment of the module is unitary, otherwise it will retrieve the environtment variables within the system deployment.<br>
 This endpoint manages the information given by the auth server, returned from the Login Service, and allows users to log into the app through the SSO&#8217;s sessions.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="_email_confirmation">3.2.3.2. Email Confirmation</h5>
 <div class="paragraph">
-<p><code>&lt;base_uri&gt;+/confirmation_mail</code></p>
+<p><code>&lt;base_uri&gt; + /confirmation_mail</code></p>
 </div>
 <div class="paragraph">
 <p>A callback endpoint for all confirmation emails. It recieves a code generated for the email, and verifies the action that the user wanted to take.</p>
@@ -1467,10 +1466,6 @@ This endpoint manages the information given by the auth server, returned from th
 </li>
 </ul>
 </div>
-</div>
-<div class="sect4">
-<h5 id="_data_flow_todo">3.2.4.2. Data flow TODO</h5>
-
 </div>
 </div>
 <div class="sect3">
@@ -1604,7 +1599,7 @@ This endpoint manages the information given by the auth server, returned from th
 <div id="footer">
 <div id="footer-text">
 Version 0.1<br>
-Last updated 2020-09-09 13:11:36 UTC
+Last updated 2020-09-10 09:07:23 UTC
 </div>
 </div>
 </body>
