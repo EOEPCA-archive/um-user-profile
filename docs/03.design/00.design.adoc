@@ -24,7 +24,7 @@ image::../images/User-profile.png[top=5%, align=center, pdfwidth=6.5in]
 === Overview and Purpose
 The web service is the user interface for all other components on this module.
 
-This same web service holds an interface for user attributes' edition and profile removal for a user.
+This same web service holds an interface for user attributes edition and profile removal for a user.
 
 === Software Reuse and Dependencies
 
@@ -39,11 +39,11 @@ The most important are:
 === Interfaces
 
 ==== Oauth Callback
-A callback for all oauth actions (login/logout), configurable via the `WEB_confg.json` file.
+A callback for all oauth actions (login/logout), configurable via the `WEB_confg.json` file in case the deployment of the module is unitary, otherwise it will retrieve the environtment variables within the system deployment.
 This endpoint manages the information given by the auth server, returned from the Login Service, and allows users to log into the app through the SSO's sessions.
 
 ==== Email Confirmation
-`<base_uri>+/confirmation_mail`
+`<base_uri> + /confirmation_mail`
 
 A callback endpoint for all confirmation emails. It recieves a code generated for the email, and verifies the action that the user wanted to take.
 
@@ -80,9 +80,6 @@ The parameters that are accepted, and their meaning, are as follows:
 - **color_button_modify**: Color used for the modify button
 - **use_threads**: Toggle threads for requests. Enabling this in production is recommended
 - **debug_mode**: Toggle debug mode, which enables a debug web interface, more errors and logs.
-
-==== Data flow TODO
-
 
 === Applicable Resources
 
