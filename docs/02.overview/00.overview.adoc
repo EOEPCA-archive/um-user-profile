@@ -16,7 +16,7 @@ In order to support the Billing Service, the User Profile building block allows 
 
 The figure below, identifies the main workflows on which the User Profile participates, along with it's components:
 
-TODO: Image
+image::../images/User-profile.png[top=5%, align=center, pdfwidth=6.5in]
 
 Based on this workflows, the User Profile enables the following functionality aspects
 
@@ -24,19 +24,18 @@ Based on this workflows, the User Profile enables the following functionality as
 
 The User Profile will mainly use the OIDC Client functionality in the User Profile Portal in order to provide Client authentication and End-User authentication functionality according to the OpenIDConnect Authentication Code Flow.
 
-This functionality is provided by the *custom_oauth* script and uses the python WellKnownHandler library that allows for simple parsing and usage of an SSO server's "well-known" endpoints 
+This functionality is provided by a custom script to manage the oauth standard and uses the python WellKnownHandler library that allows for simple parsing and usage of an SSO server's "well-known" endpoints.
 
 === Send confirmation Email
 
-This functionality allows you to send an email and notify the user that the account will be deleted. In addition, by clicking on the link in the email the user will confirm the action. This functionality is provided by *custom_smtp* and *smtp_email* scripts.
+This functionality allows you to send an email and notify the user that the account will be deleted. In addition, by clicking on the link in the email the user will confirm the action. This functionality is provided by smtp standards for gluu and custom scripts.
 
-The first script is dedicated to prepare both the url to proceed with the account removal and the html that will be in the body of the email.
-
-And after doing the 2 steps above,  it will create a class of the *smtp_email* script, which will make the whole process of creating the SMPT Server connection, generating the message and finally sends the email. Previously we need to have configured the mail that will send the email, choosing the mail (Google Account) and the password to access, which are in the Dockerfile as a container variable.
+The code within the SMTP is dedicated to prepare both the url to proceed with the account removal and the html that will be in the body of the email.
+With this it will make the whole process of creating the SMPT Server connection, generating the message and finally sends the email. Previously we need to have configured the mail that will send the email, choosing the mail (Google Account) and the password to access, which are in the Dockerfile as a container variable.
 
 === Account removal
 
-The functionality related to the account removal is implemented thanks to a SCIM Client that allow querying for user information, update User Profiles based on the assignment of a specific license or in this case a account removal previously created and the 2 previously mentioned functionalities.
+The functionality related to the account removal is implemented thanks to a SCIM Client that allow querying for user information, update User Profiles based on the assignment of a specific license or in this case a account removal previously created and the two previously mentioned functionalities.
 
 == Static Architecture
 
