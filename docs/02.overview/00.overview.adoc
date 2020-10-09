@@ -37,6 +37,10 @@ With this it will make the whole process of creating the SMPT Server connection,
 
 The functionality related to the account removal is implemented thanks to a SCIM Client that allow querying for user information, update User Profiles based on the assignment of a specific license or in this case a account removal previously created and the two previously mentioned functionalities.
 
+=== API Keys List
+
+It's a feature that allows the user to modify their own list of API keys. It is implemented using the SCIM Client that allows to perform attribute modifications and checks against the Login Service OIDC Auth.
+
 == Static Architecture
 
 [NOTE]
