@@ -58,9 +58,6 @@ class SCIMClient(metaclass=Singleton):
             if self.separator in k:
                 tmp = k.split(self.separator)
                 k = '.'.join(tmp)
-            logging.info('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa')
-            logging.info(k)
-            logging.info(v)
             res = self.scim_client.editUserAttribute(user_id,k,v)
             if res != 200:
                 print(res)
@@ -73,9 +70,6 @@ class SCIMClient(metaclass=Singleton):
         err = ""
         try:
             data = self.scim_client.getUserAttributes(user_id)
-            print(data)
-            logging.info('LOS DATOS:            ')
-            logging.info(data)
         except Exception as e:
             print(str(e))
             err = "Something went wrong while getting attributes: "+str(e)
@@ -88,12 +82,7 @@ class SCIMClient(metaclass=Singleton):
 
         ret = {"fixed": {},
                "editable": {}}
-        print(data)
-        logging.getLogger().setLevel(logging.INFO)
-        logging.info(data)
         data = self._purge_blacklist(data)
-        print(data)
-
         for k,v in data.items():
             if isinstance(v, dict):
                 for k,v in self._flatten({k:v}).items():
