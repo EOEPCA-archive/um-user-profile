@@ -161,9 +161,6 @@ input {
   {% endif %}
   
   <br>
-
-
-
     <div id="myDIV" class="header">
       <h2 style="margin:5px">API Keys List</h2>
       <div>
@@ -173,25 +170,18 @@ input {
         </ul>
         <span onclick="newElement()" class="addBtn">Add</span>
       </div>
-    </div>
-  
- 
-      
+    </div>   
     <form action="{{ url_for('modify_apis') }}" method="post" id="myUL">
       {% if data %}
         {% for values in data %}
           {% set k, v = values.split(':') %}
           <label class="row"><input class="item" contenteditable="true"  type="text" id="monkey" name="key" value="{{k}}"><input class="item" contenteditable="true"  type="text" id="monkey" name="value" value="{{v}}"></label>
         {% endfor %}
-
       {% endif %}
       <input class="subBtn" type="submit" value="Apply">
     </form>
       
-    
-
   <script>
-    
   // Create a "close" button and append it to each list item
   var myNodelist = document.getElementsByTagName("LABEL");
   var i;
@@ -213,25 +203,6 @@ input {
     }
   }
   
-  function changeList() {
-    var ul=document.getElementById("myUL");
-    var vi = document.ul.childNodes;
-    $(document).ready(function() {
-       $('#Retrieve').click(function(){
-           $.ajax({
-           url: "/modify_apis",
-           type: "post",
-           data: {vi: vi},
-           success: function(response) {
-           $("#wordResult").html(response.html);
-          },
-          error: function(xhr) {
-            //Do Something to handle error
-         }
-         });
-       });
-    });
-  }
   // Create a new list item when clicking on the "Add" button
   function newElement() {
     var ki = document.createElement("input");
