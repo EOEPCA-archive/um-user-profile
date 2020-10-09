@@ -24,10 +24,18 @@ form label value {
   padding: 0px 0;
   font-size: 10x;
 }
-form label key {
+form label input {
   text-align: center;
   padding: 0px 0;
   font-size: 10x;
+  background-color: transparent;
+}
+
+form input {
+  text-align: center;
+  padding: 0px 0;
+  font-size: 10x;
+  background-color: transparent;
 }
 
 /* Style the list items */
@@ -111,12 +119,33 @@ input {
   cursor: pointer;
   transition: 0.3s;
   border-radius: 0;
-  margin-top: -39px;
+  margin-top: -80px;
 }
 
 .addBtn:hover {
   background-color: #bbb;
 }
+
+
+.subBtn {
+  padding: 20px;
+  width: 6%;
+  background: #d9d9d9;
+  color: #555;
+  float:right;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 0;
+  margin-top: 20px;
+  margin-right: 1000px
+}
+
+.subBtn:hover {
+  background-color: #bbb;
+}
+
 </style>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
@@ -132,10 +161,7 @@ input {
   {% endif %}
   
   <br>
-  <br>
-  <br>
-  <br>
-  {% if data %}
+
 
 
     <div id="myDIV" class="header">
@@ -148,19 +174,21 @@ input {
         <span onclick="newElement()" class="addBtn">Add</span>
       </div>
     </div>
-
+  
+ 
       
     <form action="{{ url_for('modify_apis') }}" method="post" id="myUL">
-      {% for values in data %}
-        {% set k, v = values.split(':') %}
-        <label class="row"><input class="item" contenteditable="true"  type="text" id="monkey" name="key" value="{{k}}"><input class="item" contenteditable="true"  type="text" id="monkey" name="value" value="{{v}}"></label>
-      {% endfor %}
+      {% if data %}
+        {% for values in data %}
+          {% set k, v = values.split(':') %}
+          <label class="row"><input class="item" contenteditable="true"  type="text" id="monkey" name="key" value="{{k}}"><input class="item" contenteditable="true"  type="text" id="monkey" name="value" value="{{v}}"></label>
+        {% endfor %}
 
-      <input type="submit" value="Submit">
+      {% endif %}
+      <input class="subBtn" type="submit" value="Apply">
     </form>
       
     
-  {% endif %}
 
   <script>
     
@@ -226,7 +254,8 @@ input {
     if (inputValue === '') {
       alert("You must write something!");
     } else {
-      document.getElementById("myUL").appendChild(li);
+      var list = document.getElementById("myUL");
+      list.insertBefore(li, list.childNodes[0]);
     }
     document.getElementById("myInput").value = "";
     document.getElementById("myValue").value = "";
