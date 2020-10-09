@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 from flask import Flask, render_template, request, jsonify, redirect, session, url_for
 import json
-
+import logging
+import re
 from custom_oauth import OAuthClient
 from custom_scim import SCIMClient
 from custom_smtp import SMTPClient
@@ -169,8 +170,28 @@ def logout():
         return redirect(url_for("home"))
 
 
-@app.route(g_base_uri+"/profile_apis/modify",methods=['POST'])
+@app.route(g_base_uri+"/apis_management/modify",methods=['POST'])
 def modify_apis():
+    
+    logging.info('!!!!!!!!!!!!!!!!0!!!!!!!!!!!!!!!!!!')
+    data = request.form.to_dict()
+    logging.info(request.form)
+    logging.info(request.form.getlist('key'))
+    keys=request.form.getlist('key')
+    values=request.form.getlist('value')
+    res=[]
+    for i in range(len(keys)):
+        res.append(str(keys[i])+':'+str(values[i]))
+    logging.info('!!!!!!!!!!!!!!!!1!!!!!!!!!!!!!!!!!!')
+    try:
+        found = str(res).replace('\'', '')
+        found = found.replace(' ', '')
+    except:
+        pass
+    logging.info(res)
+    logging.info(found)
+
+    #urn:ietf:params:scim:schemas:extension:gluu:2.0:User->apiKeys
     refresh_token = session.get('refresh_token')
     logged_in = session.get('logged_in')
     if not logged_in or refresh_token is None or refresh_token is "":
@@ -181,10 +202,15 @@ def modify_apis():
     session[generic.ERR_MSG], session[generic.ERR_CODE] = refresh_session(refresh_token)
 
     #FORM DATA
-    if session[generic.ERR_MSG] is "" and request.form:
-        print(session.get('logged_user'))
-        session[generic.ERR_MSG], session[generic.ERR_CODE] = scim_client.changeAttributes(session.get('logged_user'), request.form)
-
+    if session[generic.ERR_MSG] is "":
+        logging.info('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        word = request.args
+        logging.info(request.form)
+        logging.info(word)
+        logging.info(scim_client.getAttributes(session.get('logged_user')))
+        logging.info(request.form)
+        logging.info('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        session[generic.ERR_MSG], session[generic.ERR_CODE] = scim_client.editApiKeys(session.get('logged_user'), found)
     return redirect(url_for("apis_management"))
 
 @app.route(g_base_uri+"/apis_management")
@@ -203,9 +229,30 @@ def apis_management():
     if not logged_in or token is None or token is "":
         session["reminder"] = 'apis_management'
         return redirect(url_for('login'))
-    print(scim_client.getAttributes(session.get('logged_user')))
     data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
+    found = None
+    
+    logging.info('-------------------')
+    logging.info(data)
+    logging.info('---------------------')
 
+    for v in str(data).split('\''):
+        logging.info(str(v))
+        if '[' in str(v):
+            logging.info(str(v))
+            m = re.search('\[(.+?)\]', str(v))
+            if m:
+                found = m.group(1)
+    try:
+        found = found.replace('\'', '')
+    except:
+        pass
+    try:
+        a = found.split(',')
+    except:
+        pass
+
+    logging.info(a)
     return render_template("apis_management.html",
         title = g_title,
         username = session.get('logged_user'),
@@ -214,7 +261,7 @@ def apis_management():
         color_web_header = g_header_color,
         logo_alt_name = g_logo_alt,
         logo_image_path = g_logo_image,
-        data = data
+        data = a
     )
 
 
@@ -234,6 +281,8 @@ def modify_management():
 
     #FORM DATA
     if session[generic.ERR_MSG] is "" and request.form:
+        logging.info('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU')
+        logging.info(request.form)
         session[generic.ERR_MSG], session[generic.ERR_CODE] = scim_client.changeAttributes(session.get('logged_user'), request.form)
 
     return redirect(url_for("profile_management"))

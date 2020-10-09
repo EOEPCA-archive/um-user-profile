@@ -31,15 +31,25 @@ class SCIMClient(metaclass=Singleton):
         redirectURIs=["https://"+config["sso_url"]+"/login"]
         logoutURI="https://"+config["sso_url"]+"/logout"
         responseTypes=[]
-        scopes=["openid", "oxd", "permission"]
+        scopes=["openid", "oxd", "permission", "profile"]
         token_endpoint_auth_method=ENDPOINT_AUTH_CLIENT_BASIC
-        self.scim_client.registerClient("SCIMClient", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method)
+        self.scim_client.registerClient("SCIMClientUser", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method)
         logging.getLogger().setLevel(logging.INFO)
 
     def _get_valid_https_url(self, url):
         if "http" not in url:
             return "https://" + url
 
+    def editApiKeys(self, user_id, data):
+        k = 'urn:ietf:params:scim:schemas:extension:gluu:2.0:User.apiKeys'
+        res = self.scim_client.editUserAttribute(user_id,k,data)
+        if res != 200:
+            print(res)
+            print("error for "+str(k))
+            return "Error while updating "+str(k)+" -> "+str(res), ""
+
+        return "", ""
+  
     def changeAttributes(self, user_id, data):
         data = data.to_dict()
         for k, v in data.items():
@@ -48,6 +58,9 @@ class SCIMClient(metaclass=Singleton):
             if self.separator in k:
                 tmp = k.split(self.separator)
                 k = '.'.join(tmp)
+            logging.info('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa')
+            logging.info(k)
+            logging.info(v)
             res = self.scim_client.editUserAttribute(user_id,k,v)
             if res != 200:
                 print(res)
@@ -61,6 +74,8 @@ class SCIMClient(metaclass=Singleton):
         try:
             data = self.scim_client.getUserAttributes(user_id)
             print(data)
+            logging.info('LOS DATOS:            ')
+            logging.info(data)
         except Exception as e:
             print(str(e))
             err = "Something went wrong while getting attributes: "+str(e)
@@ -73,7 +88,11 @@ class SCIMClient(metaclass=Singleton):
 
         ret = {"fixed": {},
                "editable": {}}
+        print(data)
+        logging.getLogger().setLevel(logging.INFO)
+        logging.info(data)
         data = self._purge_blacklist(data)
+        print(data)
 
         for k,v in data.items():
             if isinstance(v, dict):

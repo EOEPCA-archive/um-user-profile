@@ -14,24 +14,24 @@ body {
 }
 
 /* Remove margins and padding from the list */
-ul {
+form {
   margin: 0;
   padding: 0;
 }
 
-ul li value {
+form label value {
   text-align: center;
   padding: 0px 0;
   font-size: 10x;
 }
-ul li key {
+form label key {
   text-align: center;
   padding: 0px 0;
   font-size: 10x;
 }
 
 /* Style the list items */
-ul li {
+form label {
   display: grid;
   grid-template-columns: auto auto;
   cursor: pointer;
@@ -50,12 +50,12 @@ ul li {
 }
 
 /* Set all odd list items to a different color (zebra-stripes) */
-ul li:nth-child(odd) {
+form label:nth-child(odd) {
   background: #f9f9f9;
 }
 
 /* Darker background-color on hover */
-ul li:hover {
+form label:hover {
   background: #ddd;
 }
 
@@ -118,83 +118,133 @@ input {
   background-color: #bbb;
 }
 </style>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <body>
+  {% extends "template.html" %}
+  {% block content %}
 
-<div id="myDIV" class="header">
-  <h2 style="margin:5px">API Keys List</h2>
-  <div>
-    <ul>
-      <input type="text" id="myInput" placeholder="API Key Name...">
-      <input type="text" id="myValue" placeholder="Key Content...">
-    </ul>
-    <span onclick="newElement()" class="addBtn">Add</span>
-  </div>
-</div>
+  {% if err_msg %}
+  <h3 align="center" style="color: red; font-weight: bold" id="err_msg">Warning: {{ err_msg }}</h3>
+    {% if err_code %}
+    <h3 align="center" style="color: orangered; font-weight: bold" id="err_code">Error code: {{ err_code }}</h3>
+    {% endif %}
+  {% endif %}
+  
+  <br>
+  <br>
+  <br>
+  <br>
+  {% if data %}
 
-<ul id="myUL">
-  <li class="row"><key class="item" contenteditable="true">key</key><value class="item" contenteditable="true">value</value></li>
-  <li class="row"><key class="item" contenteditable="true">key</key><value class="item" contenteditable="true">value</value></li>
-</ul>
 
-<script>
-// Create a "close" button and append it to each list item
-var myNodelist = document.getElementsByTagName("LI");
-var i;
-for (i = 0; i < myNodelist.length; i++) {
-  var span = document.createElement("SPAN");
-  var txt = document.createTextNode("\u00D7");
-  span.className = "close";
-  span.appendChild(txt);
-  myNodelist[i].appendChild(span);
-}
+    <div id="myDIV" class="header">
+      <h2 style="margin:5px">API Keys List</h2>
+      <div>
+        <ul>
+          <input type="text" id="myInput" placeholder="API Name...">
+          <input type="text" id="myValue" placeholder="API Key...">
+        </ul>
+        <span onclick="newElement()" class="addBtn">Add</span>
+      </div>
+    </div>
 
-// Click on a close button to hide the current list item
-var close = document.getElementsByClassName("close");
-var i;
-for (i = 0; i < close.length; i++) {
-  close[i].onclick = function() {
-    var div = this.parentElement;
-    div.style.display = "none";
+      
+    <form action="{{ url_for('modify_apis') }}" method="post" id="myUL">
+      {% for values in data %}
+        {% set k, v = values.split(':') %}
+        <label class="row"><input class="item" contenteditable="true"  type="text" id="monkey" name="key" value="{{k}}"><input class="item" contenteditable="true"  type="text" id="monkey" name="value" value="{{v}}"></label>
+      {% endfor %}
+
+      <input type="submit" value="Submit">
+    </form>
+      
+    
+  {% endif %}
+
+  <script>
+    
+  // Create a "close" button and append it to each list item
+  var myNodelist = document.getElementsByTagName("LABEL");
+  var i;
+  for (i = 0; i < myNodelist.length; i++) {
+    var span = document.createElement("SPAN");
+    var txt = document.createTextNode("\u00D7");
+    span.className = "close";
+    span.appendChild(txt);
+    myNodelist[i].appendChild(span);
   }
-}
 
-// Create a new list item when clicking on the "Add" button
-function newElement() {
-  var ki = document.createElement("key");
-  var li = document.createElement("li");
-  var vi = document.createElement("value");
-  vi.setAttribute('contenteditable', true);
-  ki.setAttribute('contenteditable', true);
-  var inputValue = document.getElementById("myInput").value;
-  var inputValue1 = document.getElementById("myValue").value;
-  var t = document.createTextNode(inputValue);
-  var t1 = document.createTextNode(inputValue1);
-  ki.appendChild(t);
-  vi.appendChild(t1);
-  li.appendChild(ki);
-  li.appendChild(vi);
-  if (inputValue === '') {
-    alert("You must write something!");
-  } else {
-    document.getElementById("myUL").appendChild(li);
-  }
-  document.getElementById("myInput").value = "";
-  document.getElementById("myValue").value = "";
-  var span = document.createElement("SPAN");
-  var txt = document.createTextNode("\u00D7");
-  span.className = "close";
-  span.appendChild(txt);
-  li.appendChild(span);
-
+  // Click on a close button to hide the current list item
+  var close = document.getElementsByClassName("close");
+  var i;
   for (i = 0; i < close.length; i++) {
     close[i].onclick = function() {
       var div = this.parentElement;
-      div.style.display = "none";
+      div.remove()
     }
   }
-}
-</script>
+  
+  function changeList() {
+    var ul=document.getElementById("myUL");
+    var vi = document.ul.childNodes;
+    $(document).ready(function() {
+       $('#Retrieve').click(function(){
+           $.ajax({
+           url: "/modify_apis",
+           type: "post",
+           data: {vi: vi},
+           success: function(response) {
+           $("#wordResult").html(response.html);
+          },
+          error: function(xhr) {
+            //Do Something to handle error
+         }
+         });
+       });
+    });
+  }
+  // Create a new list item when clicking on the "Add" button
+  function newElement() {
+    var ki = document.createElement("input");
+    var li = document.createElement("label");
+    var vi = document.createElement("input");
+    vi.setAttribute('contenteditable', true);
+    ki.setAttribute('contenteditable', true);
+    var inputValue = document.getElementById("myInput").value;
+    var inputValue1 = document.getElementById("myValue").value;
+    ki.setAttribute('name', 'key');
+    vi.setAttribute('name', 'value');
+    ki.setAttribute('id', 'monkey');
+    vi.setAttribute('id', 'monkey');
+    ki.setAttribute('value', inputValue);
+    vi.setAttribute('value', inputValue1);
+    li.setAttribute('class', 'row')
+  
+    li.appendChild(ki);
+    li.appendChild(vi);
+    if (inputValue === '') {
+      alert("You must write something!");
+    } else {
+      document.getElementById("myUL").appendChild(li);
+    }
+    document.getElementById("myInput").value = "";
+    document.getElementById("myValue").value = "";
+    var span = document.createElement("SPAN");
+    var txt = document.createTextNode("\u00D7");
+    span.className = "close";
+    span.appendChild(txt);
+    li.appendChild(span);
 
+    for (i = 0; i < close.length; i++) {
+      close[i].onclick = function() {
+        var div = this.parentElement;
+        div.remove();
+      }
+    }
+  }
+  </script>
+
+  {% endblock %}
 </body>
 </html>

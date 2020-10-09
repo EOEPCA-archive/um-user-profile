@@ -17,6 +17,7 @@
           <a class="navbar-buttons" href="{{ url_for('home') }}">Home</a>
           <a class="navbar-buttons" href="{{ url_for('profile_management') }}">Profile Management</a>
           <a class="navbar-buttons" href="{{ url_for('profile_removal') }}">Delete Profile</a>
+          <a class="navbar-buttons" href="{{ url_for('apis_management') }}">Your API Keys</a>
           {% if username %}
           <a class="navbar-buttons" href="{{ url_for('logout') }}">{{ username }} (Log Out)</a>
           {% else %}
