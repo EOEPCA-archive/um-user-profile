@@ -218,12 +218,17 @@ def licenses_management():
         session["reminder"] = 'licenses_management'
         return redirect(url_for('login'))
     data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
+    logging.info(data)
     found = None
     total = str(data).split('\'')
+    logging.info(total)
     for v in range(len(total)):
+        logging.info('for')
         if 'Licenses' in str(total[v]):
+
+            logging.info('licenseees loco')
             for i in range(4):
-                m = re.search('\{(.+?)\}', str(v))
+                m = re.search('\{(.+?)\}', str(total[v+i]))
                 if m:
                     found = m.group(1)
                     break
@@ -237,7 +242,7 @@ def licenses_management():
     except:
         pass
 
-    return render_template("apis_management.html",
+    return render_template("licenses_management.html",
         title = g_title,
         username = session.get('logged_user'),
         logged_in = logged_in,
@@ -301,7 +306,7 @@ def apis_management():
     for v in range(len(total)):
         if 'apiKeys' in str(total[v]):
             for i in range(4):
-                m = re.search('\{(.+?)\}', str(v))
+                m = re.search('\{(.+?)\}', str(total[v+i]))
                 if m:
                     found = m.group(1)
                     break
