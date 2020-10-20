@@ -1,5 +1,76 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+<style>
+
+  #myDIV {
+    margin: 5px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    margin-left: 45%;
+  }
+   
+  .subBtn {
+    padding: 20px;
+    width: 100px;
+    background: #d9d9d9;
+    color: #555;
+    float:right;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 0;
+    margin-top: 20px;
+    position: absolute;
+    margin-left: 45%;
+  }
+  
+  .subBtn:hover {
+    background-color: #bbb;
+  }
+  
+  form {
+    margin: 0;
+    padding: 100;
+    width: 100%;
+  }
+  form label {
+  
+    width: 46%;
+    display:inline-block;
+    /*display: grid;*/
+    grid-template-columns: auto auto;
+    cursor: pointer;
+    position: relative;
+    padding: 12px 8px 12px 40px;
+    list-style-type: none;
+    background: #eee;
+    font-size: 18px;
+    transition: 0.2s;
+    
+    /* make the list items unselectable */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  form input {
+    border: 1px solid white;
+    display:inline-block;
+    text-align: center;
+    padding: 0px 0;
+    font-size: 10x;
+    width: 46%;
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+    padding: 12px 8px 12px 50px;
+    list-style-type: none;
+    background: #eee;
+    font-size: 18px;
+    transition: 0.2s;
+
+  </style>
   <head>
 	<link rel="stylesheet" type="text/css" href="/static/css/profile_management.css">
   </head>
@@ -13,13 +84,11 @@
       <h3 align="center" style="color: orangered; font-weight: bold" id="err_code">Error code: {{ err_code }}</h3>
       {% endif %}
     {% endif %}
-    
-    <br>
-    <br>
-    <br>
-    <br>
+  
+    <div id="myDIV" class="header">
+      <h2 style="margin:5px">Licenses List</h2>
+    </div>
     {% if data %}
-
     <form action="{{ url_for('modify_management') }}" method="post">
       {% for data_k, data_v in data.items() %}
         {% for k, v in data_v.items() %}
