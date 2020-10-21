@@ -1,11 +1,232 @@
  <!DOCTYPE html>
 <html lang="en" dir="ltr">
- <head>
-   <meta charset="utf-8">
-   <title>{{ title }}</title>
-    <link rel="stylesheet" href="/static/css/template.css">
-    <link rel="stylesheet" href="/static/css/general.css">
- </head>
+<head>
+  <meta charset="utf-8">
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="/static/css/template.css">
+  <link rel="stylesheet" href="/static/css/general.css">
+</head>
+<style>
+  table.center {
+  margin-left:auto; 
+  margin-right:auto;
+}
+
+form {
+  text-align: left;
+  margin-left: 20px; 
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+}
+
+.logo {
+  margin-top: 5%;
+  margin-left: 10%;
+  vertical-align:middle;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #3a393b !important
+}
+
+.buttons-container {
+  float: right;
+}
+
+.navbar-buttons {
+  float: left;
+  text-align: center;
+  padding: 20px 16px !important;
+  text-decoration: none;
+  font-size: 17px;
+  color: white;
+}
+
+.navbar-brand{
+  float: left;
+}
+
+.topnav a:hover {
+  color: #f2c811
+}
+
+#button_delete {
+  border: 1px solid #F12D37;
+  color: #F12D37;
+}
+
+#button_delete:hover {
+  color: white;
+  background-color: #F12D37;
+}
+
+#select_client_id {
+  width: 35%;
+    padding: 5px 20px;
+    border: 1px solid black;
+    border-radius: 3px;
+    background-color: white;
+    outline: none;
+    margin-left: 10px;
+}
+
+.div_label {
+  display: inline-block;
+  width: 115px;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.label_general_entry {
+  font-weight: bold;
+}
+
+.header_table {
+    text-align: center;
+}
+
+.column_header {
+  padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.input_table {
+    border: 1px solid black;
+    border-radius: 3px;
+    background-color: white;
+    outline: none;
+}
+
+td {
+    margin-left: 50%;
+    margin-right: 5%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+#custom_table tr {
+  color: black;
+}
+
+#custom_table tbody tr:nth-child(odd){
+  background-color: whitesmoke;
+}
+
+.buttons_table {
+  padding: 5px 5px;
+    border-radius: 3px;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+.container_checkboxes {
+  column-count: 3;
+  margin-top: 5px;
+}
+
+.input_data {
+  width: 25%;
+    padding: 5px 5px;
+    border: 1px solid black;
+    border-radius: 3px;
+    background-color: white;
+    outline: none;
+}
+.subBtn {
+  padding: 20px;
+  width: 8%;
+  background: #d9d9d9;
+  color: #555;
+  float:right;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 0;
+  margin-top: 20px;
+  margin-left: 45%;
+  position: absolute;
+}
+
+.subBtn:hover {
+  background-color: #bbb;
+}
+
+form {
+  margin: 1em 4em 0em 4em;
+  width: 90%;
+  background-color:#fff;
+}
+form label {
+  
+  box-shadow: 4px 4px 4px 1px rgba(0, 0, 0, 0.2);
+  width: 48%;
+  display:inline-block;
+  grid-template-columns: auto auto;
+  cursor: pointer;
+  position: relative;
+  padding: 12px 8px 12px 40px;
+  list-style-type: none;
+  background: #fff;
+  border: solid 1px #e0e0e0;
+  font-size: 18px;
+  transition: 0.2s;
+  
+  /* make the list items unselectable */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+form input {
+  
+  box-shadow: 4px 4px 4px 1px rgba(0, 0, 0, 0.2);
+  border: 1px solid #e0e0e0;
+  display:inline-block;
+  text-align: center;
+  padding: 0px 0;
+  font-size: 10x;
+  width: 48%;
+  background-color: #ffffff;
+  cursor: pointer;
+  position: relative;
+  padding: 12px 8px 12px 50px;
+  list-style-type: none;
+  font-size: 18px;
+  transition: 0.2s;
+}
+input[type=submit] {
+  width: 20%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 1em 2.0em;
+  margin-left: 36.5em;
+  margin-right: auto;
+  display: block;
+  margin-top: 2.5em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+.header {
+  background-color: #f9F9F9;
+  padding: 30px;
+  color: #3a393b;
+  text-align: center;
+}
+</style>
 
  <body style="background-color:{{ color_web_background }};">
 
