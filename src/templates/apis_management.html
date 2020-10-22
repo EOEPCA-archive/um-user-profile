@@ -43,7 +43,7 @@ form input {
 
 /* Style the list items */
 form label {
-  width: 100% !important;
+  width: 106% !important;
   display: grid;
   grid-template-columns: auto auto;
   cursor: pointer;
@@ -111,6 +111,23 @@ input {
   font-size: 16px;
 }
 
+input[type=submit] {
+  width: 20% !important;
+  background-color: #4CAF50;
+  color: white;
+  padding: 1em 2.0em;
+  margin-left: 38% !important;
+  margin-right: auto;
+  display: block;
+  margin-top: 2.5em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
 /* Style the "Add" button */
 .addBtn {
   padding: 30px;
@@ -124,6 +141,7 @@ input {
   transition: 0.3s;
   border-radius: 0;
   margin-top: -80px;
+  margin-right: 1%;
 }
 
 .addBtn:hover {

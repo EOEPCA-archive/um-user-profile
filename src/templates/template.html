@@ -24,9 +24,10 @@ body {
 }
 
 .logo {
-  margin-top: 5%;
-  margin-left: 10%;
-  vertical-align:middle;
+  margin-top: 11%;
+  margin-left: 77%;
+  vertical-align: middle;
+  margin-bottom: 10%;
 }
 
 .topnav {
@@ -36,14 +37,15 @@ body {
 
 .buttons-container {
   float: right;
+  margin-right: 1%;
 }
 
 .navbar-buttons {
   float: left;
   text-align: center;
-  padding: 20px 16px !important;
+  padding: 25px 23px !important;
   text-decoration: none;
-  font-size: 17px;
+  font-size: 19px;
   color: white;
 }
 
@@ -237,9 +239,9 @@ input[type=submit]:hover {
       <div class = "buttons-container">
           <a class="navbar-buttons" href="{{ url_for('home') }}">Home</a>
           <a class="navbar-buttons" href="{{ url_for('profile_management') }}">Profile Management</a>
-          <a class="navbar-buttons" href="{{ url_for('profile_removal') }}">Delete Profile</a>
           <a class="navbar-buttons" href="{{ url_for('apis_management') }}">Your API Keys</a>
           <a class="navbar-buttons" href="{{ url_for('licenses_management') }}">Your Licenses</a>
+          <a class="navbar-buttons" href="{{ url_for('profile_removal') }}">Delete Profile</a>
           {% if username %}
           <a class="navbar-buttons" href="{{ url_for('logout') }}">{{ username }} (Log Out)</a>
           {% else %}
