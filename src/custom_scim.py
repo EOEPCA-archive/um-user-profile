@@ -49,6 +49,16 @@ class SCIMClient(metaclass=Singleton):
             return "Error while updating "+str(k)+" -> "+str(res), ""
 
         return "", ""
+    
+    def editLicenses(self, user_id, data):
+        k = 'urn:ietf:params:scim:schemas:extension:gluu:2.0:User.Licenses'
+        res = self.scim_client.editUserAttribute(user_id,k,data)
+        if res != 200:
+            print(res)
+            print("error for "+str(k))
+            return "Error while updating "+str(k)+" -> "+str(res), ""
+
+        return "", ""
   
     def changeAttributes(self, user_id, data):
         data = data.to_dict()
