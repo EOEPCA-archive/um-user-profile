@@ -45,6 +45,10 @@ It's a feature that allows the user to modify their own list of API keys. It is 
 
 It's a feature that allows the user to modify their own list of Licenses the same way the API Keys List above is defined. It is implemented using the SCIM Client that allows to perform attribute modifications and checks against the Login Service OIDC Auth.
 
+=== List of Terms and Conditions
+
+It's a feature that allows the user to modify their own list of Documents of T&C the same way the API Keys List and Licenses manager above is defined. It is implemented using the SCIM Client that allows to perform attribute modifications and checks against the Login Service OIDC Auth.
+
 
 == Static Architecture
 
