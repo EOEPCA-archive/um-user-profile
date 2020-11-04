@@ -60,6 +60,16 @@ class SCIMClient(metaclass=Singleton):
 
         return "", ""
   
+    def editTC(self, user_id, data):
+        k = 'urn:ietf:params:scim:schemas:extension:gluu:2.0:User.TermsConditions'
+        res = self.scim_client.editUserAttribute(user_id,k,data)
+        if res != 200:
+            print(res)
+            print("error for "+str(k))
+            return "Error while updating "+str(k)+" -> "+str(res), ""
+
+        return "", ""
+    
     def changeAttributes(self, user_id, data):
         data = data.to_dict()
         for k, v in data.items():

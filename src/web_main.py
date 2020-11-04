@@ -169,6 +169,98 @@ def logout():
     else:
         return redirect(url_for("home"))
 
+@app.route(g_base_uri+"/TC_management/modify",methods=['POST'])
+def modify_TC():
+    
+    data = request.form.to_dict()
+    keys=request.form.getlist('key')
+    values=request.form.getlist('value')
+    res={}
+    for i in range(len(keys)):
+        res[str(keys[i])] = str(values[i])
+    try:
+        found = str(res).replace('\'', '')
+        found = found.replace(' ', '')
+    except:
+        pass
+
+    #urn:ietf:params:scim:schemas:extension:gluu:2.0:User->apiKeys
+    refresh_token = session.get('refresh_token')
+    logged_in = session.get('logged_in')
+    if not logged_in or refresh_token is None or refresh_token is "":
+        session["reminder"] = 'modify_TC'
+        return redirect(url_for('login'))
+
+    # Refresh session and execute
+    session[generic.ERR_MSG], session[generic.ERR_CODE] = refresh_session(refresh_token)
+
+    #FORM DATA
+    if session[generic.ERR_MSG] is "":
+        word = request.args
+        session[generic.ERR_MSG], session[generic.ERR_CODE] = scim_client.editTC(session.get('logged_user'), found)
+    return redirect(url_for("TC_management"))
+
+@app.route(g_base_uri+"/TC_management")
+def TC_management():
+    err_msg = None
+    old_err_msg = session.get(generic.ERR_MSG, "")
+    err_code = session.get(generic.ERR_CODE, "")
+    # Overwrite them to not let the user lock themselfs in an error
+    session[generic.ERR_MSG] = ""
+    session[generic.ERR_CODE] = ""
+    
+    refresh_session(session.get('refresh_token',""))
+
+    token = session.get('access_token')
+    logged_in = session.get('logged_in')
+    if not logged_in or token is None or token is "":
+        session["reminder"] = 'TC_management'
+        return redirect(url_for('login'))
+    data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
+    logging.info(data)
+    found = None
+    total = str(data).split('\'')
+    logging.info(total)
+    for v in range(len(total)):
+        if 'TermsConditions' in str(total[v]):
+
+            for i in range(4):
+                m = re.search('\{(.+?)\}', str(total[v+i]))
+                if m:
+                    found = m.group(1)
+                    break
+    a=''
+    try:
+        found = found.replace('\'', '')
+    except:
+        pass
+    try:
+        a = found.split(',')
+    except:
+        pass
+
+    return render_template("TC_management.html",
+        title = g_title,
+        username = session.get('logged_user'),
+        logged_in = logged_in,
+        color_web_background = g_background_color,
+        color_web_header = g_header_color,
+        logo_alt_name = g_logo_alt,
+        logo_image_path = g_logo_image,
+        data = a
+    )
+
+
+
+
+
+
+
+
+
+
+
+
 
 @app.route(g_base_uri+"/licenses_management/modify",methods=['POST'])
 def modify_licenses():
