@@ -180,7 +180,7 @@ def modify_TC():
         res[str(keys[i])] = str(values[i])
     try:
         found = str(res).replace('\'', '')
-        found = found.replace(' ', '')
+        #found = found.replace(' ', '')
     except:
         pass
 
