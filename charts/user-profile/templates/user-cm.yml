@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-cm
+data:
+  UP_SSO_URL: {{ .Values.global.realm | quote }}
+  UP_TITLE: {{ .Values.global.domain | quote }}
+  UP_SCOPES: {{ .Values.global.proxyEndpoint | quote }}
+  UP_REDIRECT_URI: {{ .Values.global.serviceHost | quote }}
+  UP_POST_LOGOUT_REDIRECT_URI: {{ .Values.global.servicePort | quote }}
+  UP_BASE_URI: {{ .Values.global.margin | quote }}
+  UP_OAUTH_CALLBACK_PATH: {{ .Values.global.sslCerts | quote }}
+  UP_LOGOUT_ENDPOINT: {{ .Values.global.useThreads | quote }}
+  UP_SERVICE_HOST: {{ .Values.global.debugMode | quote }}
+  UP_SERVICE_PORT: {{ .Values.global.resourceServer | quote }}
+  UP_PROTECTED_ATTRIBUTES: {{ .Values.global.umaValidation | quote }}
+  UP_BLACKLIST_ATTRIBUTES: {{ .Values.global.limitUses | quote }}
+  UP_SEPARATOR_UI_ATTRIBUTES: {{ .Values.global.pdpUrl | quote }}
+  UP_COLOR_WEB_BACKGROUND: {{ .Values.global.pdpPort | quote }}
+  UP_COLOR_WEB_HEADER: {{ .Values.global.pdpPolicy | quote }}
+  UP_LOGO_ALT_NAME: {{ .Values.global.verifySignature | quote }}
+  UP_LOGO_IMAGE_PATH: {{ .Values.global.verifySignature | quote }}
+  UP_COLOR_HEADER_TABLE: {{ .Values.global.verifySignature | quote }}
+  UP_COLOR_TEXT_HEADER_TABLE: {{ .Values.global.verifySignature | quote }}
+  UP_COLOR_BUTTON_MODIFY: {{ .Values.global.verifySignature | quote }}
+  UP_USE_THREADS: {{ .Values.global.verifySignature | quote }}
+  UP_DEBUG_MODE: {{ .Values.global.verifySignature | quote }}
