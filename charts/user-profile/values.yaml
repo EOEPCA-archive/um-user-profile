@@ -2,11 +2,11 @@
 
 global:
   nginxIp: 10.0.2.15
-  ssoUrl: var.hostname
+  ssoUrl: demoexample.gluu.org
   title: "EOEPCA User Profile"
   scopes: "openid email user_name"
-  redirectUri: "http://${var.hostname}/web_ui/oauth/callback"
-  postLogoutRedirectUri: http://${var.hostname}/web_ui"
+  redirectUri: "http://demoexample.gluu.org/web_ui/oauth/callback"
+  postLogoutRedirectUri: http://demoexample.gluu.org/web_ui"
   baseUri: "/web_ui"
   oauthCallbackPath: "/oauth/callback"
   logoutEndpoint: "/logout"
