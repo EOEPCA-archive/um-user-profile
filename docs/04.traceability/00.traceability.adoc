@@ -1,11 +1,44 @@
 [[traceabilityMatrix]]
-= Use Case Traceability
+= User Story Traceability
 
-[NOTE]
-.Content Description
-================================
-This section contains:
+.User Stories
+|===
+|Code |Description 
 
-* A traceability matrix against the use case analysis document of the project, indicating which components address each use case
+|EOEPCA-165	
+|T&C Review Section
 
-================================
+|EOEPCA-161	
+|License Management Section
+
+|EOEPCA-13	
+|Reusable SCIM Client Implementation
+
+|EOEPCA-11	
+|Reusable OIDC Client Implementation
+
+|EOEPCA-88	
+|Extend SCIM Client with UMA Protection
+
+|EOEPCA-211	
+|Implementation of Helm Charts
+
+|EOEPCA-87	
+|Email Notifications Hook
+
+|EOEPCA-66	
+|Setup of CI/CD Configuration
+
+|EOEPCA-24	
+|On-boarding Flow
+
+|EOEPCA-21	
+|End-User Account Removal
+
+|EOEPCA-20	
+|End-User Profile Edition/Update
+
+|EOEPCA-164	
+|API Keys Management Section
+
+|===
