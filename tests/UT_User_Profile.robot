@@ -12,30 +12,38 @@ ${URL}=  https://test.10.0.2.15.nip.io/web_ui
 
 *** Test Cases ***
 
-Service Status
-  Set Chrome
-  Set Browser Implicit Wait  5
-  ${title}=  Get Title
-  Log to Console  ${title}
-  BuiltIn.Run Keyword If  "${title}"=="EOEPCA User Profile"  LoginService Call Log in Button
-  LoginService Fill Credentials
-  ${title}=  Get Title
-  BuiltIn.Run Keyword If  "${title}"=="oxAuth"  LoginService Allow User
-  BuiltIn.Run Keyword If  "${title}"=="oxAuth - Passport Login"  LoginService Fill Credentials
-  LoginService Call Log out Button
+# Service Status
+#   Set Chrome
+#   Set Browser Implicit Wait  5
+#   ${title}=  Get Title
+#   BuiltIn.Run Keyword If  "${title}"=="EOEPCA User Profile"  LoginService Call Log in Button
+#   LoginService Fill Credentials
+#   ${title}=  Get Title
+#   BuiltIn.Run Keyword If  "${title}"=="oxAuth"  LoginService Allow User
+#   BuiltIn.Run Keyword If  "${title}"=="oxAuth - Passport Login"  LoginService Fill Credentials
+#   LoginService Call Log out Button
 
 Attributes Edition
   Set Chrome
   Set Browser Implicit Wait  5
   ${title}=  Get Title
-  Log to Console  ${title}
   BuiltIn.Run Keyword If  "${title}"=="EOEPCA User Profile"  LoginService Call Log in Button
   LoginService Fill Credentials
   ${title}=  Get Title
   BuiltIn.Run Keyword If  "${title}"=="oxAuth"  LoginService Allow User
   BuiltIn.Run Keyword If  "${title}"=="oxAuth - Passport Login"  LoginService Fill Credentials
-  Capture Page Screenshot
   Go to Attributes
+
+User Deletion
+  Set Chrome
+  Set Browser Implicit Wait  5
+  ${title}=  Get Title
+  BuiltIn.Run Keyword If  "${title}"=="EOEPCA User Profile"  LoginService Call Log in Button
+  LoginService Fill Credentials
+  ${title}=  Get Title
+  BuiltIn.Run Keyword If  "${title}"=="oxAuth"  LoginService Allow User
+  BuiltIn.Run Keyword If  "${title}"=="oxAuth - Passport Login"  LoginService Fill Credentials
+  Delete User
 
 
 *** Keywords ***
@@ -49,65 +57,80 @@ Set Chrome
   Call Method  ${chrome_options}  add_argument  ignore-certificate-errors
   ${options}=  Call Method  ${chrome_options}  to_capabilities      
   Open Browser  ${URL}  browser=chrome  desired_capabilities=${options}
+ 
+Configuration Error
+  Log to Console  !
+  Log to Console  [WARNING] The service is up, but the attributes are not accesible due to lack of configuration on the login service.
+  Log to Console  Make sure SMTP server is enabled, and configured. SCIM service must be enabled also.
+
+Delete User
+  
+  Click Link  xpath=//a[@href="/web_ui/profile_removal"]
+  Click Element  xpath=//button[@type="submit"]
+  ${a}=  Get Text  xpath=//html
+  ${match}  ${value}  Run Keyword And Ignore Error  Should Contain  ${a}  confirmation mail sent succesfully
+  ${RETURNVALUE}  Set Variable If  '${match}' == 'PASS'  ${True}  ${False}
+  Should Be True  ${RETURNVALUE}
 
 
+Profile Management
+  Click Element  xpath=//input[@type="submit"]
+  ${a}=  Get Text  xpath=//html
+  ${match}  ${value}  Run Keyword And Ignore Error  Should Contain  ${a}  User Attributes
+  ${RETURNVALUE}  Set Variable If  '${match}' == 'PASS'  ${True}  ${False}
+  Should Be True  ${RETURNVALUE}
+
+API Keys Management
+  Click Element  xpath=//input[@type="submit"]
+  ${a}=  Get Text  xpath=//html
+  ${match}  ${value}  Run Keyword And Ignore Error  Should Contain  ${a}  API Keys List
+  ${RETURNVALUE}  Set Variable If  '${match}' == 'PASS'  ${True}  ${False}
+  Should Be True  ${RETURNVALUE}
+
+Licenses Management
+  Click Element  xpath=//input[@type="submit"]
+  ${a}=  Get Text  xpath=//html
+  ${match}  ${value}  Run Keyword And Ignore Error  Should Contain  ${a}  Licenses List
+  ${RETURNVALUE}  Set Variable If  '${match}' == 'PASS'  ${True}  ${False}
+  Should Be True  ${RETURNVALUE}
+
+Terms and Conditions
+  Click Element  xpath=//input[@type="submit"]  
+  ${a}=  Get Text  xpath=//html
+  ${match}  ${value}  Run Keyword And Ignore Error  Should Contain  ${a}  Terms and Conditions
+  ${RETURNVALUE}  Set Variable If  '${match}' == 'PASS'  ${True}  ${False}
+  Should Be True  ${RETURNVALUE}
+
+
+Profile Edition
+  Profile Management
+  Click Link  xpath=//a[@href="/web_ui/apis_management"]
+  API Keys Management
+  Click Link  xpath=//a[@href="/web_ui/licenses_management"]
+  Licenses Management
+  Click Link  xpath=//a[@href="/web_ui/TC_management"]
+  Terms and Conditions
 
 
 Go to Attributes
   #Click Element  xpath=//a[@class="logo"]
   Click Link  xpath=//a[@href="/web_ui/profile_management"]
-  Capture Page Screenshot
+  ${a}=  Get Text  xpath=//html
+  ${match}  ${value}  Run Keyword And Ignore Error  Should Contain  ${a}  AttributeError
+  ${RETURNVALUE}  Set Variable If  '${match}' == 'PASS'  ${True}  ${False}
+  BuiltIn.Run Keyword If  "${RETURNVALUE}"=="True"  Configuration Error
+  Profile Edition
 
-LoginService Go TabUser
-  Go to Menu
-  Set Browser Implicit Wait  2
-  LoginService Go to Users
-
-LoginService Add Person
-  [Arguments]  ${user_name}  ${first_name}  ${display_name}  ${last_name}  ${email}  ${password}
-  Click Element  xpath=//a[@href="/identity/person/addPerson.htm"]
-  Click Element  xpath=//input[@id="PForm:L:0:IL:0:D:custId_text_"]
-  Input Text  xpath=//input[@id="PForm:L:0:IL:0:D:custId_text_"]  ${user_name}
-  Click Element  xpath=//input[@id="PForm:L:1:IL:0:D:custId_text_"]
-  Input Text  xpath=//input[@id="PForm:L:1:IL:0:D:custId_text_"]  ${first_name}
-  Click Element  xpath=//input[@id="PForm:L:2:IL:0:D:custId_text_"]
-  Input Text  xpath=//input[@id="PForm:L:2:IL:0:D:custId_text_"]  ${display_name}
-  Click Element  xpath=//input[@id="PForm:L:3:IL:0:D:custId_text_"]
-  Input Text  xpath=//input[@id="PForm:L:3:IL:0:D:custId_text_"]  ${last_name}
-  Click Element  xpath=//input[@id="PForm:L:4:IL:0:D:Email"]
-  Input Text  xpath=//input[@id="PForm:L:4:IL:0:D:Email"]  ${email}
-  Click Element  xpath=//input[@id="PForm:L:5:IL:0:P:custpasswordId"]
-  Input Password  xpath=//input[@id="PForm:L:5:IL:0:P:custpasswordId"]  ${password}
-  Click Element  xpath=//input[@id="PForm:L:5:IL:0:j_idt244:custconfirmpasswordId"]
-  Input Password  xpath=//input[@id="PForm:L:5:IL:0:j_idt244:custconfirmpasswordId"]  ${password}
-  Set Browser Implicit Wait  10
-  Click Element  xpath=//input[@id="PForm:L:4:IL:0:D:Email"]
-  Click Element  xpath=//button[@name="PForm:j_idt306"]
-  Set Browser Implicit Wait  2
-
-LoginService Go to Users
-  Click Element  xpath=//li[@id="menuUsers"]
-  Set Browser Implicit Wait  2
-  Click Element  xpath=//li[@id="subMenuLinkUsers2"]
-
-LoginService Fill Credentials Gluu
-  [Arguments]  ${user}  ${pwd}
-  Input Text  id=loginForm:username  ${user}
-  Input Password  id=loginForm:password  ${pwd}
-  Click Button  id=loginForm:loginButton
-  Set Browser Implicit Wait  10
 
 LoginService Allow User
   Title Should Be  oxAuth
   Click Link  xpath=//a[@id="authorizeForm:allowButton"]
   Set Browser Implicit Wait  5
-  #Capture Page Screenshot  
 
 LoginService Call Log in Button
   Title Should Be  EOEPCA User Profile
   Click Link  xpath=//a[@href="/web_ui/login"]
   Set Browser Implicit Wait  5
-  Capture Page Screenshot
 
 LoginService Fill Credentials
   Title Should Be  oxAuth - Passport Login
@@ -116,7 +139,4 @@ LoginService Fill Credentials
   Click Button  id=loginForm:loginButton
   Set Browser Implicit Wait  10
 
-LoginService Call Log out Button
-  Title Should Be  EOEPCA User Profile
-  Click Link    xpath=//a[@href="/web_ui/logout"]
-  Set Browser Implicit Wait  5
+
