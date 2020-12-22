@@ -12,16 +12,6 @@ ${URL}=  https://test.10.0.2.15.nip.io/web_ui
 
 *** Test Cases ***
 
-# Service Status
-#   Set Chrome
-#   Set Browser Implicit Wait  5
-#   ${title}=  Get Title
-#   BuiltIn.Run Keyword If  "${title}"=="EOEPCA User Profile"  LoginService Call Log in Button
-#   LoginService Fill Credentials
-#   ${title}=  Get Title
-#   BuiltIn.Run Keyword If  "${title}"=="oxAuth"  LoginService Allow User
-#   BuiltIn.Run Keyword If  "${title}"=="oxAuth - Passport Login"  LoginService Fill Credentials
-#   LoginService Call Log out Button
 
 Attributes Edition
   Set Chrome
@@ -33,17 +23,6 @@ Attributes Edition
   BuiltIn.Run Keyword If  "${title}"=="oxAuth"  LoginService Allow User
   BuiltIn.Run Keyword If  "${title}"=="oxAuth - Passport Login"  LoginService Fill Credentials
   Go to Attributes
-
-User Deletion
-  Set Chrome
-  Set Browser Implicit Wait  5
-  ${title}=  Get Title
-  BuiltIn.Run Keyword If  "${title}"=="EOEPCA User Profile"  LoginService Call Log in Button
-  LoginService Fill Credentials
-  ${title}=  Get Title
-  BuiltIn.Run Keyword If  "${title}"=="oxAuth"  LoginService Allow User
-  BuiltIn.Run Keyword If  "${title}"=="oxAuth - Passport Login"  LoginService Fill Credentials
-  Delete User
 
 
 *** Keywords ***
