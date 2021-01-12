@@ -15,6 +15,15 @@ jobs:
     - stage: container creation and publishing
       install: skip
       script: travis/containerCreation.sh um-user-profile
+      
+    - stage: Static Code Analysis    
+      language: java
+      if: branch = develop
+      before_install:
+        - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
+        - unzip sonar-scanner-cli-3.3.0.1492-linux.zip -d /tmp
+      script: /tmp/sonar-scanner-3.3.0.1492-linux/bin/sonar-scanner -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY -Dsonar.sources=. -Dsonar.host.url=$SONARQUBE_URL -Dsonar.login=$SONAR_TOKEN
+
 
     - stage: smoke and acceptance test
       install: skip # without this there's a `git clone` executed!

@@ -1,5 +1,30 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+  <style>
+    button[type=submit] {
+      width: 20% !important;
+      background-color: #f93f3f;
+      color: white;
+      padding: 1em 2.0em;
+      margin-left: 43% !important;
+      margin-right: auto;
+      display: block;
+      margin-top: 2.5em;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button[type=submit]:hover {
+      background-color: #a04545;
+    }
+    .header {
+      background-color: #f9F9F9;
+      padding: 30px;
+      color: #3a393b;
+      text-align: center;
+    }
+  </style>
   <head>
 	<link rel="stylesheet" type="text/css" href="/static/css/profile_management.css">
   </head>
@@ -13,13 +38,11 @@
       <h3 align="center" style="color: orangered; font-weight: bold" id="err_code">Error code: {{ err_code }}</h3>
       {% endif %}
     {% endif %}
-    
-    <br>
-    <br>
-    <br>
-    <br>
+    <div id="myDIV" class="header">
+      <h2 style="margin:5px">Are you sure you want to delete your User?</h2>
+    </div>
     <form action="{{ url_for('confirmation_mail') }}" method="post">
-        <button name="delete" type="submit">Delete Button</button>
+        <button name="delete" type="submit">Delete</button>
     </form>
 
   {% endblock %}
