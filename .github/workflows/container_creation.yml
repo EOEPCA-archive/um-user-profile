@@ -1,0 +1,46 @@
+# This is a basic workflow to help you get started with Actions
+
+name: User Profile BB Workflow
+
+# Controls when the action will run. 
+on: push
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_COMPOSE_VERSION: 1.25.4
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code
+        uses: actions/checkout@v2
+      # Runs a single command using the runners shell
+      - name: Setup Python 3.6.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6.9
+      # Runs a set of commands using the runners shell
+      - name: Testing
+        run: |
+          sudo apt-get install jq python3-venv
+          pip install -r ./src/requirements.txt
+          pytest ./tests
+      # Uncomment below if wanted Dockerhub Publication
+      # - name: Container Creation and Publishing
+      #   run: ./gh_actions/containerCreation.sh um-user-profile
+      # - name: Smoke and Acceptance Test
+      #   run: ./gh_actions/acceptanceTest.sh um-user-profile 8080 7000
+      # - name: Release Container
+      #   if: github.ref == 'refs/heads/master' && github.event != 'pull_request'
+      #   run: ./gh_actions/release.sh um-user-profile
+        
+      
+        
+        
