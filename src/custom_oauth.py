@@ -31,7 +31,7 @@ class OAuthClient(metaclass=Singleton):
         redirectURIs=["https://"+config["sso_url"]+"/web_ui/oauth/callback"]
         logoutURI="http://"+config["sso_url"]+"/web_ui"
         responseTypes=["code", "token", "id_token"]
-        scopes=["openid", "user_name", "permission", "email", "eoepca"]
+        scopes=["openid", "user_name", "permission", "email", "eoepca", "is_operator"]
         sectorIdentifier="https://"+config["sso_url"]+"/oxauth/sectoridentifier/9b473868-fa96-4fd1-a662-76e3663c9726"
         token_endpoint_auth_method=ENDPOINT_AUTH_CLIENT_POST
         scim_client2.registerClient("UserClient", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method, sectorIdentifier=sectorIdentifier)
@@ -94,3 +94,92 @@ class OAuthClient(metaclass=Singleton):
         end_session_endpoint = self.wkhandler.get(wkh.TYPE_OIDC, wkh.KEY_OIDC_END_SESSION_ENDPOINT)
 
         return end_session_endpoint +"?post_logout_redirect_uri="+self.post_logout_redirect_uri+"&id_token_hint="+id_token
+    
+
+    def verify_JWT_token(self, token, key):
+        try:
+            header = str(token).split(".")[0]
+            paddedHeader = header + '=' * (4 - len(header) % 4)
+            decodedHeader = base64.b64decode(paddedHeader)
+            #to remove byte-code
+            decodedHeader_format = decodedHeader.decode('utf-8')
+            decoded_str_header = json.loads(decodedHeader_format)
+
+            payload = str(token).split(".")[1]
+            paddedPayload = payload + '=' * (4 - len(payload) % 4)
+            decoded = base64.b64decode(paddedPayload)
+            #to remove byte-code
+            decoded = decoded.decode('utf-8')
+            decoded_str = json.loads(decoded)
+
+            if decoded_str_header['kid'] != "RSA1":
+                verificator = JWT_Verification()
+                result = verificator.verify_signature_JWT(token)
+            else:
+                #validate signature for rpt
+                rsajwk = RSAKey(kid="RSA1", key=import_rsa_key_from_file("config/public.pem"))
+                dict_rpt_values = JWS().verify_compact(token, keys=[rsajwk], sigalg="RS256")
+
+                if dict_rpt_values == decoded_str:
+                    result = True
+                else:
+                    result = False
+
+            if result == False:
+                print("Verification of the signature for the JWT failed!")
+                raise Exception
+            else:
+                print("Signature verification is correct!")
+
+            if decoded_str_header['kid'] != "RSA1":
+                if key in decoded_str.keys():
+                    if decoded_str[key] != None:
+                        user_value = decoded_str[key]
+                    else:
+                        raise Exception
+                else:
+                    user_value = decoded_str['pct_claims'][key]
+            else:
+                if decoded_str[key] == None:
+                    if decoded_str['pct_claims'][key][0] == None:
+                        raise Exception
+                    else:
+                        user_value = decoded_str['pct_claims'][key][0]
+                else:
+                    user_value = decoded_str[key]
+
+            return user_value
+        except Exception as e:
+            print("Authenticated RPT Resource. No Valid JWT id token passed! " +str(e))
+            return None
+
+    def verify_OAuth_token(self, token, key):
+        headers = { 'content-type': "application/json", 'Authorization' : 'Bearer '+token}
+        url = self.wkh.get(TYPE_OIDC, KEY_OIDC_USERINFO_ENDPOINT )
+        try:
+            res = get(url, headers=headers, verify=False)
+            user = (res.json())
+            return user[key]
+        except:
+            print("OIDC Handler: Get User "+key+": Exception occured!")
+            return None
+
+    def verify_uid_headers(self, headers_protected, key):
+        value = None
+        token_protected = None
+        #Retrieve the token from the headers
+        for i in headers_protected:
+            if 'Bearer' in str(i):
+                aux_protected=headers_protected.index('Bearer')
+                token_protected = headers_protected[aux_protected+1]           
+        if token_protected:
+            #Compares between JWT id_token and OAuth access token to retrieve the requested key-value
+            if len(str(token_protected))>40:
+                value=self.verify_JWT_token(token_protected, key)
+            else:
+                value=self.verify_OAuth_token(token_protected, key)
+
+            return value
+        else:
+            return 'NO TOKEN FOUND'
+
