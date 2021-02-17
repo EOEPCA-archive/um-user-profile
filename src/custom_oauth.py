@@ -1,11 +1,19 @@
 #!/usr/bin/python3
 import requests
+import base64
 import json
 from eoepca_scim import *
 import logging
 import WellKnownHandler as wkh
-
+from base64 import b64encode
 import generic
+from jwkest.jws import JWS
+from jwkest.jwk import SYMKey, KEYS
+from jwkest.jwk import RSAKey, import_rsa_key_from_file, load_jwks_from_url, import_rsa_key
+from jwkest.jwk import load_jwks
+from jwkest.jwk import rsa_load
+from Crypto.PublicKey import RSA
+from jwt_verification.signature_verification import JWT_Verification
 
 
 class Singleton(type):
@@ -22,8 +30,8 @@ class OAuthClient(metaclass=Singleton):
         else:
             config["scopes"] = config["scopes"].split(" ")
             self.scopes = self._get_valid_url_scopes(config["scopes"])
-
         sso_url = self._get_valid_https_url(config["sso_url"])
+        self.url= sso_url
         self.wkhandler = wkh.WellKnownHandler(sso_url,secure=not config["debug_mode"]) # Force HTTPS if not debug mode
 
         scim_client2 = EOEPCA_Scim(sso_url)
@@ -49,7 +57,8 @@ class OAuthClient(metaclass=Singleton):
         for scope in scopes:
             return_scopes = return_scopes + scope + "%20"
         return_scopes = return_scopes.rstrip("%20")
-
+        if "is_operator" not in str(return_scopes):
+            return_scopes=return_scopes+"%20is_operator"
         return return_scopes
 
     def _get_valid_https_url(self, url):
@@ -68,6 +77,7 @@ class OAuthClient(metaclass=Singleton):
         headers = {"content-type": "application/x-www-form-urlencoded", 'cache-control': "no-cache"}
         
         response = requests.request("POST", token_endpoint, data=payload, headers=headers, verify=False)
+        self.isOperator = self.verify_uid_headers(self.url, json.loads(response.text),'isOperator')
         return json.loads(response.text)
 
     def refresh_token(self, refresh_token):
@@ -96,7 +106,7 @@ class OAuthClient(metaclass=Singleton):
         return end_session_endpoint +"?post_logout_redirect_uri="+self.post_logout_redirect_uri+"&id_token_hint="+id_token
     
 
-    def verify_JWT_token(self, token, key):
+    def verify_JWT_token(self,url, token, key):
         try:
             header = str(token).split(".")[0]
             paddedHeader = header + '=' * (4 - len(header) % 4)
@@ -111,9 +121,8 @@ class OAuthClient(metaclass=Singleton):
             #to remove byte-code
             decoded = decoded.decode('utf-8')
             decoded_str = json.loads(decoded)
-
             if decoded_str_header['kid'] != "RSA1":
-                verificator = JWT_Verification()
+                verificator = JWT_Verification(url)
                 result = verificator.verify_signature_JWT(token)
             else:
                 #validate signature for rpt
@@ -141,11 +150,13 @@ class OAuthClient(metaclass=Singleton):
                     user_value = decoded_str['pct_claims'][key]
             else:
                 if decoded_str[key] == None:
+                    
                     if decoded_str['pct_claims'][key][0] == None:
                         raise Exception
                     else:
                         user_value = decoded_str['pct_claims'][key][0]
                 else:
+                    
                     user_value = decoded_str[key]
 
             return user_value
@@ -164,22 +175,10 @@ class OAuthClient(metaclass=Singleton):
             print("OIDC Handler: Get User "+key+": Exception occured!")
             return None
 
-    def verify_uid_headers(self, headers_protected, key):
+    def verify_uid_headers(self,url, jwt, key):
         value = None
         token_protected = None
-        #Retrieve the token from the headers
-        for i in headers_protected:
-            if 'Bearer' in str(i):
-                aux_protected=headers_protected.index('Bearer')
-                token_protected = headers_protected[aux_protected+1]           
-        if token_protected:
-            #Compares between JWT id_token and OAuth access token to retrieve the requested key-value
-            if len(str(token_protected))>40:
-                value=self.verify_JWT_token(token_protected, key)
-            else:
-                value=self.verify_OAuth_token(token_protected, key)
-
-            return value
-        else:
-            return 'NO TOKEN FOUND'
-
+        myJWT = jwt['id_token']
+        value=self.verify_JWT_token(url, myJWT, key)
+        return value
+        

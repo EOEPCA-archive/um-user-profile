@@ -107,28 +107,18 @@ def refresh_session(refresh_token):
 @app.route(g_base_uri+g_oauth_callback_path)
 def oauth_callback():
     code = request.args.get('code')
-
-    logging.info('a ver el callback chicos!!!!!!!!!!!!!!!!!!!!!!')
-    logging.info(request.args)
-    logging.info(request)
-    logging.info(request.headers)
     try:
         response = auth_client.get_token(code)
     except Exception as e:
         print(str(e))
         return redirect(url_for('home'))
-    logging.info(response)
     session['access_token'] = response["access_token"]
     session['id_token'] = response["id_token"]
     session['refresh_token'] = response["refresh_token"]
     session[generic.ERR_CODE] = ""
     session[generic.ERR_MSG] = ""
     try:
-        logging.info(response)
-        logging.info(str(response))
         userinfo = auth_client.get_user_info(response["access_token"])
-        logging.info('!!!!!!!!!!!!!!!!!!!ALVLUSERINFO')
-        logging.info(userinfo)
     except Exception as e:
         print(str(e))
         return redirect(url_for('home'))
@@ -226,10 +216,8 @@ def TC_management():
         session["reminder"] = 'TC_management'
         return redirect(url_for('login'))
     data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
-    logging.info(data)
     found = None
     total = str(data).split('\'')
-    logging.info(total)
     for v in range(len(total)):
         if 'TermsConditions' in str(total[v]):
 
@@ -258,18 +246,6 @@ def TC_management():
         logo_image_path = g_logo_image,
         data = a
     )
-
-
-
-
-
-
-
-
-
-
-
-
 
 @app.route(g_base_uri+"/licenses_management/modify",methods=['POST'])
 def modify_licenses():
@@ -319,15 +295,10 @@ def licenses_management():
         session["reminder"] = 'licenses_management'
         return redirect(url_for('login'))
     data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
-    logging.info(data)
     found = None
     total = str(data).split('\'')
-    logging.info(total)
     for v in range(len(total)):
-        logging.info('for')
         if 'Licenses' in str(total[v]):
-
-            logging.info('licenseees loco')
             for i in range(4):
                 m = re.search('\{(.+?)\}', str(total[v+i]))
                 if m:
@@ -452,15 +423,16 @@ def modify_details():
 
     #FORM DATA
     flat_list = [item for sublist in list(request.form.listvalues()) for item in sublist]
+    logging.info('mmmmmmaqui stoy')
     logging.info(flat_list)
-
-    data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
-    myDetails= []
-    for k, v in data['editable'].items(): 
-        if "StorageDetails" in str(k):
-            data['editable'][k] = flat_list
-    logging.info(data)
-    logging.info(list(request.form.listvalues()))
+    l=[]
+    for i in flat_list:
+        a={}
+        a["value"] = str(i)
+        l.append(a)
+    logging.info(l)
+    
+    
     if session[generic.ERR_MSG] is "" and request.form:
         session[generic.ERR_MSG], session[generic.ERR_CODE] = scim_client.editStorageDetails(session.get('logged_user'), str(flat_list))
 
@@ -488,7 +460,6 @@ def storage_details():
     for k, v in data['editable'].items(): 
         if "StorageDetails" in str(k):
             myDetails = data['editable'][k]
-    logging.info(myDetails)
     return render_template("storage_details.html",
         title = g_title,
         username = session.get('logged_user'),
@@ -497,7 +468,8 @@ def storage_details():
         color_web_header = g_header_color,
         logo_alt_name = g_logo_alt,
         logo_image_path = g_logo_image,
-        data = myDetails
+        data = myDetails,
+        isOper = auth_client.isOperator
     )
 
 
@@ -545,7 +517,6 @@ def profile_management():
         if "StorageDetails" in str(k):
             del data['editable'][k]
             break
-    logging.info(data)
     return render_template("profile_management.html",
         title = g_title,
         username = session.get('logged_user'),
