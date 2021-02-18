@@ -80,6 +80,12 @@ Terms and Conditions
   ${RETURNVALUE}  Set Variable If  '${match}' == 'PASS'  ${True}  ${False}
   Should Be True  ${RETURNVALUE}
 
+Storage Details
+  Click Element  xpath=//input[@type="submit"]  
+  ${a}=  Get Text  xpath=//html
+  ${match}  ${value}  Run Keyword And Ignore Error  Should Contain  ${a}  Storage Details
+  ${RETURNVALUE}  Set Variable If  '${match}' == 'PASS'  ${True}  ${False}
+  Should Be True  ${RETURNVALUE}
 
 Profile Edition
   Profile Management
@@ -89,6 +95,8 @@ Profile Edition
   Licenses Management
   Click Link  xpath=//a[@href="/web_ui/TC_management"]
   Terms and Conditions
+  Click Link  xpath=//a[@href="/web_ui/storage_details"]
+  Storage Details
 
 
 Go to Attributes

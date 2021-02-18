@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  
+body {
+  margin: 0;
+  min-width: 250px;
+}
+
+/* Include the padding and border in an element's total width and height */
+* {
+  box-sizing: border-box;
+}
+
+/* Remove margins and padding from the list */
+form {
+  margin: 0;
+  padding: 0;
+}
+
+
+form label input {
+  text-align: center;
+  padding: 0px 0;
+  font-size: 10x;
+  background-color: transparent;
+  width: 100%;
+}
+
+form input {
+  border: 0px !important;
+  text-align: center;
+  padding: 0px 0;
+  font-size: 10x;
+  background-color: transparent;
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Style the list items */
+form label {
+  width: 104% !important;
+  display: grid;
+  grid-template-columns: auto auto;
+  cursor: pointer;
+  position: relative;
+  padding: 12px 8px 12px 40px;
+  list-style-type: none;
+  background: #eee;
+  font-size: 18px;
+  transition: 0.2s;
+  
+  /* make the list items unselectable */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Set all odd list items to a different color (zebra-stripes) */
+form label:nth-child(odd) {
+  background: #f9f9f9;
+}
+
+/* Darker background-color on hover */
+form label:hover {
+  background: #ddd;
+}
+
+
+/* Style the close button */
+.close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 12px 16px 12px 16px;
+}
+
+.close:hover {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Style the header */
+.header {
+  background-color: #505050;
+  padding: 30px 40px;
+  color: white;
+  text-align: center;
+}
+
+/* Clear floats after the header */
+.header:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the input */
+input {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  width: 75%;
+  padding: 10px;
+  float: left;
+  font-size: 16px;
+}
+
+input[type=submit] {
+  width: 20% !important;
+  background-color: #4CAF50;
+  color: white;
+  padding: 1em 2.0em;
+  margin-left: 38% !important;
+  margin-right: auto;
+  display: block;
+  margin-top: 2.5em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+/* Style the "Add" button */
+.addBtn {
+  padding: 10px;
+  width: 23.5%;
+  background: #d9d9d9;
+  color: #555;
+  float: right;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 0;
+  margin-right: 1%;
+}
+
+.addBtn:hover {
+  background-color: #bbb;
+}
+
+
+.subBtn {
+  padding: 20px;
+  width: 6%;
+  background: #d9d9d9;
+  color: #555;
+  float:right;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 0;
+  margin-top: 20px;
+  margin-right: 1000px
+}
+
+.subBtn:hover {
+  background-color: #bbb;
+}
+
+</style>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+  {% extends "template.html" %}
+  {% block content %}
+
+  {% if err_msg %}
+  <h3 align="center" style="color: red; font-weight: bold" id="err_msg">Warning: {{ err_msg }}</h3>
+    {% if err_code %}
+    <h3 align="center" style="color: orangered; font-weight: bold" id="err_code">Error code: {{ err_code }}</h3>
+    {% endif %}
+  {% endif %}
+    <div id="myDIV" class="header">
+      <h2 style="margin:5px">Storage Details</h2>
+  {% if isOper %}
+      <div>
+        <ul>
+          <input type="text" id="myInput" placeholder="API Name...">
+        </ul>
+        <span onclick="newElement()" class="addBtn">Add</span>
+      </div>
+    </div>   
+    <form action="{{ url_for('modify_details') }}" method="post" id="myUL">
+      
+    {% if data %}
+      {% for k in data %}
+        <label class="row"><input class="item" contenteditable="true"  type="text" id="monkey" name="key" value="{{k}}"></label>
+      {% endfor %}
+    {% endif %}
+      <input class="subBtn" type="submit" value="Apply">
+    </form>
+  {% else %}
+    <h3>Only operators can access this data.</h3>
+  {% endif %}
+      
+  <script>
+  // Create a "close" button and append it to each list item
+  var myNodelist = document.getElementsByTagName("LABEL");
+  var i;
+  for (i = 0; i < myNodelist.length; i++) {
+    var span = document.createElement("SPAN");
+    var txt = document.createTextNode("\u00D7");
+    span.className = "close";
+    span.appendChild(txt);
+    myNodelist[i].appendChild(span);
+  }
+
+  // Click on a close button to hide the current list item
+  var close = document.getElementsByClassName("close");
+  var i;
+  for (i = 0; i < close.length; i++) {
+    close[i].onclick = function() {
+      var div = this.parentElement;
+      div.remove()
+    }
+  }
+  
+  // Create a new list item when clicking on the "Add" button
+  function newElement() {
+    var li = document.createElement("label");
+    var vi = document.createElement("input");
+    var inputValue = document.getElementById("myInput").value;
+    vi.setAttribute('name', 'key');
+    vi.setAttribute('id', 'monkey');
+    vi.setAttribute('value', inputValue);
+    vi.setAttribute('contenteditable', true);
+    vi.setAttribute('class', 'item')
+    vi.setAttribute('type', 'text')
+    li.setAttribute('class', 'row')
+    li.appendChild(vi);
+    if (inputValue === '') {
+      alert("You must write something!");
+    } else {
+      var list = document.getElementById("myUL");
+      list.insertBefore(li, list.childNodes[0]);
+    }
+    document.getElementById("myInput").value = "";
+    var span = document.createElement("SPAN");
+    var txt = document.createTextNode("\u00D7");
+    span.className = "close";
+    span.appendChild(txt);
+    li.appendChild(span);
+
+    for (i = 0; i < close.length; i++) {
+      close[i].onclick = function() {
+        var div = this.parentElement;
+        div.remove();
+      }
+    }
+  }
+  </script>
+
+  {% endblock %}
+</body>
+</html>

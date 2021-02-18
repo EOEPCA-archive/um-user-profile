@@ -112,7 +112,6 @@ def oauth_callback():
     except Exception as e:
         print(str(e))
         return redirect(url_for('home'))
-
     session['access_token'] = response["access_token"]
     session['id_token'] = response["id_token"]
     session['refresh_token'] = response["refresh_token"]
@@ -217,10 +216,8 @@ def TC_management():
         session["reminder"] = 'TC_management'
         return redirect(url_for('login'))
     data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
-    logging.info(data)
     found = None
     total = str(data).split('\'')
-    logging.info(total)
     for v in range(len(total)):
         if 'TermsConditions' in str(total[v]):
 
@@ -249,18 +246,6 @@ def TC_management():
         logo_image_path = g_logo_image,
         data = a
     )
-
-
-
-
-
-
-
-
-
-
-
-
 
 @app.route(g_base_uri+"/licenses_management/modify",methods=['POST'])
 def modify_licenses():
@@ -310,15 +295,10 @@ def licenses_management():
         session["reminder"] = 'licenses_management'
         return redirect(url_for('login'))
     data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
-    logging.info(data)
     found = None
     total = str(data).split('\'')
-    logging.info(total)
     for v in range(len(total)):
-        logging.info('for')
         if 'Licenses' in str(total[v]):
-
-            logging.info('licenseees loco')
             for i in range(4):
                 m = re.search('\{(.+?)\}', str(total[v+i]))
                 if m:
@@ -423,6 +403,70 @@ def apis_management():
         data = a
     )
 
+
+
+
+
+
+
+
+@app.route(g_base_uri+"/storage_details/modify",methods=['POST'])
+def modify_details():
+    refresh_token = session.get('refresh_token')
+    logged_in = session.get('logged_in')
+    if not logged_in or refresh_token is None or refresh_token is "":
+        session["reminder"] = 'modify_details'
+        return redirect(url_for('login'))
+
+    # Refresh session and execute
+    session[generic.ERR_MSG], session[generic.ERR_CODE] = refresh_session(refresh_token)
+
+    #FORM DATA
+    flat_list = [item for sublist in list(request.form.listvalues()) for item in sublist]
+    if session[generic.ERR_MSG] is "" and request.form:
+        session[generic.ERR_MSG], session[generic.ERR_CODE] = scim_client.editStorageDetails(session.get('logged_user'), flat_list)
+
+    return redirect(url_for("storage_details"))
+
+@app.route(g_base_uri+"/storage_details")
+def storage_details():
+    err_msg = None
+    old_err_msg = session.get(generic.ERR_MSG, "")
+    err_code = session.get(generic.ERR_CODE, "")
+    # Overwrite them to not let the user lock themselfs in an error
+    session[generic.ERR_MSG] = ""
+    session[generic.ERR_CODE] = ""
+    
+    refresh_session(session.get('refresh_token',""))
+
+    token = session.get('access_token')
+    logged_in = session.get('logged_in')
+    if not logged_in or token is None or token is "":
+        session["reminder"] = 'storage_details'
+        return redirect(url_for('login'))
+
+    data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
+    myDetails= []
+    for k, v in data['editable'].items(): 
+        if "StorageDetails" in str(k):
+            myDetails = data['editable'][k]
+    return render_template("storage_details.html",
+        title = g_title,
+        username = session.get('logged_user'),
+        logged_in = logged_in,
+        color_web_background = g_background_color,
+        color_web_header = g_header_color,
+        logo_alt_name = g_logo_alt,
+        logo_image_path = g_logo_image,
+        data = myDetails,
+        isOper = auth_client.isOperator
+    )
+
+
+
+
+
+
 @app.route(g_base_uri+"/profile_management/modify",methods=['POST'])
 def modify_management():
     refresh_token = session.get('refresh_token')
@@ -458,7 +502,11 @@ def profile_management():
         return redirect(url_for('login'))
 
     data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
-
+    print(data)
+    for k, v in data['editable'].items(): 
+        if "StorageDetails" in str(k):
+            del data['editable'][k]
+            break
     return render_template("profile_management.html",
         title = g_title,
         username = session.get('logged_user'),
