@@ -423,18 +423,8 @@ def modify_details():
 
     #FORM DATA
     flat_list = [item for sublist in list(request.form.listvalues()) for item in sublist]
-    logging.info('mmmmmmaqui stoy')
-    logging.info(flat_list)
-    l=[]
-    for i in flat_list:
-        a={}
-        a["value"] = str(i)
-        l.append(a)
-    logging.info(l)
-    
-    
     if session[generic.ERR_MSG] is "" and request.form:
-        session[generic.ERR_MSG], session[generic.ERR_CODE] = scim_client.editStorageDetails(session.get('logged_user'), str(flat_list))
+        session[generic.ERR_MSG], session[generic.ERR_CODE] = scim_client.editStorageDetails(session.get('logged_user'), flat_list)
 
     return redirect(url_for("storage_details"))
 

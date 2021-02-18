@@ -42,7 +42,9 @@ class SCIMClient(metaclass=Singleton):
 
     def editStorageDetails(self, user_id, data):
         k = 'urn:ietf:params:scim:schemas:extension:gluu:2.0:User.StorageDetails'
-        res = self.scim_client.editUserAttribute(user_id,k,data)
+        stringo= str(data)
+        resulto= stringo.replace('\'', '\"')
+        res = self.scim_client.editUserMultiValueAttribute(user_id,k,str(resulto))
         if res != 200:
             print(res)
             print("error for "+str(k))
