@@ -86,7 +86,7 @@ This section contains:
 
 ================================
 
-=== USP_UC_001: Use Case: Account Removal
+=== USP-UC-001: Use Case: Account Removal
 
 The user is capable deleting their own account
 
@@ -107,7 +107,7 @@ image::../images/Use_Case_Removal.png[width=85%,pdfwidth=85%,align="center"]
 image::../images/ProfileManagement.png[top=5%, align=center, pdfwidth=6.5in]
 This diagram covers the following use cases:
 
-=== USP_UC_002: Profile Management
+=== USP-UC-002: Profile Management
 
 The user is capable of modifying their own profile attributes
 
@@ -122,7 +122,7 @@ The user is capable of modifying their own profile attributes
 *** The user can edit attribute fields
 *** The changes are saved within the Login Service
 
-=== USP_UC_003: Licenses Management
+=== USP-UC-003: Licenses Management
 
 The user is capable of managing their own licenses
 
@@ -137,7 +137,7 @@ The user is capable of managing their own licenses
 *** The user can view, add and delete licenses
 *** The changes are saved within the Login Service
 
-=== USP_UC_004: API Keys Management
+=== USP-UC-004: API Keys Management
 
 The user is capable of managing their own API keys
 
@@ -152,7 +152,7 @@ The user is capable of managing their own API keys
 *** The user can view, add and delete API keys
 *** The changes are saved within the Login Service
 
-=== USP_UC_005: Terms & Conditions Management
+=== USP-UC-005: Terms & Conditions Management
 
 The user is capable of managing their own T&C
 
