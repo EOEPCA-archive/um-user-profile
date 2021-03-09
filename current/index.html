@@ -44,10 +44,19 @@
 <li><a href="#_api_keys_list">2.1.4. API Keys List</a></li>
 <li><a href="#_licenses_list">2.1.5. Licenses List</a></li>
 <li><a href="#_list_of_terms_and_conditions">2.1.6. List of Terms and Conditions</a></li>
+<li><a href="#_storage_details">2.1.7. Storage Details</a></li>
 </ul>
 </li>
 <li><a href="#_static_architecture">2.2. Static Architecture</a></li>
-<li><a href="#_use_cases">2.3. Use Cases</a></li>
+<li><a href="#_use_cases">2.3. Use Cases</a>
+<ul class="sectlevel3">
+<li><a href="#_usp_uc_001_use_case_account_removal">2.3.1. USP-UC-001: Use Case: Account Removal</a></li>
+<li><a href="#_usp_uc_002_profile_management">2.3.2. USP-UC-002: Profile Management</a></li>
+<li><a href="#_usp_uc_003_licenses_management">2.3.3. USP-UC-003: Licenses Management</a></li>
+<li><a href="#_usp_uc_004_api_keys_management">2.3.4. USP-UC-004: API Keys Management</a></li>
+<li><a href="#_usp_uc_005_terms_conditions_management">2.3.5. USP-UC-005: Terms &amp; Conditions Management</a></li>
+</ul>
+</li>
 <li><a href="#_external_interfaces">2.4. External Interfaces</a>
 <ul class="sectlevel3">
 <li><a href="#_um_login_service_interface">2.4.1. um-login-service Interface</a></li>
@@ -1010,6 +1019,12 @@ With this it will make the whole process of creating the SMPT Server connection,
 <p>It&#8217;s a feature that allows the user to modify their own list of Documents of T&amp;C the same way the API Keys List and Licenses manager above is defined. It is implemented using the SCIM Client that allows to perform attribute modifications and checks against the Login Service OIDC Auth.</p>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_storage_details">2.1.7. Storage Details</h4>
+<div class="paragraph">
+<p>This section defines a list of Object Storage bucket URI where the Storage Details of each User are saved. This attribute is multi-valued within Gluu and it&#8217;s represented as a list, the same way the others attributes are saved, it will use the SCIM Client in order to perform those modifications. It also makes use of the OAuth Client to resolve authentication, but in a different way than the previous attribute editors: since this information will only be accesible by operators, the OAuth Client will check if the attribute isOperator is set to True for the user that want access to the Storage Details front page.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_static_architecture">2.2. Static Architecture</h3>
@@ -1084,12 +1099,10 @@ With this it will make the whole process of creating the SMPT Server connection,
 </tr>
 </table>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Use Case: Account Removal</p>
-</li>
-</ul>
+<div class="sect3">
+<h4 id="_usp_uc_001_use_case_account_removal">2.3.1. USP-UC-001: Use Case: Account Removal</h4>
+<div class="paragraph">
+<p>The user is capable deleting their own account</p>
 </div>
 <div id="img_userProfileUseCaseRemoval" class="imageblock text-center">
 <div class="content">
@@ -1141,6 +1154,223 @@ With this it will make the whole process of creating the SMPT Server connection,
 </div>
 </li>
 </ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/ProfileManagement.png" alt="ProfileManagement">
+</div>
+</div>
+<div class="paragraph">
+<p>This diagram covers the following use cases:</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_usp_uc_002_profile_management">2.3.2. USP-UC-002: Profile Management</h4>
+<div class="paragraph">
+<p>The user is capable of modifying their own profile attributes</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Principal actor: User</p>
+</li>
+<li>
+<p>Preconditions:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user must be signed in to perform the action</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Postconditions:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user&#8217;s attributes are modified</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Main successful scenario:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user logs in to the platform</p>
+</li>
+<li>
+<p>The user selects the option for profile management</p>
+</li>
+<li>
+<p>The user can edit attribute fields</p>
+</li>
+<li>
+<p>The changes are saved within the Login Service</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_usp_uc_003_licenses_management">2.3.3. USP-UC-003: Licenses Management</h4>
+<div class="paragraph">
+<p>The user is capable of managing their own licenses</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Principal actor: User</p>
+</li>
+<li>
+<p>Preconditions:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user must be signed in to perform the action</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Postconditions:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user&#8217;s licenses are available</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Main successful scenario:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user logs in to the platform</p>
+</li>
+<li>
+<p>The user selects the option for licenses</p>
+</li>
+<li>
+<p>The user can view, add and delete licenses</p>
+</li>
+<li>
+<p>The changes are saved within the Login Service</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_usp_uc_004_api_keys_management">2.3.4. USP-UC-004: API Keys Management</h4>
+<div class="paragraph">
+<p>The user is capable of managing their own API keys</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Principal actor: User</p>
+</li>
+<li>
+<p>Preconditions:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user must be signed in to perform the action</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Postconditions:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user&#8217;s API keys are available</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Main successful scenario:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user logs in to the platform</p>
+</li>
+<li>
+<p>The user selects the option for API keys</p>
+</li>
+<li>
+<p>The user can view, add and delete API keys</p>
+</li>
+<li>
+<p>The changes are saved within the Login Service</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_usp_uc_005_terms_conditions_management">2.3.5. USP-UC-005: Terms &amp; Conditions Management</h4>
+<div class="paragraph">
+<p>The user is capable of managing their own T&amp;C</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Principal actor: User</p>
+</li>
+<li>
+<p>Preconditions:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user must be signed in to perform the action</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Postconditions:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user&#8217;s T&amp;C are available</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Main successful scenario:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The user logs in to the platform</p>
+</li>
+<li>
+<p>The user selects the option for Terms &amp; Conditions</p>
+</li>
+<li>
+<p>The user can view, add and delete T&amp;C values</p>
+</li>
+<li>
+<p>The changes are saved within the Login Service</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -1591,63 +1821,91 @@ This endpoint manages the information given by the auth server, returned from th
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. User Stories</caption>
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Code</th>
+<th class="tableblock halign-left valign-top">User Story Code</th>
 <th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Building Block Use Case</th>
+<th class="tableblock halign-left valign-top">Master Use Case</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-165</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">T&amp;C Review Section</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">USP-UC-005</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-UC-1506</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-161</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">License Management Section</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">USP-UC-003</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-UC-1506</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-13</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Reusable SCIM Client Implementation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-UC-1003</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-11</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Reusable OIDC Client Implementation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-UC-1003</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-88</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Extend SCIM Client with UMA Protection</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-UC-1003</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-211</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Implementation of Helm Charts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD Task</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-87</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Email Notifications Hook</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">USP-UC-001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-UC-0110</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-66</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Setup of CI/CD Configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD Task</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-24</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">On-boarding Flow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD Task</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-21</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">End-User Account Removal</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">USP-UC-001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-UC-0110</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-20</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">End-User Profile Edition/Update</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">USP-UC-002</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-UC-0112</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-164</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">API Keys Management Section</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">USP-UC-004</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EOEPCA-UC-1506</p></td>
 </tr>
 </tbody>
 </table>
@@ -1661,7 +1919,7 @@ This endpoint manages the information given by the auth server, returned from th
 <div id="footer">
 <div id="footer-text">
 Version 0.1<br>
-Last updated 2021-01-29 13:20:12 UTC
+Last updated 2021-03-09 11:27:41 UTC
 </div>
 </div>
 </body>
