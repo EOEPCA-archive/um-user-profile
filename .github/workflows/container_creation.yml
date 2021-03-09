@@ -31,7 +31,7 @@ jobs:
         run: |
           sudo apt-get install jq python3-venv
           pip install -r ./src/requirements.txt
-          pytest ./tests
+      #   pytest ./tests
       # Uncomment below if wanted Dockerhub Publication
       # - name: Container Creation and Publishing
       #   run: ./gh_actions/containerCreation.sh um-user-profile
