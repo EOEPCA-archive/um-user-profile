@@ -86,7 +86,9 @@ This section contains:
 
 ================================
 
-* Use Case: Account Removal
+=== USP-UC-001: Use Case: Account Removal
+
+The user is capable deleting their own account
 
 [#img_userProfileUseCaseRemoval,reftext='{figure-caption} {counter:figure-num}']
 image::../images/Use_Case_Removal.png[width=85%,pdfwidth=85%,align="center"]
@@ -102,6 +104,68 @@ image::../images/Use_Case_Removal.png[width=85%,pdfwidth=85%,align="center"]
 *** The user will receive a confirmation email
 *** When the user clicks on the url in the email will confirm the action of account removal
 
+image::../images/ProfileManagement.png[top=5%, align=center, pdfwidth=6.5in]
+This diagram covers the following use cases:
+
+=== USP-UC-002: Profile Management
+
+The user is capable of modifying their own profile attributes
+
+** Principal actor: User
+** Preconditions:
+*** The user must be signed in to perform the action
+** Postconditions:
+*** The user's attributes are modified
+** Main successful scenario:
+*** The user logs in to the platform
+*** The user selects the option for profile management
+*** The user can edit attribute fields
+*** The changes are saved within the Login Service
+
+=== USP-UC-003: Licenses Management
+
+The user is capable of managing their own licenses
+
+** Principal actor: User
+** Preconditions:
+*** The user must be signed in to perform the action
+** Postconditions:
+*** The user's licenses are available
+** Main successful scenario:
+*** The user logs in to the platform
+*** The user selects the option for licenses
+*** The user can view, add and delete licenses
+*** The changes are saved within the Login Service
+
+=== USP-UC-004: API Keys Management
+
+The user is capable of managing their own API keys
+
+** Principal actor: User
+** Preconditions:
+*** The user must be signed in to perform the action
+** Postconditions:
+*** The user's API keys are available
+** Main successful scenario:
+*** The user logs in to the platform
+*** The user selects the option for API keys
+*** The user can view, add and delete API keys
+*** The changes are saved within the Login Service
+
+=== USP-UC-005: Terms & Conditions Management
+
+The user is capable of managing their own T&C
+
+** Principal actor: User
+** Preconditions:
+*** The user must be signed in to perform the action
+** Postconditions:
+*** The user's T&C are available
+** Main successful scenario:
+*** The user logs in to the platform
+*** The user selects the option for Terms & Conditions
+*** The user can view, add and delete T&C values
+*** The changes are saved within the Login Service
 
 == External Interfaces
 
