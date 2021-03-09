@@ -241,6 +241,7 @@ input[type=submit]:hover {
           <a class="navbar-buttons" href="{{ url_for('apis_management') }}">Your API Keys</a>
           <a class="navbar-buttons" href="{{ url_for('licenses_management') }}">Your Licenses</a>
           <a class="navbar-buttons" href="{{ url_for('TC_management') }}">Terms and Conditions</a>
+          <a class="navbar-buttons" href="{{ url_for('storage_details') }}">Storage Details</a>
           <a class="navbar-buttons" href="{{ url_for('profile_removal') }}">Delete Profile</a>
           {% if username %}
           <a class="navbar-buttons" href="{{ url_for('logout') }}">{{ username }} (Log Out)</a>

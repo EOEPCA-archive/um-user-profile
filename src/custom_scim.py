@@ -31,7 +31,7 @@ class SCIMClient(metaclass=Singleton):
         redirectURIs=["https://"+config["sso_url"]+"/login"]
         logoutURI="https://"+config["sso_url"]+"/logout"
         responseTypes=[]
-        scopes=["openid", "oxd", "permission", "profile"]
+        scopes=["openid", "oxd", "permission", "profile", "is_operator"]
         token_endpoint_auth_method=ENDPOINT_AUTH_CLIENT_BASIC
         self.scim_client.registerClient("SCIMClientUser", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method)
         logging.getLogger().setLevel(logging.INFO)
@@ -40,6 +40,17 @@ class SCIMClient(metaclass=Singleton):
         if "http" not in url:
             return "https://" + url
 
+    def editStorageDetails(self, user_id, data):
+        k = 'urn:ietf:params:scim:schemas:extension:gluu:2.0:User.StorageDetails'
+        stringo= str(data)
+        resulto= stringo.replace('\'', '\"')
+        res = self.scim_client.editUserMultiValueAttribute(user_id,k,str(resulto))
+        if res != 200:
+            print(res)
+            print("error for "+str(k))
+            return "Error while updating "+str(k)+" -> "+str(res), ""
+
+        return "", ""
     def editApiKeys(self, user_id, data):
         k = 'urn:ietf:params:scim:schemas:extension:gluu:2.0:User.apiKeys'
         res = self.scim_client.editUserAttribute(user_id,k,data)

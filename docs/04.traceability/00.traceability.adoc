@@ -3,42 +3,66 @@
 
 .User Stories
 |===
-|Code |Description 
+|User Story Code |Description |Building Block Use Case |Master Use Case
 
 |EOEPCA-165	
 |T&C Review Section
+| USP-UC-005
+| EOEPCA-UC-1506
 
 |EOEPCA-161	
 |License Management Section
+| USP-UC-003
+| EOEPCA-UC-1506
 
 |EOEPCA-13	
 |Reusable SCIM Client Implementation
+| -
+| EOEPCA-UC-1003
 
 |EOEPCA-11	
 |Reusable OIDC Client Implementation
+| -
+| EOEPCA-UC-1003
 
 |EOEPCA-88	
 |Extend SCIM Client with UMA Protection
+| -
+| EOEPCA-UC-1003
 
 |EOEPCA-211	
 |Implementation of Helm Charts
+| -
+| CI/CD Task
 
 |EOEPCA-87	
 |Email Notifications Hook
+| USP-UC-001
+| EOEPCA-UC-0110
 
 |EOEPCA-66	
 |Setup of CI/CD Configuration
+| -
+| CI/CD Task
 
 |EOEPCA-24	
 |On-boarding Flow
+| -
+| CI/CD Task
 
 |EOEPCA-21	
 |End-User Account Removal
+| USP-UC-001
+| EOEPCA-UC-0110
 
 |EOEPCA-20	
 |End-User Profile Edition/Update
+| USP-UC-002
+| EOEPCA-UC-0112
 
 |EOEPCA-164	
 |API Keys Management Section
+| USP-UC-004
+| EOEPCA-UC-1506
 
 |===
