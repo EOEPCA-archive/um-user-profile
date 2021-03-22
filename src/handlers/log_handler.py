@@ -1,5 +1,6 @@
 import logging, logging.config, yaml
 import os
+import json
 
 class LogHandler:
     __instance__ = None
@@ -36,12 +37,12 @@ class LogHandler:
             logging.warning (str(exception))
             logging.warning (DEFAULT_CONFIG_MSG)
     
-    def format_message(self, subcomponent, action_id, action_type, log_code, log_message):
+    def format_message(self, subcomponent, action_id, action_type, log_code, activity):
         message = "\n=========================\n"
         message += "Subcomponent: "+subcomponent+"\n"
         message += "Action Identifier: "+action_id+"\n"
         message += "Action Type: "+action_type+"\n"
-        message += "Log Code: "+log_code+"\n"
-        message += "Activity: "+log_message+"\n"
+        message += "Log Code: "+str(log_code)+"\n"
+        message += "Activity: "+json.dumps(activity)+"\n"
         message += "========================="
         return message
