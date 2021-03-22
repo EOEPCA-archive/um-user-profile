@@ -106,6 +106,13 @@
 <li><a href="#_applicable_resources_2">3.3.5. Applicable Resources</a></li>
 </ul>
 </li>
+<li><a href="#_logging">3.4. Logging</a>
+<ul class="sectlevel3">
+<li><a href="#_design">3.4.1. Design</a></li>
+<li><a href="#_log_message_format">3.4.2. Log message format</a></li>
+<li><a href="#_log_message_codes">3.4.3. Log message codes</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#traceabilityMatrix">4. User Story Traceability</a></li>
@@ -1072,7 +1079,7 @@ With this it will make the whole process of creating the SMPT Server connection,
 </ul>
 </div>
 <div class="paragraph">
-<p>The Section for the Building Block Design <a href="#Design">[Design]</a> contains detailed descriptions and references to the Open Source components used in this Building Block.</p>
+<p>The Section for the Building Block Design <a href="#_design">Design</a> contains detailed descriptions and references to the Open Source components used in this Building Block.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1810,6 +1817,110 @@ This endpoint manages the information given by the auth server, returned from th
 </li>
 </ul>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_logging">3.4. Logging</h3>
+<div class="sect3">
+<h4 id="_design">3.4.1. Design</h4>
+<div class="paragraph">
+<p>Logging accross the EOEPCA Building Blocks works much in the same way, by usage of a log helper class to initiate a Python logger, handler and formater that simultaneously outputs log messages to console and a log file. These log files are set on a rotation, with a 1GB limit per each, with the 10 latest log files being kept in memory.</p>
+</div>
+<div class="paragraph">
+<p>A new configuration yaml file is added to the building block, containing initialization parameters.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_log_message_format">3.4.2. Log message format</h4>
+<div class="paragraph">
+<p>INFO level log messages follow the following format:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>TIME: in ISO 8601 format, "%Y-%m-%dT%H:%M:%S%z"</p>
+</li>
+<li>
+<p>LEVELNAME: INFO by default</p>
+</li>
+<li>
+<p>COMPONENT: "USP"</p>
+</li>
+<li>
+<p>SUBCOMPONENT: N/A</p>
+</li>
+<li>
+<p>ACTION IDENTIFIER: HTTP by default</p>
+</li>
+<li>
+<p>ACTION TYPE: N/A</p>
+</li>
+<li>
+<p>LOG CODE: Unique code identifying log message type</p>
+</li>
+<li>
+<p>ACTIVITY: Detailed log message, check reference table</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_log_message_codes">3.4.3. Log message codes</h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Log Codes</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Log Code</th>
+<th class="tableblock halign-left valign-top">Structure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{"User":user,"Description":"User login failed"}</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1002</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{"User":user,"Description":"User sucessfully logs in"}</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1003</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{"User":user,"Description":"User updated profile"}</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1004</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{"User":user,"Description":"User updated T&amp;C"}</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1005</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{"User":user,"Description":"User updated API Keys"}</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1006</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{"User":user,"Description":"User updated Storage details"}</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1007</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{"User":user,"Description":"User updated Licenses"}</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1008</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{"User":user,"Description":"User deleted profile"}</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1009</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{"User":user,"Description":"Error reading token"}</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1010</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{"User":user,"Description":"Error fetching user info","Token":access_token}</p></td>
+</tr>
+</tbody>
+</table>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -1819,7 +1930,7 @@ This endpoint manages the information given by the auth server, returned from th
 <h2 id="traceabilityMatrix">4. User Story Traceability</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. User Stories</caption>
+<caption class="title">Table 3. User Stories</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -1919,7 +2030,7 @@ This endpoint manages the information given by the auth server, returned from th
 <div id="footer">
 <div id="footer-text">
 Version 0.1<br>
-Last updated 2021-03-19 18:49:12 UTC
+Last updated 2021-03-22 20:00:38 UTC
 </div>
 </div>
 </body>
