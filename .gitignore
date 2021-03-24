@@ -1,5 +1,6 @@
 # Log file
 *.log
+!user_profile.log
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
