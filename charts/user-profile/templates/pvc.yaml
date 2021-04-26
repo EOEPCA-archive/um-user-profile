@@ -9,10 +9,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  storageClassName: ""
   accessModes:
     - {{ .Values.persistence.accessModes }}
-  capacity:
-    storage: {{ .Values.persistence.dbStorageSize }}
   resources:
     requests:
       storage: {{ .Values.persistence.dbStorageSize }}

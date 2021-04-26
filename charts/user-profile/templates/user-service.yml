@@ -5,16 +5,13 @@ metadata:
   labels:
     app: {{ .Values.global.user }}
 spec:
-  type: NodePort
   ports:
-  - port: 5566
-    name: http-up
-    targetPort: 5566
-    protocol: TCP
-  - port: 1028
-    name: https-up
-    targetPort: 443
-    protocol: TCP
+    {{- range $key, $value := .Values.ports }}
+    - port: {{ $value.port }}
+      targetPort: {{ $value.targetPort }}
+      protocol: {{ $value.type }}
+      name: {{ $key }}
+    {{- end }}
   selector:
     app: {{ .Values.global.user }}
     

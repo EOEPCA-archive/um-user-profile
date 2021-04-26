@@ -23,27 +23,24 @@ spec:
             memory: {{ .Values.requests.memory }}
             cpu: {{ .Values.requests.cpu }}
         livenessProbe:
-          httpGet:
-            path: /oxauth/.well-known/openid-configuration
-            port: 8080
+          tcpSocket:
+            port: {{ .Values.global.servicePort }}
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
         readinessProbe:
-          httpGet:
-            path: /oxauth/.well-known/openid-configuration
-            port: 8080
+          tcpSocket:
+            port: {{ .Values.global.servicePort }}
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
         ports:
-        - name: http-up
-          containerPort: 5566
-          protocol: TCP
-        - name: https-up
-          containerPort: 443
-          protocol: TCP
+        {{- range $key, $value := .Values.ports }}
+        - containerPort: {{ $value.targetPort }}
+          name: {{ $key }}
+          protocol: {{ $value.type }}
+        {{- end }}
         envFrom:
         - configMapRef:
-            name: user-cm
+            name: {{ .Values.global.user }}-cm
         volumeMounts:
         - mountPath: /opt/user-profile/db/um-user-profile-config
           subPath: um-user-profile-config
@@ -51,16 +48,16 @@ spec:
           mountPropagation: HostToContainer
         - mountPath: /opt/gluu/jetty/user-profile/logs
           subPath: user-profile/logs
-          name: vol-userman
+          name: {{ .Values.volumeClaim.name }}
       
       hostAliases:
       - ip: {{ .Values.global.nginxIp }}
         hostnames:
-        - {{ .Values.global.ep }}
+        - {{ .Values.global.domain }}
       volumes:
-        - name: vol-userman
+        - name: {{ .Values.volumeClaim.name }}
           persistentVolumeClaim:
             claimName: {{ .Values.volumeClaim.name }}
         - name: config-user
           configMap:
-            name: user-cm
+            name: {{ .Values.global.user }}-cm
