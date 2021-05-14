@@ -51,6 +51,10 @@ jobs:
             sleep 1
       - name: Installing robotframework
         run: pip3 install robotframework
+      - name: Which 
+        run: |
+            which chromedriver
+            which google-chrome
       - name: Installing Chrome and Drivers
         run: sudo ./gh_actions/install-chromedriver.sh
       - name: Run tests
