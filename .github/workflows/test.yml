@@ -37,6 +37,7 @@ jobs:
           source bin/activate
           cd ..
           pip3 install -r src/requirements.txt
+          pip uninstall flask && python -m pip install flask
       - name: Run main
         run: python3 src/web_main.py
       - name: Installing robotframework
