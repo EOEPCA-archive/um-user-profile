@@ -39,4 +39,5 @@ pip install -U robotframework \
 && pip install -U docutils \
 && pip install -U robotframework-requests \
 && pip install -U robotframework-seleniumlibrary \
+&& pip install -U robotframework-selenium2library \
 && pip install -U robotframework-sshlibrary
