@@ -39,5 +39,6 @@ pip install -U robotframework \
 && pip3 install -U docutils \
 && pip3 install -U selenium \
 && pip3 install -U robotframework-requests \
+&& pip3 install -U robotframework-selenium2library-java \
 && pip3 install -U robotframework-selenium2library \
 && pip3 install -U robotframework-sshlibrary
