@@ -29,11 +29,13 @@ jobs:
         run: sudo apt-get install jq python3-venv
       - name: Change to main folder
         run: cd ..
-      - name: Create python env
-        run: python3 -m venv env
+      - name: Create flask env
+        run: virtualenv flask
       - name: Activate environment
         run: |
-          source env/bin/activate
+          cd flask
+          source bin/activate
+          cd ..
           pip3 install -r src/requirements.txt
       - name: Run main
         run: python3 src/web_main.py
