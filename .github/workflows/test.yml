@@ -53,9 +53,5 @@ jobs:
         run: pip3 install robotframework
       - name: Installing Chrome and Drivers
         run: sudo ./gh_actions/install-chromedriver.sh
-      - name: Activate env
-        run: |
-            which robot
-            source $HOME/.local/robot/bin/activate
       - name: Run tests
         run: robot ./tests
