@@ -54,6 +54,8 @@ jobs:
       - name: Installing Chrome and Drivers
         run: sudo ./gh_actions/install-chromedriver.sh
       - name: Activate env
-        run:  source $HOME/.local/robot/bin/activate
+        run: |
+            which robot
+            source $HOME/.local/robot/bin/activate
       - name: Run tests
         run: robot ./tests

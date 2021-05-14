@@ -32,3 +32,11 @@ curl -sLO https://chromedriver.storage.googleapis.com/${driver_version}/chromedr
 unzip chromedriver_linux64.zip
 rm chromedriver_linux64.zip
 mv chromedriver $HOME/.local/bin
+
+
+echo "INFO: Installing Robot Framework and dependencies..."
+pip install -U robotframework \
+&& pip install -U docutils \
+&& pip install -U robotframework-requests \
+&& pip install -U robotframework-seleniumlibrary \
+&& pip install -U robotframework-sshlibrary
