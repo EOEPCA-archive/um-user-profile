@@ -13,7 +13,7 @@ buildTag=travis_$TRAVIS_BUILD_NUMBER # We use a temporary build number for taggi
 docker build -t eoepca/$1 .
 docker tag eoepca/$1 eoepca/$1:$buildTag
 
-echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+# echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
-docker push eoepca/$1:$buildTag   # defaults to docker hub EOEPCA repo
+# docker push eoepca/$1:$buildTag   # defaults to docker hub EOEPCA repo
 
