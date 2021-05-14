@@ -46,7 +46,9 @@ jobs:
       #     pip install -r src/requirements.txt
       #     pip uninstall -y flask && python -m pip install flask
       - name: Run main
-        run: python src/web_main.py
+        run: |
+            nohup python3 src/web_main.py &
+            sleep 1
       - name: Installing robotframework
         run: pip3 install robotframework
       - name: Installing Chrome and Drivers
