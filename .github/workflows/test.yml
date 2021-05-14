@@ -29,15 +29,22 @@ jobs:
         run: sudo apt-get install jq python3-venv virtualenv
       - name: Change to main folder
         run: cd ..
-      - name: Create flask env
-        run: virtualenv flask
+      - name: Create python env
+        run: python3 -m venv env
       - name: Activate environment
-        run: |
-          cd flask
-          source bin/activate
-          cd ..
-          pip install -r src/requirements.txt
-          pip uninstall -y flask && python -m pip install flask
+        run: source env/bin/activate
+      - name: Install requirements
+        run: pip3 install -r src/requirements.txt
+
+      # - name: Create flask env
+      #   run: virtualenv flask
+      # - name: Activate environment
+      #   run: |
+      #     cd flask
+      #     source bin/activate
+      #     cd ..
+      #     pip install -r src/requirements.txt
+      #     pip uninstall -y flask && python -m pip install flask
       - name: Run main
         run: python src/web_main.py
       - name: Installing robotframework
