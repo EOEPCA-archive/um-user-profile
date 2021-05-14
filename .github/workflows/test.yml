@@ -36,10 +36,10 @@ jobs:
           cd flask
           source bin/activate
           cd ..
-          pip3 install -r src/requirements.txt
+          pip install -r src/requirements.txt
           pip uninstall -y flask && python -m pip install flask
       - name: Run main
-        run: python3 src/web_main.py
+        run: python src/web_main.py
       - name: Installing robotframework
         run: pip3 install robotframework
       - name: Installing Chrome and Drivers
