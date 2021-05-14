@@ -1,6 +1,5 @@
 *** Settings ***
 
-Library  Selenium2Library
 Library  SeleniumLibrary
 Library  Process
 Library  OperatingSystem
@@ -107,7 +106,7 @@ Go to Attributes
   ${match}  ${value}  Run Keyword And Ignore Error  Should Contain  ${a}  AttributeError
   ${RETURNVALUE}  Set Variable If  '${match}' == 'PASS'  ${True}  ${False}
   BuiltIn.Run Keyword If  "${RETURNVALUE}"=="True"  Configuration Error
-  Profile Edition
+  BuiltIn.Run Keyword If  "${RETURNVALUE}"=="False"  Profile Edition
 
 
 LoginService Allow User
