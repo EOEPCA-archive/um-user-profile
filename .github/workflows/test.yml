@@ -35,9 +35,13 @@ jobs:
         run: |
           source env/bin/activate
           pip install -r src/requirements.txt
-      # - name: Run main
-      #   run: python src/main.py
-      # - name: Run tests Database
-      #   run: python tests/test_database.py
-      # - name: Run tests PDP
-      #   run: python tests/um_pdp_test.py
+      - name: Run main
+        run: python src/web_main.py
+      - name: Installing robotframework
+        run: pip3 install robotframework
+      - name: Installing Chrome and Drivers
+        run: sudo ./gh_actions/install-chromedriver.sh
+      - name: Activate env
+        run:  source $HOME/.local/robot/bin/activate
+      - name: Run tests
+        run: robot ./tests
