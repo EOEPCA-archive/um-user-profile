@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: 3.6.9
       - name: Install ubuntu dependencies
-        run: sudo apt-get install jq python3-venv
+        run: sudo apt-get install jq python3-venv virtualenv
       - name: Change to main folder
         run: cd ..
       - name: Create flask env
