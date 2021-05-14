@@ -1,6 +1,7 @@
 *** Settings ***
 
 Library  Selenium2Library
+Library  SeleniumLibrary
 Library  Process
 Library  OperatingSystem
 Library  Collections
