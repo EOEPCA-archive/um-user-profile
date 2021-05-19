@@ -63,4 +63,4 @@ requests:
   memory: 70Mi
   cpu: 3m
 
-context: generic
+context: user
