@@ -18,16 +18,29 @@ spec:
       - name: {{ .Values.global.user }}
         imagePullPolicy: {{ .Values.image.imagePullPolicy }}
         image: {{ .Values.image.image }}
+        resources:
+          requests:
+            memory: {{ .Values.requests.memory }}
+            cpu: {{ .Values.requests.cpu }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.global.servicePort }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.global.servicePort }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
         ports:
-        - name: http-up
-          containerPort: 5566
-          protocol: TCP
-        - name: https-up
-          containerPort: 443
-          protocol: TCP
+        {{- range $key, $value := .Values.ports }}
+        - containerPort: {{ $value.targetPort }}
+          name: {{ $key }}
+          protocol: {{ $value.type }}
+        {{- end }}
         envFrom:
         - configMapRef:
-            name: user-cm
+            name: {{ .Values.global.user }}-cm
         volumeMounts:
         - mountPath: /opt/user-profile/db/um-user-profile-config
           subPath: um-user-profile-config
@@ -35,16 +48,16 @@ spec:
           mountPropagation: HostToContainer
         - mountPath: /opt/gluu/jetty/user-profile/logs
           subPath: user-profile/logs
-          name: eoepca-user-pv-host
+          name: {{ .Values.volumeClaim.name }}
       
       hostAliases:
       - ip: {{ .Values.global.nginxIp }}
         hostnames:
-        - {{ .Values.global.ep }}
+        - {{ .Values.global.domain }}
       volumes:
-        - name: eoepca-user-pv-host
+        - name: {{ .Values.volumeClaim.name }}
           persistentVolumeClaim:
-            claimName: eoepca-user-pvc
+            claimName: {{ .Values.volumeClaim.name }}
         - name: config-user
           configMap:
-            name: user-cm
+            name: {{ .Values.global.user }}-cm

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: eoepca-user-pvc
+  name: {{ .Values.volumeClaim.name }}
   namespace: {{ .Release.Namespace }}
   labels:
     eoepca_type: userman
@@ -9,10 +9,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  storageClassName: ""
   accessModes:
     - {{ .Values.persistence.accessModes }}
-  capacity:
-    storage: {{ .Values.persistence.dbStorageSize }}
   resources:
     requests:
       storage: {{ .Values.persistence.dbStorageSize }}
