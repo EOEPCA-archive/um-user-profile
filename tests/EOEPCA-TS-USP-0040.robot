@@ -8,7 +8,7 @@ Library  Collections
 *** Variables ***
 ${USER}=  admin
 ${PWD}=  admin_Abcd1234#
-${URL}=  https://test.10.0.2.15.nip.io/web_ui
+${URL}=  https://test.185.52.193.87.nip.io/web_ui
 
 *** Test Cases ***
 
@@ -106,7 +106,7 @@ Go to Attributes
   ${match}  ${value}  Run Keyword And Ignore Error  Should Contain  ${a}  AttributeError
   ${RETURNVALUE}  Set Variable If  '${match}' == 'PASS'  ${True}  ${False}
   BuiltIn.Run Keyword If  "${RETURNVALUE}"=="True"  Configuration Error
-  Profile Edition
+  BuiltIn.Run Keyword If  "${RETURNVALUE}"=="False"  Profile Edition
 
 
 LoginService Allow User
