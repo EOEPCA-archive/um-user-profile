@@ -8,6 +8,7 @@ from custom_scim import SCIMClient
 from custom_smtp import SMTPClient
 import generic
 import os
+from handlers.pep_handler import PEP_Handler
 
 env_vars = [
 "UP_SSO_URL",
@@ -560,6 +561,8 @@ def confirmation(token):
         logo_image_path = g_logo_image)
 
 
+
+
 @app.route(g_base_uri+"/profile_removal")
 def profile_removal():
     err_msg = None
@@ -586,6 +589,46 @@ def profile_removal():
     else:
         print('The confirmation link is invalid or has expired.', 'error')
         return redirect(url_for('login'))
+
+
+@app.route(g_base_uri+"/resource_control_monitoring")
+def resource_control_monitoring():
+    err_msg = None
+    old_err_msg = session.get(generic.ERR_MSG, "")
+    err_code = session.get(generic.ERR_CODE, "")
+    # Overwrite them to not let the user lock themselfs in an error
+    session[generic.ERR_MSG] = ""
+    session[generic.ERR_CODE] = ""
+    
+    refresh_session(session.get('refresh_token',""))
+    pep_handler = PEP_Handler("172.17.0.6:5576", "172.17.0.4:5567")
+    token = session.get('access_token')
+    id_token = session.get('id_token')
+    logged_in = session.get('logged_in')
+    if not logged_in or token is None or token is "":
+        session["reminder"] = 'resource_control_monitoring'
+        return redirect(url_for('login'))
+    data, session[generic.ERR_MSG] = pep_handler.get_resources(token)
+    f = open("/1.txt", "a")
+    f.write(str(id_token))
+    f.close()
+    policies = {}
+    resources= {}
+    for k in data.json():
+        policy, session[generic.ERR_MSG]= pep_handler.get_policies(k["_id"], token)
+        policies[k["_id"]] = policy.json()["policies"]
+        resources[k["_id"]] = k
+    return render_template("resource_control_monitoring.html",
+        title = g_title,
+        username = session.get('logged_user'),
+        logged_in = logged_in,
+        color_web_background = g_background_color,
+        color_web_header = g_header_color,
+        logo_alt_name = g_logo_alt,
+        logo_image_path = g_logo_image,
+        data = resources,
+        policy = policies
+    )
 
 if __name__ == "__main__":
     app.run(

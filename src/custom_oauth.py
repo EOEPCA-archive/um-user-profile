@@ -42,7 +42,7 @@ class OAuthClient(metaclass=Singleton):
         scopes=["openid", "user_name", "permission", "email", "eoepca", "is_operator"]
         sectorIdentifier="https://"+config["sso_url"]+"/oxauth/sectoridentifier/9b473868-fa96-4fd1-a662-76e3663c9726"
         token_endpoint_auth_method=ENDPOINT_AUTH_CLIENT_POST
-        scim_client2.registerClient("UserClient", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method, sectorIdentifier=sectorIdentifier)
+        scim_client2.registerClient("UserClient", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method, sectorIdentifier=sectorIdentifier, subject_type= "public")
 
         self.client_id = self._get_valid_url_client_id(scim_client2.client_id)
         self.redirect_uri = config["redirect_uri"]
