@@ -37,6 +37,8 @@ configMap:
   colorButtonModify: "#38A79F"
   useThreads: "true"
   debugMode: "true"
+  pepEndpoint: "172.17.0.6:5576"
+  pdpEndpoint: "172.17.0.4:5567"
 
 
 image: 

@@ -32,7 +32,9 @@ env_vars = [
 "UP_COLOR_TEXT_HEADER_TABLE",
 "UP_COLOR_BUTTON_MODIFY",
 "UP_USE_THREADS",
-"UP_DEBUG_MODE"]
+"UP_DEBUG_MODE",
+"UP_PEP_ENDPOINT",
+"UP_PDP_ENDPOINT"]
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 use_env_var = True
@@ -601,7 +603,7 @@ def resource_control_monitoring():
     session[generic.ERR_CODE] = ""
     
     refresh_session(session.get('refresh_token',""))
-    pep_handler = PEP_Handler("172.17.0.6:5576", "172.17.0.4:5567")
+    pep_handler = PEP_Handler(config["pep_endpoint"], config["pdp_endpoint"])
     token = session.get('access_token')
     id_token = session.get('id_token')
     logged_in = session.get('logged_in')
@@ -609,9 +611,6 @@ def resource_control_monitoring():
         session["reminder"] = 'resource_control_monitoring'
         return redirect(url_for('login'))
     data, session[generic.ERR_MSG] = pep_handler.get_resources(token)
-    f = open("/1.txt", "a")
-    f.write(str(id_token))
-    f.close()
     policies = {}
     resources= {}
     for k in data.json():

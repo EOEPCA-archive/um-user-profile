@@ -53,6 +53,11 @@ It's a feature that allows the user to modify their own list of Documents of T&C
 
 This section defines a list of Object Storage bucket URI where the Storage Details of each User are saved. This attribute is multi-valued within Gluu and it's represented as a list, the same way the others attributes are saved, it will use the SCIM Client in order to perform those modifications. It also makes use of the OAuth Client to resolve authentication, but in a different way than the previous attribute editors: since this information will only be accesible by operators, the OAuth Client will check if the attribute isOperator is set to True for the user that want access to the Storage Details front page.
 
+=== Resource Control Monitoring
+
+It's a section that allows the user to visualize in a simple way their own list of resources and policies associated to the UUID of that user. In order to visualize them at least a PEP and PDP endpoints needs to be configured in the definition of the deployment.
+
+
 == Static Architecture
 
 [NOTE]

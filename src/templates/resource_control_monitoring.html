@@ -198,6 +198,7 @@ tr {
       <td>POLICIES</td>
     </tr>
   {% if policy %}
+  {% if data %}
   {% for k, v in policy.items() %}
   {% set count = v|length +1 %}
   <tr>
@@ -208,8 +209,8 @@ tr {
     <td>{{d}}</td>
   </tr>
   {% endfor %}
-  
   {% endfor %}
+  {% endif %}
   {% endif %}
   </table>
 
