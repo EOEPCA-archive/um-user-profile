@@ -25,3 +25,5 @@ data:
   UP_COLOR_BUTTON_MODIFY: {{ .Values.configMap.colorButtonModify | quote }}
   UP_USE_THREADS: {{ .Values.configMap.useThreads | quote }}
   UP_DEBUG_MODE: {{ .Values.configMap.debugMode | quote }}
+  UP_PEP_ENDPOINT: {{ .Values.configMap.pepEndpoint | quote }}
+  UP_PDP_ENDPOINT: {{ .Values.configMap.pdpEndpoint | quote }}
