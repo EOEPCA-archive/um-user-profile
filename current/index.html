@@ -45,6 +45,7 @@
 <li><a href="#_licenses_list">2.1.5. Licenses List</a></li>
 <li><a href="#_list_of_terms_and_conditions">2.1.6. List of Terms and Conditions</a></li>
 <li><a href="#_storage_details">2.1.7. Storage Details</a></li>
+<li><a href="#_resource_control_monitoring">2.1.8. Resource Control Monitoring</a></li>
 </ul>
 </li>
 <li><a href="#_static_architecture">2.2. Static Architecture</a></li>
@@ -1030,6 +1031,12 @@ With this it will make the whole process of creating the SMPT Server connection,
 <h4 id="_storage_details">2.1.7. Storage Details</h4>
 <div class="paragraph">
 <p>This section defines a list of Object Storage bucket URI where the Storage Details of each User are saved. This attribute is multi-valued within Gluu and it&#8217;s represented as a list, the same way the others attributes are saved, it will use the SCIM Client in order to perform those modifications. It also makes use of the OAuth Client to resolve authentication, but in a different way than the previous attribute editors: since this information will only be accesible by operators, the OAuth Client will check if the attribute isOperator is set to True for the user that want access to the Storage Details front page.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_resource_control_monitoring">2.1.8. Resource Control Monitoring</h4>
+<div class="paragraph">
+<p>It&#8217;s a section that allows the user to visualize in a simple way their own list of resources and policies associated to the UUID of that user. In order to visualize them at least a PEP and PDP endpoints needs to be configured in the definition of the deployment.</p>
 </div>
 </div>
 </div>
@@ -2030,7 +2037,7 @@ This endpoint manages the information given by the auth server, returned from th
 <div id="footer">
 <div id="footer-text">
 Version 0.1<br>
-Last updated 2022-02-26 15:56:08 UTC
+Last updated 2022-02-28 16:28:08 UTC
 </div>
 </div>
 </body>
