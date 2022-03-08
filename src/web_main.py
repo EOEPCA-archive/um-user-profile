@@ -33,6 +33,7 @@ env_vars = [
 "UP_USE_THREADS",
 "UP_DEBUG_MODE"]
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
 use_env_var = True
 
 for env_var in env_vars:
@@ -42,7 +43,7 @@ for env_var in env_vars:
 config = {}
 # setup config
 if use_env_var is False:
-    with open("config/WEB_config.json") as j:
+    with open(dir_path+"/config/WEB_config.json") as j:
         config = json.load(j)
 else:
     for env_var in env_vars:
@@ -80,7 +81,7 @@ _user_mail = ''
 
 # Save new client_id and secret config if any
 if use_env_var is False:
-    with open("config/WEB_config.json", "w") as f:
+    with open(dir_path+"/config/WEB_config.json", "w") as f:
         json.dump(config, f)
 else:
    # os.environ["UP_CLIENT_ID"] = config["client_id"]

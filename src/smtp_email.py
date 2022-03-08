@@ -23,8 +23,14 @@ class SMTPEmail():
             and certificate validation, and try to choose a secure protocol and cipher settings
         """
         self.host = "smtp.gmail.com"
-        self.email_from = os.environ['EMAIL_ADRESS']
-        self.password = os.environ['EMAIL_PASSWORD']
+        try:
+            self.email_from = os.environ['EMAIL_ADRESS']
+        except:
+            self.email_from = "user_name"
+        try:
+            self.password = os.environ['EMAIL_PASSWORD']
+        except:
+            self.password = "defaultPWD"
         self.port = 465
         self.context = ssl.create_default_context()
     
