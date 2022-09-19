@@ -8,6 +8,10 @@ metadata:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
+  tls: 
+   - secretName: tls-certificate
+     hosts:
+       - demoexample.gluu.org
   rules:
   - host: {{ .Values.global.domain | quote }}
     http:
@@ -31,6 +35,10 @@ metadata:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
+  tls: 
+   - secretName: tls-certificate
+     hosts:
+       - demoexample.gluu.org
   rules:
   - host: {{ .Values.global.domain | quote }}
     http:
