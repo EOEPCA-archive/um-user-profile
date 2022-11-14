@@ -2,6 +2,9 @@
 from eoepca_scim import *
 import logging
 import collections
+import os
+import json
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 class Singleton(type):
     _instances = {}
@@ -27,15 +30,21 @@ class SCIMClient(metaclass=Singleton):
 
         # auto-create client in SCIM
         self.scim_client = EOEPCA_Scim(sso_url)
-        grantTypes=["client_credentials", "urn:ietf:params:oauth:grant-type:uma-ticket"]
+        grantTypes=["client_credentials", "urn:ietf:params:oauth:grant-type:uma-ticket","authorization_code"]
         redirectURIs=["https://"+config["sso_url"]+"/login"]
         logoutURI="https://"+config["sso_url"]+"/logout"
-        responseTypes=[]
-        scopes=["openid", "oxd", "permission", "profile", "is_operator"]
-        token_endpoint_auth_method=ENDPOINT_AUTH_CLIENT_BASIC
-        self.scim_client.registerClient("SCIMClientUser", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method)
+        responseTypes=["code","token","id_token"]
+        scopes=["openid", "oxd", "permission", "profile", "is_operator","user_name"]
+        token_endpoint_auth_method=ENDPOINT_AUTH_CLIENT_PRIVATE_KEY_JWT
+        subject_type="public"
+        
+        self.scim_client.registerClient("SCIMClientUser", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method, useJWT=1, subject_type=subject_type)
         logging.getLogger().setLevel(logging.INFO)
-
+        config["client_id_scim"]=self.scim_client.client_id
+        config["client_secret_scim"]=self.scim_client.client_secret
+        with open(dir_path+"/config/WEB_config.json", "w") as f:
+            json.dump(config, f)
+            print("added scim")
     def _get_valid_https_url(self, url):
         if "http" not in url:
             return "https://" + url

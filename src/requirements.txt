@@ -10,10 +10,12 @@ requests==2.23.0
 urllib3==1.25.9
 Werkzeug==1.0.1
 WellKnownHandler==0.2.0
-eoepca-scim==2.7.6
+eoepca-scim==2.8.1
 pyjwkest==1.3.6
+jwt
 pycrypto==2.6
 robotframework-seleniumlibrary==3.3.1
 selenium==3.141.0
 webdrivermanager
 robotframework
+pyyaml

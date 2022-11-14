@@ -2,11 +2,13 @@
 import requests
 import base64
 import json
+import os
 from eoepca_scim import *
 import logging
 import WellKnownHandler as wkh
 from base64 import b64encode
 import generic
+from flask import jsonify
 from jwkest.jws import JWS
 from jwkest.jwk import SYMKey, KEYS
 from jwkest.jwk import RSAKey, import_rsa_key_from_file, load_jwks_from_url, import_rsa_key
@@ -14,7 +16,12 @@ from jwkest.jwk import load_jwks
 from jwkest.jwk import rsa_load
 from Crypto.PublicKey import RSA
 from jwt_verification.signature_verification import JWT_Verification
-
+from handlers.log_handler import LogHandler
+log_handler = LogHandler
+log_handler.load_config("UP", "./config/log_config.yaml")
+logging.getLogger().setLevel(logging.INFO)
+logger = logging.getLogger("USER_PROFILE")
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 class Singleton(type):
     _instances = {}
@@ -24,7 +31,7 @@ class Singleton(type):
         return cls._instances[cls]
 
 class OAuthClient(metaclass=Singleton):
-    def __init__(self, config,use_env_var):
+    def __init__(self, config,use_env_var, test_mode=False):
         if use_env_var is False:
             self.scopes = self._get_valid_url_scopes(config["scopes"])
         else:
@@ -32,23 +39,29 @@ class OAuthClient(metaclass=Singleton):
             self.scopes = self._get_valid_url_scopes(config["scopes"])
         sso_url = self._get_valid_https_url(config["sso_url"])
         self.url= sso_url
+        self.test_mode=test_mode
         self.wkhandler = wkh.WellKnownHandler(sso_url,secure=not config["debug_mode"]) # Force HTTPS if not debug mode
-
+        self.termList=[]
         scim_client2 = EOEPCA_Scim(sso_url)
         grantTypes=["client_credentials", "urn:ietf:params:oauth:grant-type:uma-ticket", "authorization_code", "refresh_token", "implicit", "password"]
         redirectURIs=["https://"+config["sso_url"]+"/web_ui/oauth/callback"]
         logoutURI="http://"+config["sso_url"]+"/web_ui"
         responseTypes=["code", "token", "id_token"]
-        scopes=["openid", "user_name", "permission", "email", "eoepca", "is_operator"]
+        scopes=["openid", "user_name", "permission", "email", "eoepca", "is_operator", "profile"]
         sectorIdentifier="https://"+config["sso_url"]+"/oxauth/sectoridentifier/9b473868-fa96-4fd1-a662-76e3663c9726"
+        subject_type="public"
         token_endpoint_auth_method=ENDPOINT_AUTH_CLIENT_POST
-        scim_client2.registerClient("UserClient", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method, sectorIdentifier=sectorIdentifier)
-
+        scim_client2.registerClient("UserClient", grantTypes, redirectURIs, logoutURI, responseTypes, scopes, token_endpoint_auth_method, sectorIdentifier= sectorIdentifier, useJWT=1, subject_type=subject_type)
+        print("First Client_id: "+str(scim_client2.client_id))
         self.client_id = self._get_valid_url_client_id(scim_client2.client_id)
+        config["client_id"]= self.client_id
         self.redirect_uri = config["redirect_uri"]
         self.client_secret = scim_client2.client_secret
+        config["client_secret"]= self.client_secret
         self.post_logout_redirect_uri = config["post_logout_redirect_uri"]
-
+        with open(dir_path+"/config/WEB_config.json", "w") as f:
+            json.dump(config, f)
+            print("added oauth")
     def _get_valid_url_client_id(self, client_id):
         return client_id.replace("@","%40")
 
@@ -78,7 +91,67 @@ class OAuthClient(metaclass=Singleton):
         
         response = requests.request("POST", token_endpoint, data=payload, headers=headers, verify=False)
         self.isOperator = self.verify_uid_headers(self.url, json.loads(response.text),'isOperator')
+        sub = self.verify_uid_headers(self.url, json.loads(response.text),'isOperator')
+
         return json.loads(response.text)
+
+    def get_user(self,url,idx,token):
+        headers = {
+            'Authorization': "Bearer "+token
+        }
+        
+        endpoint="/identity/restv1/scim/v2/Users/"+str(idx)
+        r = requests.get(url+endpoint, headers=headers, verify=False)
+        try:
+            logger.info(r.json())
+            return r.json(), r.status_code
+            
+        except:
+            return jsonify(message=r.text), r.status_code
+            
+    
+    def set_user(self,url,idx,token, data, AUTH=2):
+        endpoint="/identity/restv1/scim/v2/Users/"+str(idx)
+        USER = "urn:ietf:params:scim:schemas:core:2.0:User"
+        USER_CUSTOM_ATTRS = "urn:ietf:params:scim:schemas:extension:gluu:2.0:User"
+        #attributePath = 'urn:ietf:params:scim:schemas:extension:gluu:2.0:User.TermsConditions'
+        headers = {'Authorization': "Bearer "+token}
+        payload = {
+            "schemas": [USER, USER_CUSTOM_ATTRS],
+            USER_CUSTOM_ATTRS: {
+                "TermsConditions": data
+            }
+        }
+        r = requests.put(url+endpoint, headers=headers,json=payload, verify=False)
+        if r.status_code == 401 and AUTH > 0:       
+            AUTH -= 1
+            if not self.test_mode:
+                self.get_uma_token(r.headers["WWW-Authenticate"].split("ticket=")[1])
+            else:
+                self.get_oauth_token()
+            return set_user(url, idx, token, data, AUTH)
+        if r.status_code == 200:
+            return data, r.status_code
+        return r.text, r.status_code
+
+
+    def get_terms_conditions(self):
+        return self.termList
+
+    def backup_terms(self,pdp_url, token):
+        headers = {'Content-Type': 'application/json, Authorization: Bearer '+ token}
+        r = requests.get(pdp_url, headers=headers, verify=False).json()
+        k=[]
+        for i in r:
+            k.append(i["term_id"])
+        self.termList= k
+        return k
+    def delete_terms(self,pdp_url, token):
+        headers = {'Content-Type': 'application/json, Authorization: Bearer '+ token}
+        r = requests.delete(pdp_url, headers=headers, verify=False)
+
+
+
 
     def refresh_token(self, refresh_token):
         "Gets a new token, using a previous refresh token"
@@ -178,7 +251,41 @@ class OAuthClient(metaclass=Singleton):
     def verify_uid_headers(self,url, jwt, key):
         value = None
         token_protected = None
-        myJWT = jwt['id_token']
+        if "id_token" in jwt:
+            myJWT = jwt['id_token']
+        else:
+            myJWT=jwt
         value=self.verify_JWT_token(url, myJWT, key)
         return value
         
+    def get_oauth_token(self):
+        auth_retries=2
+        payload = "scope=openid%20permission%20uma_protection&client_id="+self.client_id+"&client_secret="+self.client_secret+"&grant_type=client_credentials"
+        headers = {'content-type': "application/x-www-form-urlencoded"}
+
+        r = self.session.post(self.sso_url+endpoints.TOKEN, data=payload, headers=headers, verify=False)
+        token = r.json()
+        
+        # Check for an error in the server
+        if "error_description" in token:
+            raise Exception("Error while obtaining token: "+ str(token["error_description"]))
+
+        if r.status_code == 200:
+            self.access_token = token["access_token"]
+
+    def get_uma_token(self, ticket):
+        headers = {'content-type': "application/x-www-form-urlencoded"}
+        payload = {
+            "client_id": self.client_id,
+            "client_secret": self.client_secret,
+            "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket",
+            "ticket": ticket
+        }
+        r = self.session.post(self.sso_url+endpoints.TOKEN, data=payload, headers=headers, verify=False)
+        token = r.json()
+            # Check for an error in the server
+        if "error_description" in token:
+            raise Exception("Error while obtaining token: "+ str(token["error_description"]))
+
+        if r.status_code == 200:
+            self.access_token = token["access_token"]

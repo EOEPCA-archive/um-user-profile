@@ -37,12 +37,12 @@ configMap:
   colorButtonModify: "#38A79F"
   useThreads: "true"
   debugMode: "true"
+  pdpPort: 5567
 
 
 image: 
   imagePullPolicy: Always
-  image: eoepca/um-user-profile:v0.3
-
+  image: eoepca/um-user-profile:v1.1
 persistence: 
   accessModes: ReadWriteMany
   dbStorageSize: 5Gi
