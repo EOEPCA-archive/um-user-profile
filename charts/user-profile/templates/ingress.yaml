@@ -36,7 +36,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   tls: 
-   - secretName: tls-certificate
+   - secretName: tls-certificate-user-profile
      hosts:
        - demoexample.gluu.org
   rules:
