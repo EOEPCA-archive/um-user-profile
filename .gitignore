@@ -61,3 +61,6 @@ env/
 
 # VSCode
 .vscode
+
+# Intellij Idea
+.idea
