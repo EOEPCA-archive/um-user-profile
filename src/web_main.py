@@ -1,13 +1,23 @@
 #!/usr/bin/python3
 from flask import Flask, render_template, request, jsonify, redirect, session, url_for
 import json
+import ast
 import logging
+import jwt
+from handlers.log_handler import LogHandler
+import requests
 import re
 from custom_oauth import OAuthClient
 from custom_scim import SCIMClient
+from eoepca_scim import *
 from custom_smtp import SMTPClient
 import generic
 import os
+log_handler = LogHandler
+log_handler.load_config("UP", "./config/log_config.yaml")
+logging.getLogger().setLevel(logging.INFO)
+logger = logging.getLogger("USER_PROFILE")
+
 
 env_vars = [
 "UP_SSO_URL",
@@ -31,7 +41,9 @@ env_vars = [
 "UP_COLOR_TEXT_HEADER_TABLE",
 "UP_COLOR_BUTTON_MODIFY",
 "UP_USE_THREADS",
-"UP_DEBUG_MODE"]
+"UP_DEBUG_MODE",
+"UP_PDP_URL",
+"UP_PDP_PORT"]
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 use_env_var = True
@@ -39,7 +51,6 @@ use_env_var = True
 for env_var in env_vars:
     if env_var not in os.environ:
         use_env_var = False
-
 config = {}
 # setup config
 if use_env_var is False:
@@ -48,14 +59,13 @@ if use_env_var is False:
 else:
     for env_var in env_vars:
         env_var_config = env_var.replace('UP_', '')
-
         if "true" in os.environ[env_var].replace('"', ''):
             config[env_var_config.lower()] = True
         elif "false" in os.environ[env_var].replace('"', ''):
             config[env_var_config.lower()] = False
         else:
             config[env_var_config.lower()] = os.environ[env_var].replace('"', '')
-
+    
 # We need to pass these on every render, and they are not going to change
 g_background_color = config["color_web_background"]
 g_header_color = config["color_web_header"]
@@ -79,25 +89,17 @@ scim_client = SCIMClient(config,use_env_var)
 smtp_client = SMTPClient(config,app.secret_key)
 _user_mail = ''
 
-# Save new client_id and secret config if any
-if use_env_var is False:
-    with open(dir_path+"/config/WEB_config.json", "w") as f:
-        json.dump(config, f)
-else:
-   # os.environ["UP_CLIENT_ID"] = config["client_id"]
-   # os.environ["UP_CLIENT_SECRET"] = config["client_secret"]
-   # os.environ["UP_CLIENT_ID_SCIM"] = config["client_id_scim"]
-   # os.environ["UP_CLIENT_SECRET_SCIM"] = config["client_secret_scim"]
-   pass
 
 auth_client = OAuthClient(config, use_env_var)
+# Save new client_id and secret config if any
+
+with open(dir_path+"/config/WEB_config.json", "w") as f:
+    json.dump(config, f)
 
 def refresh_session(refresh_token):
     print("Refreshing session")
     data = auth_client.refresh_token(refresh_token)
-    print(data)
     err, code = generic.get_posible_errors(data)
-    print(err)
     if err is "":
         print("Ok, writing new session data")
         session["access_token"] = data.get("access_token","")
@@ -173,31 +175,41 @@ def logout():
 def modify_TC():
     
     data = request.form.to_dict()
+    
     keys=request.form.getlist('key')
     values=request.form.getlist('value')
+    checks=request.form.getlist('check')
     res={}
-    for i in range(len(keys)):
-        res[str(keys[i])] = str(values[i])
-    try:
-        found = str(res).replace('\'', '')
-        #found = found.replace(' ', '')
-    except:
-        pass
+    
 
     #urn:ietf:params:scim:schemas:extension:gluu:2.0:User->apiKeys
     refresh_token = session.get('refresh_token')
     logged_in = session.get('logged_in')
+    
     if not logged_in or refresh_token is None or refresh_token is "":
         session["reminder"] = 'modify_TC'
         return redirect(url_for('login'))
 
     # Refresh session and execute
     session[generic.ERR_MSG], session[generic.ERR_CODE] = refresh_session(refresh_token)
-
+    token = session.get('access_token')
+    id_token = session.get('id_token')
     #FORM DATA
+    sub=auth_client.verify_uid_headers("http://"+config["sso_url"], id_token, 'sub')
+    
+    for i in auth_client.get_terms_conditions():
+        if i not in keys:
+            auth_client.delete_terms(config["pdp_url"]+'/pdp/terms/'+i, id_token)
+
+
     if session[generic.ERR_MSG] is "":
         word = request.args
-        session[generic.ERR_MSG], session[generic.ERR_CODE] = scim_client.editTC(session.get('logged_user'), found)
+        for i in range(len(keys)):
+            data= '{"term_id":"'+str(keys[i])+'", "term_description":"'+str(values[i])+'"}'
+            headers = {'Content-Type': 'application/json, Authorization: Bearer '+ token}
+            r = requests.post("https://" + config["sso_url"]+'/pdp/terms/', headers=headers, data=data, verify=False)
+            headers = {'Content-Type': 'application/json, Authorization: Bearer '+ id_token}
+        k = auth_client.set_user(url="http://" + config["sso_url"],idx= sub,token= token,data= str(checks))
     return redirect(url_for("TC_management"))
 
 @app.route(g_base_uri+"/TC_management")
@@ -212,30 +224,28 @@ def TC_management():
     refresh_session(session.get('refresh_token',""))
 
     token = session.get('access_token')
+    id_token = session.get('id_token')
     logged_in = session.get('logged_in')
     if not logged_in or token is None or token is "":
         session["reminder"] = 'TC_management'
         return redirect(url_for('login'))
     data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
     found = None
-    total = str(data).split('\'')
-    for v in range(len(total)):
-        if 'TermsConditions' in str(total[v]):
-
-            for i in range(4):
-                m = re.search('\{(.+?)\}', str(total[v+i]))
-                if m:
-                    found = m.group(1)
-                    break
+    
     a=''
-    try:
-        found = found.replace('\'', '')
-    except:
-        pass
-    try:
-        a = found.split(',')
-    except:
-        pass
+    headers = {'Content-Type': 'application/json, Authorization: Bearer '+ token}
+    s= requests.get(config["pdp_url"]+'/pdp/terms/', headers=headers, verify=False) 
+    j = s.json()
+    n=auth_client.backup_terms(config["pdp_url"]+'/pdp/terms/', id_token)
+    sub=auth_client.verify_uid_headers("http://"+config["sso_url"], id_token, 'sub')
+    
+    data = auth_client.get_user("http://"+config["sso_url"], sub, token)
+    total = str(data).split('\'')
+    for k in data[0]:
+        if "gluu:2.0:User" in k:
+            for n in data[0][k]:
+                if "TermsConditions" in n:
+                    termList= ast.literal_eval(data[0][k][n])
 
     return render_template("TC_management.html",
         title = g_title,
@@ -245,8 +255,21 @@ def TC_management():
         color_web_header = g_header_color,
         logo_alt_name = g_logo_alt,
         logo_image_path = g_logo_image,
-        data = a
+        data = termList,
+        terms = j
     )
+def get_user(idx,token):
+    headers = {
+        'Authorization': "Bearer "+token
+    }
+    
+    endpoint="/identity/restv1/scim/v2/Users/"+str(idx)
+    r = requests.get("http://"+config["sso_url"]+endpoint, headers=headers, verify=False)
+    try:
+        return r.json(), r.status_code
+        
+    except JSONDecodeError:
+        return jsonify(message=r.text), r.status_code
 
 @app.route(g_base_uri+"/licenses_management/modify",methods=['POST'])
 def modify_licenses():
@@ -503,11 +526,11 @@ def profile_management():
         return redirect(url_for('login'))
 
     data, session[generic.ERR_MSG] = scim_client.getAttributes(session.get('logged_user'))
-    print(data)
-    for k, v in data['editable'].items(): 
-        if "StorageDetails" in str(k):
-            del data['editable'][k]
-            break
+    if 'editable' in data:
+        for k, v in data['editable'].items(): 
+            if "StorageDetails" in str(k):
+                del data['editable'][k]
+                break
     return render_template("profile_management.html",
         title = g_title,
         username = session.get('logged_user'),

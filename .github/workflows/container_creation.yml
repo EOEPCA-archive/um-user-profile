@@ -10,7 +10,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       DOCKER_COMPOSE_VERSION: 1.25.4
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -40,7 +40,3 @@ jobs:
       # - name: Release Container
       #   if: github.ref == 'refs/heads/master' && github.event != 'pull_request'
       #   run: ./gh_actions/release.sh um-user-profile
-        
-      
-        
-        

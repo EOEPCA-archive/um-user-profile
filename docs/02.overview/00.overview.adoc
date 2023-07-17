@@ -47,7 +47,7 @@ It's a feature that allows the user to modify their own list of Licenses the sam
 
 === List of Terms and Conditions
 
-It's a feature that allows the user to modify their own list of Documents of T&C the same way the API Keys List and Licenses manager above is defined. It is implemented using the SCIM Client that allows to perform attribute modifications and checks against the Login Service OIDC Auth.
+It's a feature that allows the user to modify their own list of Documents of T&C. The page itself will query the PDP to list all available Terms and Conditions registered and will represent with a checkbox those that the user has accepted. It is implemented using the SCIM Client that allows to perform attribute modifications and checks against the Login Service OIDC Auth. It also allows new T&C documents to be inserted in the mongo database.
 
 === Storage Details
 
