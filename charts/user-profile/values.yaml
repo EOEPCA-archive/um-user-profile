@@ -42,7 +42,7 @@ configMap:
 
 image: 
   imagePullPolicy: Always
-  image: ghcr.io/eoepca/um-user-profile:v1.2
+  image: ghcr.io/eoepca/um-user-profile:v1.3
 persistence: 
   accessModes: ReadWriteMany
   dbStorageSize: 5Gi

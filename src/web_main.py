@@ -93,9 +93,6 @@ _user_mail = ''
 auth_client = OAuthClient(config, use_env_var)
 # Save new client_id and secret config if any
 
-with open(dir_path+"/config/WEB_config.json", "w") as f:
-    json.dump(config, f)
-
 def refresh_session(refresh_token):
     print("Refreshing session")
     data = auth_client.refresh_token(refresh_token)
