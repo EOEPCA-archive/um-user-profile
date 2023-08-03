@@ -51,6 +51,7 @@ use_env_var = True
 for env_var in env_vars:
     if env_var not in os.environ:
         use_env_var = False
+
 config = {}
 # setup config
 if use_env_var is False:
