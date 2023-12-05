@@ -11,6 +11,13 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 
+<hr class="solid">
+<h3 align="center"> End of Life Notice </h3>
+</p>
+<h4 align="center"> This repository has archived due to being replaced by a User Management solution based on Keycloak available at: </h3>
+<h4 align="center"> https://github.com/eoepca/um-identity-service </h4>
+<hr class="solid">
+
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
